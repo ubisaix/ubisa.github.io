@@ -2,15 +2,14 @@
 <html lang="ka">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ასტრო-პორტალი 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@100;300;400;700&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --gold: #ffd700;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 215, 0, 0.3);
-            /* ახალი შრიფტი */
+            --glass: rgba(15, 20, 30, 0.85);
+            --border: rgba(255, 215, 0, 0.2);
             --main-font: 'Noto Sans Georgian', sans-serif;
         }
 
@@ -19,14 +18,15 @@
             color: #e0e0e0;
             font-family: var(--main-font);
             margin: 0;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            align-items: center;
+            overflow-x: hidden;
         }
 
         .stars {
-            position: absolute;
+            position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://www.transparenttextures.com/patterns/stardust.png');
             opacity: 0.4;
@@ -35,142 +35,149 @@
 
         /* ნავიგაცია */
         nav {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--border);
-            padding: 20px 0;
+            padding: 15px 0;
             display: flex;
             justify-content: center;
-            gap: 25px;
-            z-index: 10;
+            flex-wrap: wrap;
+            gap: 15px;
+            z-index: 100;
         }
 
         nav a {
             color: #fff;
             text-decoration: none;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 8px 15px;
-            border-radius: 5px;
-            transition: 0.4s;
+            padding: 5px 12px;
+            border-radius: 4px;
+            transition: 0.3s;
             border: 1px solid transparent;
         }
 
         nav a:hover {
             border-color: var(--gold);
             color: var(--gold);
-            background: rgba(255, 215, 0, 0.05);
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
-        /* მთავარი არე */
+        /* მთავარი კონტეინერი */
         .main-wrapper {
-            flex-grow: 1;
             position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 900px; /* საკმარისი ადგილი წრისთვის */
             display: flex;
             justify-content: center;
             align-items: center;
+            margin-top: 20px;
         }
 
+        /* ზოდიაქოს წრე */
         .zodiac-ring {
             position: absolute;
-            width: 850px;
-            height: 850px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 215, 0, 0.1);
         }
 
         .zodiac-node {
             position: absolute;
             cursor: pointer;
             text-align: center;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 5;
+            transition: all 0.4s ease;
+            z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100px;
+        }
+
+        .zodiac-icon {
+            width: 45px;
+            height: 45px;
+            fill: rgba(255, 215, 0, 0.5);
+            transition: 0.3s;
         }
 
         .zodiac-label {
             font-size: 0.7rem;
-            font-weight: 400;
-            color: var(--gold);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 8px;
-            opacity: 0.6;
+            color: #aaa;
+            margin-top: 5px;
             transition: 0.3s;
-        }
-
-        .zodiac-icon {
-            font-size: 2.2rem;
-            color: rgba(255, 215, 0, 0.4);
-            transition: 0.3s;
-        }
-
-        .zodiac-node:hover {
-            transform: scale(1.4);
         }
 
         .zodiac-node:hover .zodiac-icon {
-            color: var(--gold);
-            text-shadow: 0 0 20px var(--gold);
+            fill: var(--gold);
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 8px var(--gold));
         }
 
         .zodiac-node:hover .zodiac-label {
-            opacity: 1;
-            letter-spacing: 2.5px;
-            text-shadow: 0 0 8px var(--gold);
+            color: var(--gold);
+            letter-spacing: 1px;
         }
 
-        /* ბარათი */
+        /* ბარათი - ოპტიმიზირებული ზომა */
         .horoscope-card {
             background: var(--glass);
-            backdrop-filter: blur(30px);
+            backdrop-filter: blur(25px);
             border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 50px;
-            width: 450px;
+            border-radius: 30px;
+            padding: 40px;
+            width: 380px; /* დაპატარავებულია რომ არ გადაფაროს ნიშნები */
+            max-height: 500px;
+            overflow-y: auto; /* თუ ტექსტი ძალიან ბევრია */
             text-align: center;
-            box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
-            position: relative;
-            z-index: 6;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            z-index: 20;
+            transition: 0.5s;
         }
 
+        /* სკროლბარის სტილი ბარათისთვის */
+        .horoscope-card::-webkit-scrollbar { width: 4px; }
+        .horoscope-card::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
         .zodiac-icon-large {
-            font-size: 80px;
-            display: block;
+            width: 70px;
+            height: 70px;
+            fill: var(--gold);
             margin-bottom: 20px;
-            filter: drop-shadow(0 0 15px var(--gold));
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
         }
 
         h1 {
             color: var(--gold);
-            margin: 0 0 25px 0;
-            font-weight: 100; /* ძალიან თხელი და ელეგანტური */
-            font-size: 2.2rem;
-            letter-spacing: 6px;
+            margin: 0 0 15px 0;
+            font-weight: 300;
+            font-size: 1.8rem;
+            letter-spacing: 3px;
         }
 
         .prediction {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 300;
-            line-height: 1.8;
-            min-height: 130px;
-            color: #f0f0f0;
+            line-height: 1.6;
+            color: #efefef;
+            text-align: justify;
         }
 
         .meta {
-            margin-top: 30px;
-            padding-top: 25px;
+            margin-top: 20px;
+            padding-top: 15px;
             border-top: 1px solid rgba(255, 215, 0, 0.1);
             color: var(--gold);
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            font-weight: 400;
+            font-size: 0.8rem;
+        }
+
+        /* მობილურისთვის ადაპტაცია */
+        @media (max-width: 850px) {
+            .main-wrapper { height: auto; flex-direction: column; padding: 20px; }
+            .zodiac-ring { display: none; }
+            .horoscope-card { width: 90%; position: static; }
         }
     </style>
 </head>
@@ -192,36 +199,69 @@
     <div id="zodiacRing" class="zodiac-ring"></div>
 
     <div class="horoscope-card" id="card">
-        <span class="zodiac-icon-large" id="mainIcon">♓</span>
+        <div id="iconContainer">
+            <svg class="zodiac-icon-large" viewBox="0 0 64 64" id="mainIconSVG"></svg>
+        </div>
         <h1 id="mainTitle">თევზები</h1>
         <p class="prediction" id="mainText">
-            თქვენი სეზონია! მზე და ნეპტუნი თქვენს ნიშანშია, რაც საოცარ ინტუიციას გაძლევთ. 2026 წლის თებერვლის ბოლოს მოსალოდნელია შემოქმედებითი გარღვევა. ენდეთ შინაგან ხმას.
+            აირჩიეთ თქვენი ზოდიაქოს ნიშანი პროგნოზის სანახავად. 2026 წელი მნიშვნელოვანი ცვლილებების წელია.
         </p>
         <div class="meta" id="mainMeta">
-            <strong>ენერგია:</strong> 95% | <strong>იღბლიანი რიცხვი:</strong> 7
+            <strong>ენერგია: --% | რიცხვი: --</strong>
         </div>
     </div>
 </div>
 
 <script>
+    // SVG Path-ები (Astro.ge-ს სტილის სიმბოლოები)
+    const icons = {
+        "ვერძი": "M32 12c-5.5 0-10 4.5-10 10 0 4.4 2.8 8.1 6.8 9.5L24 48h4l3.2-13.4c.3.1.6.1.8.1s.5 0 .8-.1L36 48h4l-4.8-16.5c4-1.4 6.8-5.1 6.8-9.5 0-5.5-4.5-10-10-10zm0 4c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6 2.7-6 6-6z",
+        "კურო": "M32 10c-8.8 0-16 7.2-16 16s7.2 16 16 16 16-7.2 16-16-7.2-16-16-16zm0 28c-6.6 0-12-5.4-12-12s5.4-12 12-12 12 5.4 12 12-5.4 12-12 12zm0-28c4.4 0 8-3.6 8-8h-16c0 4.4 3.6 8 8 8z",
+        "ტყუპები": "M18 12v40h4V12h-4zm24 0v40h4V12h-4zM16 10h32v4H16v-4zm0 40h32v4H16v-4z",
+        "კირჩხიბი": "M44 28c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zM20 20c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zM44 24c8.8 0 16-7.2 16-16h-4c0 6.6-5.4 12-12 12s-12-5.4-12-12h-4c0 8.8 7.2 16 16 16z",
+        "ლომი": "M44 32c-6.6 0-12 5.4-12 12s5.4 12 12 12 12-5.4 12-12-5.4-12-12-12zm0 20c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8zM24 16c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8z",
+        "ქალწული": "M48 24c0-6.6-5.4-12-12-12s-12 5.4-12 12v20c0 2.2-1.8 4-4 4s-4-1.8-4-4V24c0-4.4-3.6-8-8-8s-8 3.6-8 8v24h4V24c0-2.2 1.8-4 4-4s4 1.8 4 4v20c0 4.4 3.6 8 8 8s8-3.6 8-8V24c0-4.4 3.6-8 8-8s8 3.6 8 8v20c0 4.4 3.6 8 8 8h4c0-8.8-7.2-16-16-16z",
+        "სასწორი": "M12 48h40v4H12v-4zm0-8h40c0-11-9-20-20-20s-20 9-20 20zm20-16c8.8 0 16 7.2 16 16H16c0-8.8 7.2-16 16-16z",
+        "მორიელი": "M48 24c0-6.6-5.4-12-12-12s-12 5.4-12 12v20c0 2.2-1.8 4-4 4s-4-1.8-4-4V24c0-4.4-3.6-8-8-8s-8 3.6-8 8v24h4V24c0-2.2 1.8-4 4-4s4 1.8 4 4v20c0 4.4 3.6 8 8 8s8-3.6 8-8V24c0-4.4 3.6-8 8-8s8 3.6 8 8v12l8 8 8-8V24z",
+        "მშვილდოსანი": "M52 12L34 30l4 4 18-18V28h4V12H44v4h12zM12 52l18-18-4-4-18 18v12h12z",
+        "თხის რქა": "M44 12c-6.6 0-12 5.4-12 12v20c0 2.2-1.8 4-4 4s-4-1.8-4-4V24c0-4.4-3.6-8-8-8s-8 3.6-8 8v24h4V24c0-2.2 1.8-4 4-4s4 1.8 4 4v20c0 8.8 7.2 16 16 16s16-7.2 16-16V24c0-2.2 1.8-4 4-4s4 1.8 4 4v4h4v-4c0-6.6-5.4-12-12-12z",
+        "მერწყული": "M12 28l8-8 8 8 8-8 8 8 8-8v4l-8 8-8-8-8 8-8-8-8 8v-4zm0 12l8-8 8 8 8-8 8 8 8-8v4l-8 8-8-8-8 8-8-8-8 8v-4z",
+        "თევზები": "M16 12c0 22 12 40 12 40s12-18 12-40h-4c0 18-8 32-8 32s-8-14-8-32h-4zm36 0c0 22-12 40-12 40s-12-18-12-40h4c0 18 8 32 8 32s8-14 8-32h4zM12 30h40v4H12v-4z"
+    };
+
     const data = {
-        "ვერძი": { icon: "♈", text: "დღეს სხვების მაგივრად მოგიწევთ პრობლემების გადაჭრა. თქვენი ჩარევა და კარგი რჩევები დაეხმარებათ მათ საკუთარი შეცდომების გამოსწორებაში. მეგობრები მადლიერებით გადაგიხდიან სამაგიეროს.", meta: "ენერგია: 88% | რიცხვი: 9" },
-        "კურო": { icon: "♉", text: "დღევანდელი დღის მიზანია სწორი მიმართულებით მიმართოთ საკუთარი პოტენციალი. მეტი შრომისმოყვარეობა გმართებთ. არ ინერვიულოთ. შეეცადეთ არ ეკამათოთ მოწნააღმდეგეებს და ყველაფერი კარგად გექნებათ.", meta: "ენერგია: 75% | რიცხვი: 6" },
-        "ტყუპები": { icon: "♊", text: "შეეცადეთ არ მოდუნდეთ და რაც შეიძლება სწრაფად გაუმკლავდეთ ამ მდგომარეობას, რადგან დღის მეორე ნახევარში ავადმყოფობისსთვის, უბრალოდ, არ გეცლებათ. საღამოს საყვარელ ადამიანთან პაემანი მოგინდებათ.", meta: "ენერგია: 92% | რიცხვი: 5" },
-        "კირჩხიბი": { icon: "♋", text: "კარგი დღე გელით საკუთარი კარიერისთვის პერსპექტიული მომავლის შესაქმნელად და ძალიან, ძალიან ბევრის მისაღწევად. დღეს შეგიძლიათ უარი თქვათ ჩვეულ დამღლელ საქმეებზე და წაიფილოსოფოსოთ მეგობრებთან ერთად ფინჯან ყავაზე. სწორედ დღეს შეძლებთ გაიხსნათ. თუ არსად წასვლის სურვილი გაქვთ, მაშინ დარჩით სახლში და საინტერესო წიგნი წაიკითხეთ.", meta: "ენერგია: 68% | რიცხვი: 2" },
-        "ლომი": { icon: "♌", text: "დღეს გეძლევათ შესაძლებლობა საკუთარ საბედოს შეხვდეთ. ამ დღის ერთადერთი მინუსი ცოტა შეუძლოდ ყოფნა და ჯანმრთელობის მდგომარეობის გაუარესებაა. მაგრამ თქვენ უბრლოდ ვალდებული ხართ მოემზადოთ ცხოვრებაში დიდი ცვლილებებისათვის. ერიდეთ კამათს ხელმძღვანელობასთან.", meta: "ენერგია: 90% | რიცხვი: 1" },
-        "ქალწული": { icon: "♍", text: "ამ დღეს შეიძლება წაროიშვას ისეთი სიტუაცია, რომელიც თითქის ყველა ამ ნიშნის წარმომადგენელს მნიშვნელოვანი გადაწყვეტილების მიღებას გაიძულებთ. არ ღირს სხვების აზრის მოსმენა, უმჯობესია საკუთარ ინტუიციას მიენდოთ. ეს დაგეხმარებათ სწორი გადაწყვეტილების მიღებაში და შეცდომებს აგარიდებთ. შეიძლება მნიშვნელოვანი ახალი ამავიც გაიგოთ, რაც ძალიან გაგახარებთ.", meta: "ენერგია: 82% | რიცხვი: 4" },
-        "სასწორი": { icon: "♎", text: "დღის პირველ ნახევარში ცოტა შეუძლოდ იგრძნობთ თავს, მაგრამ სწრაფად გაუმკლავდებით ამ დმგომარეობას და შეუდგებით ვალდებულებების შესრულებას. შეიძლება არასასიამოვნო ახალი ამბავიც შეიტყოთ, რაც ძალიან აგაღელვებთ, მაგრამ ახლობელი ადამიანების მხარდაჭერა დაგეხმარებათ დამშვიდებაში. დღის მეორე ნახვარი გაცილებით უკეთესი გექნებათ ნათესავებისა და მეგობრების წყალობით, რომლებიც მოგინახულებენ. მგზავრობა და ოჯახთან ერთად სადმე დასვენება კი სხვა დროისთვის უნდა გადადოთ.", meta: "ენერგია: 80% | რიცხვი: 3" },
-        "მორიელი": { icon: "♏", text: "ნუ შეშინდებით თუ რამდენიმე საათით გაჭედილ, დახუთულ, ბნელ ლიფტში ყოფნა მოგიწევთ. უბრალოდ, დღეს თქვენი დღე არაა! მსგავს დღეებში არა აქვს აზრი გარემოებებთან ჭიდილს. თქვენთვის აუცილებელია დაისვენოთ და დაფიქრდეთ საკუთარ ჯანმრთელობაზე. ჩაიტარეთ მასაჟის კურსი.", meta: "ენერგია: 85% | რიცხვი: 8" },
-        "მშვილდოსანი": { icon: "♐", text: "დღეს მეორე ნახევრისაგან სასიამოვნო სიურპრიზი გელით. ის გაიძულებთ მომავალზე დაფიქრდეთ. არ იქნებოდა ურიგო შვებულება დაგეგეგმათ სადმე, სადაც საყვარელ ადამიანთან ერთად წახვიდოდით და გაატარებდით დროს. სასიყვარულო ურთიერთობა უფრო მყარი გახდება. წარმატებული პერიოდია კომერციული ოპერაციებისთვის, შემოსავალი გაიზრდება და დასტაბილურდება.", meta: "ენერგია: 94% | რიცხვი: 11" },
-        "თხის რქა": { icon: "♑", text: "ურთიერთსაწინააღმდეგო მოვლენებით აღსავსე დღე გელით, რომელიც მოგიტანთ ცვლილებებს, თავგადასავლებს, მგზავრობებს. ხელსაყრელი პერიოდია ახალი კონტრაქტების გასაფორმებლად და საქმიანი მოლაპარაკებებისათვის. ამ დღეს თამამად შეგიძლიათ მიმართოთ სამართალდამცავ ორგანოებს. საღამოს პრობლემებია მოსალოდნელი საყვარელ ადამიანთან, ასევე გელით გაუთვალისწინებელი ხარჯები ან ბავშვებთან დაკავშირებული საჭირბოროტო საკითხები.", meta: "ენერგია: 80% | რიცხვი: 10" },
-        "მერწყული": { icon: "♒", text: "დღეს თქვენი ყურადღება მთლიანად კარიერისკენ იქნება მიმართული. ყველაფერს გააკეთებთ თუნდაც ერთი ნაბიჯით წაიწიოთ წინ სოციალურ საფეხურზე. მოსალოდნელია დახმარება ისეთი ადამიანებისგან, როლებსაც წესიერად არც კი იცნობთ, თქვენგან დავალებული არ არიან დ არც არაფერს ელიან სამაგიეროდ.", meta: "ენერგია: 87% | რიცხვი: 12" },
-        "თევზები": { icon: "♓", text: "ერთ-ერთი ყველაზე ხელსაყრელი დღეა სახლში ავეჯის გადასაადგილებლად ან გარდერობის შესაცვლელად. სამსახურში არასასიამოვნო საუბარი გელით ხელმძღვანელებთან, მაგრამ შეეცადეთ თავი ხელში აიყვანოთ, არ აუწიოთ ხმას და საუბრისას არ გასცდეთ წესიერების ფარგლებს. თუ ახალ პროექტს შემოგთავაზებენ, გადაწყვეტილების მიღებამდე კარგად დაფიქრდით ყველა წვრილმანზე. შეეცადეთ ამ დღეს არ დაკარგოთ წონასწორობა და ერიდეთ ალკოჰოლს.", meta: "ენერგია: 98% | რიცხვი: 7" }
+        "ვერძი": { text: "დღეს სხვების მაგივრად მოგიწევთ პრობლემების გადაჭრა. თქვენი ჩარევა და კარგი რჩევები დაეხმარებათ მათ საკუთარი შეცდომების გამოსწორებაში. მეგობრები მადლიერებით გადაგიხდიან სამაგიეროს.", meta: "ენერგია: 88% | რიცხვი: 9" },
+        "კურო": { text: "დღევანდელი დღის მიზანია სწორი მიმართულებით მიმართოთ საკუთარი პოტენციალი. მეტი შრომისმოყვარეობა გმართებთ. არ ინერვიულოთ. შეეცადეთ არ ეკამათოთ მოწნააღმდეგეებს და ყველაფერი კარგად გექნებათ.", meta: "ენერგია: 75% | რიცხვი: 6" },
+        "ტყუპები": { text: "შეეცადეთ არ მოდუნდეთ და რაც შეიძლება სწრაფად გაუმკლავდეთ ამ მდგომარეობას, რადგან დღის მეორე ნახევარში ავადმყოფობისსთვის, უბრალოდ, არ გეცლებათ. საღამოს საყვარელ ადამიანთან პაემანი მოგინდებათ.", meta: "ენერგია: 92% | რიცხვი: 5" },
+        "კირჩხიბი": { text: "კარგი დღე გელით საკუთარი კარიერისთვის პერსპექტიული მომავლის შესაქმნელად. დღეს შეგიძლიათ უარი თქვათ ჩვეულ დამღლელ საქმეებზე და წაიფილოსოფოსოთ მეგობრებთან ერთად ფინჯან ყავაზე. სწორედ დღეს შეძლებთ გაიხსნათ. თუ არსად წასვლის სურვილი არ გაქვთ, დარჩით სახლში.", meta: "ენერგია: 68% | რიცხვი: 2" },
+        "ლომი": { text: "დღეს გეძლევათ შესაძლებლობა საკუთარ საბედოს შეხვდეთ. ამ დღის ერთადერთი მინუსი ცოტა შეუძლოდ ყოფნაა. მაგრამ თქვენ ვალდებული ხართ მოემზადოთ ცხოვრებაში დიდი ცვლილებებისათვის. ერიდეთ კამათს ხელმძღვანელობასთან.", meta: "ენერგია: 90% | რიცხვი: 1" },
+        "ქალწული": { text: "ამ დღეს შეიძლება წაროიშვას ისეთი სიტუაცია, რომელიც მნიშვნელოვანი გადაწყვეტილების მიღებას გაიძულებთ. არ ღირს სხვების აზრის მოსმენა, უმჯობესია საკუთარ ინტუიციას მიენდოთ. ეს დაგეხმარებათ შეცდომების არიდებაში.", meta: "ენერგია: 82% | რიცხვი: 4" },
+        "სასწორი": { text: "დღის პირველ ნახევარში ცოტა შეუძლოდ იგრძნობთ თავს, მაგრამ სწრაფად გაუმკლავდებით ამ მდგომარეობას. ახლობელი ადამიანების მხარდაჭერა დაგეხმარებათ დამშვიდებაში. მგზავრობა და ოჯახთან ერთად დასვენება სხვა დროისთვის გადადეთ.", meta: "ენერგია: 80% | რიცხვი: 3" },
+        "მორიელი": { text: "ნუ შეშინდებით თუ რამდენიმე საათით გაურკვევლობაში ყოფნა მოგიწევთ. უბრალოდ, დღეს თქვენი დღე არაა! არა აქვს აზრი გარემოებებთან ჭიდილს. აუცილებელია დაისვენოთ და დაფიქრდეთ საკუთარ ჯანმრთელობაზე.", meta: "ენერგია: 85% | რიცხვი: 8" },
+        "მშვილდოსანი": { text: "დღეს მეორე ნახევრისაგან სასიამოვნო სიურპრიზი გელით. ის გაიძულებთ მომავალზე დაფიქრდეთ. წარმატებული პერიოდია კომერციული ოპერაციებისთვის, შემოსავალი გაიზრდება და დასტაბილურდება.", meta: "ენერგია: 94% | რიცხვი: 11" },
+        "თხის რქა": { text: "ურთიერთსაწინააღმდეგო მოვლენებით აღსავსე დღე გელით, რომელიც მოგიტანთ ცვლილებებს. ხელსაყრელი პერიოდია ახალი კონტრაქტების გასაფორმებლად. საღამოს შესაძლოა მცირე გაუგებრობა გქონდეთ ოჯახის წევრებთან.", meta: "ენერგია: 80% | რიცხვი: 10" },
+        "მერწყული": { text: "დღეს თქვენი ყურადღება მთლიანად კარიერისკენ იქნება მიმართული. ყველაფერს გააკეთებთ თუნდაც ერთი ნაბიჯით წაიწიოთ წინ. მოსალოდნელია დახმარება სრულიად უცხო ადამიანებისგან.", meta: "ენერგია: 87% | რიცხვი: 12" },
+        "თევზები": { text: "ერთ-ერთი ყველაზე ხელსაყრელი დღეა სახლში გარემოს შესაცვლელად. სამსახურში არასასიამოვნო საუბარი გელით ხელმძღვანელებთან, მაგრამ შეეცადეთ თავი ხელში აიყვანოთ. ერიდეთ ალკოჰოლს და ზედმეტ ემოციებს.", meta: "ენერგია: 98% | რიცხვი: 7" }
     };
 
     const ring = document.getElementById('zodiacRing');
     const names = Object.keys(data);
-    const radius = 360; 
+    const radius = 350; 
+
+    function updateCard(name) {
+        const card = document.getElementById('card');
+        card.style.opacity = "0";
+        card.style.transform = "scale(0.95)";
+        
+        setTimeout(() => {
+            document.getElementById('mainTitle').innerText = name;
+            document.getElementById('mainText').innerText = data[name].text;
+            document.getElementById('mainMeta').innerHTML = `<strong>${data[name].meta}</strong>`;
+            document.getElementById('mainIconSVG').innerHTML = `<path d="${icons[name]}"></path>`;
+            card.style.opacity = "1";
+            card.style.transform = "scale(1)";
+        }, 300);
+    }
 
     names.forEach((name, i) => {
         const angle = (i * 30 - 90) * (Math.PI / 180);
@@ -231,33 +271,22 @@
         const el = document.createElement('div');
         el.className = 'zodiac-node';
         el.style.left = `calc(50% + ${x}px - 50px)`;
-        el.style.top = `calc(50% + ${y}px - 35px)`;
-        el.style.width = "100px";
+        el.style.top = `calc(50% + ${y}px - 30px)`;
         
         el.innerHTML = `
+            <svg class="zodiac-icon" viewBox="0 0 64 64">
+                <path d="${icons[name]}"></path>
+            </svg>
             <span class="zodiac-label">${name}</span>
-            <span class="zodiac-icon">${data[name].icon}</span>
         `;
         
-        el.onclick = () => {
-            const card = document.getElementById('card');
-            card.style.opacity = "0";
-            card.style.transform = "scale(0.98) translateY(10px)";
-            
-            setTimeout(() => {
-                document.getElementById('mainIcon').innerText = data[name].icon;
-                document.getElementById('mainTitle').innerText = name;
-                document.getElementById('mainText').innerText = data[name].text;
-                document.getElementById('mainMeta').innerHTML = `<strong>${data[name].meta}</strong>`;
-                card.style.opacity = "1";
-                card.style.transform = "scale(1) translateY(0)";
-            }, 300);
-        };
-        
+        el.onclick = () => updateCard(name);
         ring.appendChild(el);
     });
+
+    // საწყისი ჩვენება
+    updateCard("თევზები");
 </script>
 
 </body>
 </html>
-
