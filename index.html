@@ -1,354 +1,128 @@
 <!DOCTYPE html>
 <html lang="ka">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ასტრო-პორტალი 2026</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@100;300;400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --gold: #ffd700;
-            --glass: rgba(10, 15, 25, 0.75);
-            --border: rgba(255, 215, 0, 0.2);
-            --main-font: 'Noto Sans Georgian', sans-serif;
-        }
-
-        body {
-            /* კოსმოსური ფონის სურათი */
-            background: url('https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: #e0e0e0;
-            font-family: var(--main-font);
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
-        }
-
-        /* ანიმირებული ვარსკვლავების ფენა სურათის ზემოთ */
-        #canvas-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        nav {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--border);
-            padding: 15px 0;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            z-index: 100;
-        }
-
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 0.75rem;
-            font-weight: 300;
-            padding: 5px 12px;
-            border-radius: 4px;
-            transition: 0.3s;
-            letter-spacing: 1px;
-        }
-
-        nav a:hover { color: var(--gold); text-shadow: 0 0 10px var(--gold); }
-
-        /* თარიღი გადატანილია მარცხნივ */
-        .date-display {
-            position: absolute;
-            top: 85px;
-            left: 30px;
-            color: var(--gold);
-            font-weight: 100;
-            letter-spacing: 2px;
-            font-size: 0.9rem;
-            opacity: 0.9;
-            z-index: 50;
-            border-left: 2px solid var(--gold);
-            padding-left: 15px;
-        }
-
-        .main-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 1100px;
-            height: 850px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .zodiac-ring {
-            position: absolute;
-            width: 750px;
-            height: 750px;
-            border-radius: 50%;
-            border: 1px solid rgba(255, 215, 0, 0.08);
-            animation: rotateRing 120s linear infinite;
-        }
-
-        @keyframes rotateRing {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .zodiac-node {
-            position: absolute;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100px;
-        }
-
-        .zodiac-node-inner {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: counterRotate 120s linear infinite;
-        }
-
-        @keyframes counterRotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(-360deg); }
-        }
-
-        .zodiac-icon {
-            width: 42px;
-            height: 42px;
-            fill: rgba(255, 215, 0, 0.6);
-            filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
-            transition: 0.3s;
-        }
-
-        .zodiac-label {
-            font-size: 0.7rem;
-            color: #fff;
-            margin-top: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-        }
-
-        .zodiac-node:hover .zodiac-icon {
-            fill: var(--gold);
-            transform: scale(1.3);
-            filter: drop-shadow(0 0 15px var(--gold));
-        }
-
-        .horoscope-card {
-            background: var(--glass);
-            backdrop-filter: blur(25px);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 50px;
-            width: 380px;
-            text-align: center;
-            box-shadow: 0 0 80px rgba(0, 0, 0, 0.7);
-            z-index: 20;
-            transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .zodiac-icon-large {
-            width: 80px;
-            height: 80px;
-            fill: var(--gold);
-            margin-bottom: 25px;
-            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
-        }
-
-        h1 {
-            color: var(--gold);
-            margin: 0 0 20px 0;
-            font-weight: 300;
-            font-size: 2rem;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-        }
-
-        .prediction {
-            font-size: 1.05rem;
-            font-weight: 300;
-            line-height: 1.8;
-            color: #fff;
-            text-align: center;
-        }
-
-        .meta {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 215, 0, 0.1);
-            color: var(--gold);
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-        }
-
-        @media (max-width: 850px) {
-            .main-wrapper { height: auto; padding: 100px 20px 40px; }
-            .zodiac-ring { display: none; }
-            .horoscope-card { width: 100%; box-sizing: border-box; }
-            .date-display { top: 75px; left: 20px; font-size: 0.8rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>მშენებლობის დამხმარე</title>
+<style>
+body { font-family: Arial; margin:0; background:#f5f5f5; }
+header { background:#333; color:white; padding:15px; text-align:center; }
+section { padding:20px; margin:10px; background:white; border-radius:10px; }
+input, button { padding:10px; margin:5px; }
+button { cursor:pointer; background:#333; color:white; border:none; }
+.result { font-weight:bold; margin-top:10px; }
+</style>
 </head>
 <body>
 
-<canvas id="canvas-bg"></canvas>
+<header>
+<h1>🏗️ მშენებლობის დამხმარე პლატფორმა</h1>
+</header>
 
-<nav>
-    <a href="#">მთავარი</a>
-    <a href="#">ვიდეო პორტალი</a>
-    <a href="#">სურათები</a>
-    <a href="#">ამინდი</a>
-    <a href="#">ტელევიზია</a>
-    <a href="#">მსოფლიო დრო</a>
-    <a href="#">კონტაქტი</a>
-</nav>
+<!-- კედლის კალკულატორი -->
+<section>
+<h2>🧱 აგურის გამოთვლა</h2>
+<input type="number" id="width" placeholder="სიგანე (მეტრი)">
+<input type="number" id="height" placeholder="სიმაღლე (მეტრი)">
+<button onclick="calcBricks()">გამოთვლა</button>
+<div class="result" id="brickResult"></div>
+</section>
 
-<div class="date-display" id="currentDate"></div>
+<!-- ბეტონის კალკულატორი -->
+<section>
+<h2>🪨 ბეტონის მოცულობა</h2>
+<input type="number" id="length" placeholder="სიგრძე">
+<input type="number" id="width2" placeholder="სიგანე">
+<input type="number" id="depth" placeholder="სიღრმე">
+<button onclick="calcConcrete()">გამოთვლა</button>
+<div class="result" id="concreteResult"></div>
+</section>
 
-<div class="main-wrapper">
-    <div id="zodiacRing" class="zodiac-ring"></div>
+<!-- საღებავი -->
+<section>
+<h2>🎨 საღებავის რაოდენობა</h2>
+<input type="number" id="area" placeholder="ფართობი მ²">
+<button onclick="calcPaint()">გამოთვლა</button>
+<div class="result" id="paintResult"></div>
+</section>
 
-    <div class="horoscope-card" id="card">
-        <svg class="zodiac-icon-large" viewBox="0 0 64 64" id="mainIconSVG"></svg>
-        <h1 id="mainTitle">თევზები</h1>
-        <p class="prediction" id="mainText">აირჩიეთ ნიშანი...</p>
-        <div class="meta" id="mainMeta"></div>
-    </div>
-</div>
+<!-- ინსტრუმენტები -->
+<section>
+<h2>🧰 ინსტრუმენტების არჩევა</h2>
+<select id="job">
+<option value="brick">აგურის დაგება</option>
+<option value="paint">შეღებვა</option>
+<option value="tile">ფილის დაგება</option>
+</select>
+<button onclick="tools()">ნახვა</button>
+<div class="result" id="toolResult"></div>
+</section>
+
+<!-- ხარჯები -->
+<section>
+<h2>💸 ხარჯების გამოთვლა</h2>
+<input type="number" id="sqm" placeholder="ფართობი მ²">
+<button onclick="cost()">გამოთვლა</button>
+<div class="result" id="costResult"></div>
+</section>
+
+<!-- DIY -->
+<section>
+<h2>🏡 DIY ინსტრუქციები</h2>
+<ul>
+<li>აგურის დაგება: 1. საფუძველი 2. წებო 3. სწორად დადება</li>
+<li>ბეტონი: 1. ფორმა 2. მიქსი 3. დასხმა</li>
+<li>გიფსოკარდონი: 1. კარკასი 2. დაფები 3. დამუშავება</li>
+</ul>
+</section>
+
+<!-- შეცდომები -->
+<section>
+<h2>⚠️ შეცდომები</h2>
+<ul>
+<li>არასწორი დონე</li>
+<li>ცუდი მასალა</li>
+<li>უსაფრთხოების იგნორი</li>
+</ul>
+</section>
 
 <script>
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('currentDate').innerText = new Date().toLocaleDateString('ka-GE', options);
+function calcBricks() {
+let w = document.getElementById('width').value;
+let h = document.getElementById('height').value;
+let area = w * h;
+let bricks = Math.ceil(area * 50);
+document.getElementById('brickResult').innerText = "დაახლოებით " + bricks + " აგური";
+}
 
-    const icons = {
-        "ვერძი": "M32 12c-5.5 0-10 4.5-10 10 0 4.4 2.8 8.1 6.8 9.5L24 48h4l3.2-13.4c.3.1.6.1.8.1s.5 0 .8-.1L36 48h4l-4.8-16.5c4-1.4 6.8-5.1 6.8-9.5 0-5.5-4.5-10-10-10zm0 4c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6 2.7-6 6-6z",
-        "კურო": "M32 10c-8.8 0-16 7.2-16 16s7.2 16 16 16 16-7.2 16-16-7.2-16-16-16zm0 28c-6.6 0-12-5.4-12-12s5.4-12 12-12 12 5.4 12 12-5.4 12-12 12zm0-28c4.4 0 8-3.6 8-8h-16c0 4.4 3.6 8 8 8z",
-        "ტყუპები": "M18 12v40h4V12h-4zm24 0v40h4V12h-4zM16 10h32v4H16v-4zm0 40h32v4H16v-4z",
-        "კირჩხიბი": "M44 28c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4zM20 20c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z",
-        "ლომი": "M44 32c-6.6 0-12 5.4-12 12s5.4 12 12 12 12-5.4 12-12-5.4-12-12-12zm0 20c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8zM24 16c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8z",
-        "ქალწული": "M48 24c0-6.6-5.4-12-12-12s-12 5.4-12 12v20c0 2.2-1.8 4-4 4s-4-1.8-4-4V24c0-4.4-3.6-8-8-8s-8 3.6-8 8v24h4V24c0-2.2 1.8-4 4-4s4 1.8 4 4v20c0 4.4 3.6 8 8 8s8-3.6 8-8V24c0-4.4 3.6-8 8-8s8 3.6 8 8v20c0 4.4 3.6 8 8 8h4c0-8.8-7.2-16-16-16z",
-        "სასწორი": "M12 48h40v4H12v-4zm0-8h40c0-11-9-20-20-20s-20 9-20 20zm20-16c8.8 0 16 7.2 16 16H16c0-8.8 7.2-16 16-16z",
-        "მორიელი": "M48 24c0-6.6-5.4-12-12-12s-12 5.4-12 12v20c0 2.2-1.8 4-4 4s-4-1.8-4-4V24c0-4.4-3.6-8-8-8s-8 3.6-8 8v24h4V24c0-2.2 1.8-4 4-4s4 1.8 4 4v20c0 4.4 3.6 8 8 8s8-3.6 8-8V24c0-4.4 3.6-8 8-8s8 3.6 8 8v12l8 8 8-8V24z",
-        "მშვილდოსანი": "M52 12L34 30l4 4 18-18V28h4V12H44v4h12zM12 52l18-18-4-4-18 18v12h12z",
-        "თხის რქა": "M44 12c-6.6 0-12 5.4-12 12v20c0 2.2-1.8 4-4 4s-4-1.8-4-4V24c0-4.4-3.6-8-8-8s-8 3.6-8 8v24h4V24c0-2.2 1.8-4 4-4s4 1.8 4 4v20c0 8.8 7.2 16 16 16s16-7.2 16-16V24c0-2.2 1.8-4 4-4s4 1.8 4 4v4h4v-4c0-6.6-5.4-12-12-12z",
-        "მერწყული": "M12 28l8-8 8 8 8-8 8 8 8-8v4l-8 8-8-8-8 8-8-8-8 8v-4zm0 12l8-8 8 8 8-8 8 8 8-8v4l-8 8-8-8-8 8-8-8-8 8v-4z",
-        "თევზები": "M16 12c0 22 12 40 12 40s12-18 12-40h-4c0 18-8 32-8 32s-8-14-8-32h-4zm36 0c0 22-12 40-12 40s-12-18-12-40h4c0 18 8 32 8 32s8-14 8-32h4zM12 30h40v4H12v-4z"
-    };
+function calcConcrete() {
+let l = document.getElementById('length').value;
+let w = document.getElementById('width2').value;
+let d = document.getElementById('depth').value;
+let volume = l * w * d;
+document.getElementById('concreteResult').innerText = "მოცულობა: " + volume + " მ³";
+}
 
-    const data = {
-        "ვერძი": { text: "დღეს სხვების მაგივრად მოგიწევთ პრობლემების გადაჭრა. თქვენი ჩარევა და კარგი რჩევები დაეხმარებათ მათ საკუთარი შეცდომების გამოსწორებაში. მეგობრები მადლიერებით გადაგიხდიან სამაგიეროს.", meta: "ენერგია: 88% | რიცხვი: 9" },
-        "კურო": { text: "დღევანდელი დღის მიზანია სწორი მიმართულებით მიმართოთ საკუთარი პოტენციალი. მეტი შრომისმოყვარეობა გმართებთ. არ ინერვიულოთ. შეეცადეთ არ ეკამათოთ მოწნააღმდეგეებს.", meta: "ენერგია: 75% | რიცხვი: 6" },
-        "ტყუპები": { text: "შეეცადეთ არ მოდუნდეთ და რაც შეიძლება სწრაფად გაუმკლავდეთ ამ მდგომარეობას. საღამოს საყვარელ ადამიანთან პაემანი მოგინდებათ, რაც ენერგიით აგავსებთ.", meta: "ენერგია: 92% | რიცხვი: 5" },
-        "კირჩხიბი": { text: "კარგი დღე გელით საკუთარი კარიერისთვის პერსპექტიული მომავლის შესაქმნელად. დღეს შეგიძლიათ უარი თქვათ დამღლელ საქმეებზე და მეგობრებთან ერთად დაისვენოთ.", meta: "ენერგია: 68% | რიცხვი: 2" },
-        "ლომი": { text: "დღეს გეძლევათ შესაძლებლობა საკუთარ საბედოს შეხვდეთ. მოემზადეთ ცხოვრებაში დიდი ცვლილებებისათვის. ერიდეთ კამათს ხელმძღვანელობასთან.", meta: "ენერგია: 90% | რიცხვი: 1" },
-        "ქალწული": { text: "ამ დღეს შეიძლება წარმოიშვას სიტუაცია, რომელიც მნიშვნელოვანი გადაწყვეტილების მიღებას გაიძულებთ. უმჯობესია საკუთარ ინტუიციას მიენდოთ.", meta: "ენერგია: 82% | რიცხვი: 4" },
-        "სასწორი": { text: "დღის პირველ ნახევარში ცოტა შეუძლოდ იგრძნობთ თავს, მაგრამ სწრაფად გაუმკლავდებით. ახლობელი ადამიანების მხარდაჭერა დაგეხმარებათ დამშვიდებაში.", meta: "ენერგია: 80% | რიცხვი: 3" },
-        "მორიელი": { text: "ნუ შეშინდებით თუ რამდენიმე საათით გაურკვევლობაში ყოფნა მოგიწევთ. უბრალოდ, დღეს თქვენი დღე არაა! აუცილებელია დაისვენოთ და დაფიქრდეთ საკუთარ თავზე.", meta: "ენერგია: 85% | რიცხვი: 8" },
-        "მშვილდოსანი": { text: "დღეს მეორე ნახევრისაგან სასიამოვნო სიურპრიზი გელით. ის გაიძულებთ მომავალზე დაფიქრდეთ. წარმატებული პერიოდია ფინანსური ოპერაციებისთვის.", meta: "ენერგია: 94% | რიცხვი: 11" },
-        "თხის რქა": { text: "ურთიერთსაწინააღმდეგო მოვლენებით აღსავსე დღე გელით, რომელიც მოგიტანთ ცვლილებებს. ხელსაყრელი პერიოდია ახალი კონტრაქტების გასაფორმებლად.", meta: "ენერგია: 80% | რიცხვი: 10" },
-        "მერწყული": { text: "დღეს თქვენი ყურადღება მთლიანად კარიერისკენ იქნება მიმართული. ყველაფერს გააკეთებთ წინსვლისთვის. მოსალოდნელია დახმარება უცხო ადამიანებისგან.", meta: "ენერგია: 87% | რიცხვი: 12" },
-        "თევზები": { text: "ერთ-ერთი ყველაზე ხელსაყრელი დღეა სახლში გარემოს შესაცვლელად. სამსახურში არასასიამოვნო საუბარი გელით, მაგრამ შეეცადეთ თავი ხელში აიყვანოთ.", meta: "ენერგია: 98% | რიცხვი: 7" }
-    };
+function calcPaint() {
+let area = document.getElementById('area').value;
+let paint = Math.ceil(area / 10);
+document.getElementById('paintResult').innerText = "საჭიროა " + paint + " ლიტრი საღებავი";
+}
 
-    const ring = document.getElementById('zodiacRing');
-    const radius = 375;
+function tools() {
+let job = document.getElementById('job').value;
+let text = "";
+if(job === 'brick') text = "ბურღი, დონე, სპატული";
+if(job === 'paint') text = "როლიკი, ფუნჯი, ვედრო";
+if(job === 'tile') text = "სპატული, ლაზერი, კრამიტის საჭრელი";
+document.getElementById('toolResult').innerText = text;
+}
 
-    function updateCard(name) {
-        const card = document.getElementById('card');
-        card.style.opacity = "0";
-        card.style.transform = "translateY(20px) scale(0.98)";
-        
-        setTimeout(() => {
-            document.getElementById('mainTitle').innerText = name;
-            document.getElementById('mainText').innerText = data[name].text;
-            document.getElementById('mainMeta').innerHTML = `<strong>${data[name].meta}</strong>`;
-            document.getElementById('mainIconSVG').innerHTML = `<path d="${icons[name]}"></path>`;
-            card.style.opacity = "1";
-            card.style.transform = "translateY(0) scale(1)";
-        }, 300);
-    }
-
-    Object.keys(data).forEach((name, i) => {
-        const angle = (i * 30 - 90) * (Math.PI / 180);
-        const x = Math.cos(angle) * radius;
-        const y = Math.sin(angle) * radius;
-
-        const el = document.createElement('div');
-        el.className = 'zodiac-node';
-        el.style.left = `calc(50% + ${x}px - 50px)`;
-        el.style.top = `calc(50% + ${y}px - 50px)`;
-        
-        el.innerHTML = `
-            <div class="zodiac-node-inner">
-                <svg class="zodiac-icon" viewBox="0 0 64 64"><path d="${icons[name]}"></path></svg>
-                <span class="zodiac-label">${name}</span>
-            </div>
-        `;
-        
-        el.onclick = () => updateCard(name);
-        ring.appendChild(el);
-    });
-
-    const canvas = document.getElementById('canvas-bg');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-
-    function initCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-
-    class Particle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2;
-            this.speedX = Math.random() * 0.15 - 0.07;
-            this.speedY = Math.random() * 0.15 - 0.07;
-        }
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            if (this.x > canvas.width) this.x = 0;
-            if (this.x < 0) this.x = canvas.width;
-            if (this.y > canvas.height) this.y = 0;
-            if (this.y < 0) this.y = canvas.height;
-        }
-        draw() {
-            ctx.fillStyle = 'rgba(255, 215, 0, 0.4)';
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
-
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => { p.update(); p.draw(); });
-        requestAnimationFrame(animate);
-    }
-
-    initCanvas();
-    for(let i=0; i<100; i++) particles.push(new Particle());
-    animate();
-    window.addEventListener('resize', initCanvas);
-
-    updateCard("თევზები");
+function cost() {
+let sqm = document.getElementById('sqm').value;
+let price = sqm * 50;
+document.getElementById('costResult').innerText = "დაახლოებით ღირებულება: " + price + " ლარი";
+}
 </script>
 
 </body>
