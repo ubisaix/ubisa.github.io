@@ -87,6 +87,25 @@
         .content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+        .sub-menu {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+            background: #eee;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .sub-btn {
+            padding: 8px 15px;
+            border: 1px solid var(--secondary);
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .sub-btn.active { background: var(--secondary); color: white; }
+
         .input-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -113,6 +132,7 @@
         .result-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
         .result-item span:last-child { font-weight: bold; color: var(--success); }
 
+        /* კონტაქტის ფორმა */
         #contact-section {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: white; padding: 30px; border-radius: 15px; z-index: 2000; width: 320px;
@@ -142,7 +162,7 @@
     <h3>დაგვიტოვეთ ნომერი</h3>
     <input type="text" placeholder="სახელი" style="width:100%; margin-bottom:10px; padding:10px; box-sizing:border-box;">
     <input type="text" placeholder="ტელეფონი" style="width:100%; margin-bottom:15px; padding:10px; box-sizing:border-box;">
-    <button class="calc-btn" onclick="alert('გაიგზავნა!')">გაგზავნა</button>
+    <button class="calc-btn" onclick="alert('მონაცემები გაიგზავნა!')">გაგზავნა</button>
 </div>
 
 <div class="main-card">
@@ -167,83 +187,114 @@
         <div class="input-grid">
             <div class="input-group"><label>სიგრძე (მ):</label><input type="number" id="w_len"></div>
             <div class="input-group"><label>სიმაღლე (მ):</label><input type="number" id="w_height"></div>
-            <div class="input-group">
-                <label>მასალა:</label>
-                <select id="w_type"><option value="12.5">ბლოკი (20x40)</option><option value="50">აგური</option></select>
-            </div>
+            <div class="input-group"><label>მასალა:</label><select id="w_type"><option value="12.5">ბლოკი (20x40)</option><option value="50">აგური</option></select></div>
         </div>
         <button class="calc-btn" onclick="calcWalls()">დათვლა</button>
         <div id="res_walls" class="result-box" style="display:none"></div>
     </div>
 
     <div id="beton" class="content">
-        <h2>ბეტონის კონსტრუქცია (საძირკველი/რიგელი)</h2>
+        <h2>ბეტონის კონსტრუქცია</h2>
         <div class="input-grid">
-            <div class="input-group"><label>ჯამური სიგრძე (მ):</label><input type="number" id="b_len"></div>
+            <div class="input-group"><label>სიგრძე (მ):</label><input type="number" id="b_len"></div>
             <div class="input-group"><label>სიგანე (მ):</label><input type="number" id="b_width"></div>
-            <div class="input-group"><label>სიღრმე/სიმაღლე (მ):</label><input type="number" id="b_depth"></div>
+            <div class="input-group"><label>სიღრმე (მ):</label><input type="number" id="b_depth"></div>
         </div>
         <button class="calc-btn" onclick="calcBeton()">მოცულობის და არმატურის გათვლა</button>
         <div id="res_beton" class="result-box" style="display:none"></div>
     </div>
 
     <div id="izolacia" class="content">
-        <h2>თბოიზოლაცია (პენოპლასტი/ქვაბამბა)</h2>
-        <div class="input-grid">
-            <div class="input-group"><label>ფართობი (მ²):</label><input type="number" id="i_area"></div>
-            <div class="input-group"><label>დუბელების რაოდენობა (1მ²-ზე):</label><input type="number" id="i_dub" value="6"></div>
-        </div>
+        <h2>თბოიზოლაცია</h2>
+        <div class="input-grid"><div class="input-group"><label>ფართობი (მ²):</label><input type="number" id="i_area"></div><div class="input-group"><label>დუბელი (1მ²-ზე):</label><input type="number" id="i_dub" value="6"></div></div>
         <button class="calc-btn" onclick="calcIzolacia()">იზოლაციის დათვლა</button>
         <div id="res_izolacia" class="result-box" style="display:none"></div>
     </div>
 
     <div id="laminate" class="content">
         <h2>ლამინატი და პლინტუსი</h2>
-        <div class="input-grid">
-            <div class="input-group"><label>ოთახის ფართობი (მ²):</label><input type="number" id="l_area"></div>
-            <div class="input-group"><label>ოთახის პერიმეტრი (მ):</label><input type="number" id="l_perim"></div>
-        </div>
+        <div class="input-grid"><div class="input-group"><label>ფართობი (მ²):</label><input type="number" id="l_area"></div><div class="input-group"><label>პერიმეტრი (მ):</label><input type="number" id="l_perim"></div></div>
         <button class="calc-btn" onclick="calcLaminate()">ლამინატის დათვლა</button>
         <div id="res_laminate" class="result-box" style="display:none"></div>
     </div>
 
     <div id="stair" class="content">
         <h2>კიბის გაანგარიშება</h2>
-        <div class="input-grid">
-            <div class="input-group"><label>სრული სიმაღლე (სმ):</label><input type="number" id="st_h" placeholder="მაგ: 300"></div>
-            <div class="input-group"><label>სასურველი საფეხურის სიმაღლე (სმ):</label><input type="number" id="st_step_h" value="17"></div>
-        </div>
+        <div class="input-grid"><div class="input-group"><label>სიმაღლე (სმ):</label><input type="number" id="st_h"></div><div class="input-group"><label>სასურველი საფეხური (სმ):</label><input type="number" id="st_step_h" value="17"></div></div>
         <button class="calc-btn" onclick="calcStair()">კიბის დათვლა</button>
         <div id="res_stair" class="result-box" style="display:none"></div>
     </div>
 
     <div id="fence" class="content">
         <h2>ღობე და პერიმეტრი</h2>
-        <div class="input-grid">
-            <div class="input-group"><label>ღობის სიგრძე (მ):</label><input type="number" id="fe_len"></div>
-            <div class="input-group"><label>დაცილება ბოძებს შორის (მ):</label><input type="number" id="fe_dist" value="2.5"></div>
-        </div>
+        <div class="input-grid"><div class="input-group"><label>სიგრძე (მ):</label><input type="number" id="fe_len"></div><div class="input-group"><label>ბიჯი (მ):</label><input type="number" id="fe_dist" value="2.5"></div></div>
         <button class="calc-btn" onclick="calcFence()">ღობის დათვლა</button>
         <div id="res_fence" class="result-box" style="display:none"></div>
     </div>
 
     <div id="fasadi" class="content">
-        <h2>ფასადის "ბრიზგი" და გრუნტი</h2>
-        <div class="input-grid">
-            <div class="input-group"><label>ფასადის ფართობი (მ²):</label><input type="number" id="fa_area"></div>
-        </div>
+        <h2>ფასადის მასალები</h2>
+        <div class="input-grid"><div class="input-group"><label>ფართობი (მ²):</label><input type="number" id="fa_area"></div></div>
         <button class="calc-btn" onclick="calcFasadi()">ფასადის დათვლა</button>
         <div id="res_fasadi" class="result-box" style="display:none"></div>
     </div>
 
     <div id="more" class="content">
-        <h2>გალესვა, შპაკლი და სანტექნიკა</h2>
-        <p>აირჩიეთ ქვემოთ მოცემული სწრაფი გათვლები:</p>
-        <button class="calc-btn" style="background:var(--secondary)" onclick="alert('გამოიყენეთ შესაბამისი ტაბები ზემოთ')">ყველა ფუნქცია გააქტიურებულია</button>
+        <div class="sub-menu">
+            <button class="sub-btn active" onclick="openSubTab('plumbing_sub')">💧 სანტექნიკა</button>
+            <button class="sub-btn" onclick="openSubTab('plaster_sub')">🛠️ გალესვა</button>
+            <button class="sub-btn" onclick="openSubTab('shpakli_sub')">✨ შპაკლი</button>
+            <button class="sub-btn" onclick="openSubTab('gypsum_sub')">🏗️ გიფსო</button>
+        </div>
+
+        <div id="plumbing_sub" class="sub-content">
+            <h3>სანტექნიკის გაყვანილობა</h3>
+            <div class="input-group"><label>სველი წერტილის ფართობი (მ²):</label><input type="number" id="pl_area_sub"></div><br>
+            <label>მონიშნეთ დასამონტაჟებელი ნივთები:</label>
+            <div class="check-group">
+                <label><input type="checkbox" class="pl-item-sub" value="უნიტაზი"> უნიტაზი</label>
+                <label><input type="checkbox" class="pl-item-sub" value="ნიჟარა"> ნიჟარა</label>
+                <label><input type="checkbox" class="pl-item-sub" value="სარეცხი მანქანა"> სარეცხი მანქანა</label>
+                <label><input type="checkbox" class="pl-item-sub" value="დუში/აბაზანა"> დუში/აბაზანა</label>
+            </div><br>
+            <button class="calc-btn" onclick="calcPlumbingSub()">დათვლა</button>
+            <div id="res_plumbing_sub" class="result-box" style="display:none"></div>
+        </div>
+
+        <div id="plaster_sub" class="sub-content" style="display:none">
+            <h3>კედლის გალესვა (ცემენტი/ქვიშა)</h3>
+            <div class="input-grid">
+                <div class="input-group"><label>სიგრძე (მ):</label><input type="number" id="ps_len"></div>
+                <div class="input-group"><label>სიმაღლე (მ):</label><input type="number" id="ps_height"></div>
+                <div class="input-group"><label>სისქე (სმ):</label><input type="number" id="ps_thick" value="2"></div>
+            </div>
+            <button class="calc-btn" onclick="calcPlasterSub()">გალესვის დათვლა</button>
+            <div id="res_plaster_sub" class="result-box" style="display:none"></div>
+        </div>
+
+        <div id="shpakli_sub" class="sub-content" style="display:none">
+            <h3>კედლის შპაკლი</h3>
+            <div class="input-grid">
+                <div class="input-group"><label>ფართობი (მ²):</label><input type="number" id="sh_area"></div>
+                <div class="input-group"><label>ფენების რაოდენობა:</label><input type="number" id="sh_layers" value="2"></div>
+            </div>
+            <button class="calc-btn" onclick="calcShpakliSub()">შპაკლის დათვლა</button>
+            <div id="res_shpakli_sub" class="result-box" style="display:none"></div>
+        </div>
+
+        <div id="gypsum_sub" class="sub-content" style="display:none">
+            <h3>გიფსოკარდონი</h3>
+            <div class="input-grid">
+                <div class="input-group"><label>ფართობი (მ²):</label><input type="number" id="gy_area"></div>
+                <div class="input-group"><label>ტიპი:</label><select id="gy_type"><option value="ceiling">ჭერი</option><option value="wall">კედელი</option></select></div>
+            </div>
+            <button class="calc-btn" onclick="calcGypsumSub()">გიფსოს დათვლა</button>
+            <div id="res_gypsum_sub" class="result-box" style="display:none"></div>
+        </div>
     </div>
 
     <div style="padding: 0 30px 30px 30px;">
-        <button class="calc-btn export-btn" onclick="exportResults()">📄 ჩამოტვირთე ხარჯთაღრიცხვა (TXT)</button>
+        <button class="calc-btn export-btn" onclick="exportResults()">📄 ჩამოტვირთე სრული ხარჯთაღრიცხვა (TXT)</button>
     </div>
 </div>
 
@@ -259,6 +310,15 @@
         evt.currentTarget.classList.add("active");
     }
 
+    function openSubTab(id) {
+        let contents = document.getElementsByClassName("sub-content");
+        for (let c of contents) c.style.display = "none";
+        let btns = document.getElementsByClassName("sub-btn");
+        for (let b of btns) b.classList.remove("active");
+        document.getElementById(id).style.display = "block";
+        event.currentTarget.classList.add("active");
+    }
+
     function toggleContact() {
         let overlay = document.getElementById('overlay');
         let section = document.getElementById('contact-section');
@@ -266,7 +326,7 @@
         overlay.style.display = disp; section.style.display = disp;
     }
 
-    // 1. კედელი
+    // ძირითადი ფუნქციები
     function calcWalls() {
         let a = document.getElementById('w_len').value * document.getElementById('w_height').value;
         let factor = document.getElementById('w_type').value;
@@ -274,65 +334,56 @@
         showRes('res_walls', `კედელი: ${a} მ²`, `ბლოკი/აგური: ${units} ცალი`, `ცემენტი: ${Math.ceil(units/30)} ტომარა`);
     }
 
-    // 2. ბეტონი/არმატურა
     function calcBeton() {
         let l = document.getElementById('b_len').value;
         let w = document.getElementById('b_width').value;
         let d = document.getElementById('b_depth').value;
         let vol = (l * w * d).toFixed(2);
-        let rebar = Math.ceil(l * 4 * 1.1); // 4 ძაფი + 10% გადაბმა
-        showRes('res_beton', `ბეტონის მოცულობა: ${vol} მ³`, `არმატურა (მთავარი 4 ძაფი): ${rebar} მეტრი`, `ხამუთები (ყოველ 25სმ-ში): ${Math.ceil(l / 0.25)} ცალი`);
+        let rebar = Math.ceil(l * 4 * 1.15);
+        showRes('res_beton', `მოცულობა: ${vol} მ³`, `არმატურა (მთავარი): ${rebar} მ`, `ხამუთები: ${Math.ceil(l/0.25)} ცალი`);
     }
 
-    // 3. იზოლაცია
-    function calcIzolacia() {
-        let a = document.getElementById('i_area').value;
-        let dub = document.getElementById('i_dub').value;
-        showRes('res_izolacia', `ფართობი: ${a} მ²`, `ფილების რაოდენობა (ქაფი): ${Math.ceil(a / 0.5)} ცალი`, `დუბელი (სოკო): ${Math.ceil(a * dub)} ცალი`, `წებო-ცემენტი: ${Math.ceil(a / 4)} ტომარა`);
+    // ქვე-ფუნქციები (სხვა)
+    function calcPlumbingSub() {
+        let area = document.getElementById('pl_area_sub').value;
+        let items = document.querySelectorAll('.pl-item-sub:checked');
+        let count = items.length;
+        showRes('res_plumbing_sub', `წერტილები: ${count}`, `წყლის მილი: ${count * 6 + area * 1} მ`, `კანალიზაცია: ${count * 3 + area * 0.5} მ`);
     }
 
-    // 4. ლამინატი
-    function calcLaminate() {
-        let a = document.getElementById('l_area').value;
-        let p = document.getElementById('l_perim').value;
-        showRes('res_laminate', `ლამინატი (+10% დანაკარგი): ${Math.ceil(a * 1.1)} მ²`, `ქვეგამგები (პოდლოჟკა): ${a} მ²`, `პლინტუსი (2.5მ ღერები): ${Math.ceil(p / 2.5)} ცალი`);
+    function calcPlasterSub() {
+        let a = document.getElementById('ps_len').value * document.getElementById('ps_height').value;
+        let th = document.getElementById('ps_thick').value / 100;
+        let vol = a * th;
+        showRes('res_plaster_sub', `ფართობი: ${a} მ²`, `ცემენტი: ${Math.ceil(vol * 6.5)} ტომარა`, `ქვიშა: ${(vol * 1.2).toFixed(2)} კუბ/მ`);
     }
 
-    // 5. კიბე
-    function calcStair() {
-        let h = document.getElementById('st_h').value;
-        let sh = document.getElementById('st_step_h').value;
-        let count = Math.round(h / sh);
-        let realSh = (h / count).toFixed(1);
-        showRes('res_stair', `საფეხურების რაოდენობა: ${count}`, `თითოეულის სიმაღლე: ${realSh} სმ`, `სარეკომენდაციო სიგანე: 28-30 სმ`);
+    function calcShpakliSub() {
+        let a = document.getElementById('sh_area').value;
+        let l = document.getElementById('sh_layers').value;
+        showRes('res_shpakli_sub', `ჯამური ფართი: ${a * l} მ²`, `შპაკლი (25კგ მეშოკი): ${Math.ceil((a * l * 1.2)/25)} ცალი`);
     }
 
-    // 6. ღობე
-    function calcFence() {
-        let l = document.getElementById('fe_len').value;
-        let d = document.getElementById('fe_dist').value;
-        let posts = Math.ceil(l / d) + 1;
-        showRes('res_fence', `ბოძების რაოდენობა: ${posts} ცალი`, `ბადე/პანელი: ${l} მეტრი`, `ბეტონი ბოძებისთვის: ${(posts * 0.04).toFixed(2)} მ³`);
+    function calcGypsumSub() {
+        let a = parseFloat(document.getElementById('gy_area').value);
+        let type = document.getElementById('gy_type').value;
+        let screws = (type === 'ceiling') ? 30 : 20;
+        showRes('res_gypsum_sub', `გიფსოს ფილა: ${Math.ceil(a/2.88)} ცალი`, `შურუპი (25მმ): ${Math.ceil(a * screws)} ცალი`, `ბადე: ${Math.ceil(a * 1.5)} მ`);
     }
 
-    // 7. ფასადი
-    function calcFasadi() {
-        let a = document.getElementById('fa_area').value;
-        showRes('res_fasadi', `გრუნტი: ${Math.ceil(a / 7)} ლიტრი`, `დეკორატიული მასალა (ბრიზგი): ${Math.ceil(a * 3)} კგ`, `ბადე ფასადის: ${Math.ceil(a * 1.1)} მ²`);
-    }
-
+    // დამხმარე ფუნქციები
     function showRes(id, ...items) {
         let div = document.getElementById(id);
-        div.innerHTML = `<h3>შედეგები:</h3>` + items.map(i => `<div class="result-item"><span>${i.split(':')[0]}:</span><span>${i.split(':')[1] || ''}</span></div>`).join('');
+        div.innerHTML = `<h4>შედეგი:</h4>` + items.map(i => `<div class="result-item"><span>${i.split(':')[0]}:</span><span>${i.split(':')[1]}</span></div>`).join('');
         div.style.display = "block";
     }
 
     function exportResults() {
         let results = document.querySelectorAll('.result-box[style*="display: block"]');
         if (results.length === 0) { alert('ჯერ განახორციელეთ გათვლა!'); return; }
-        let text = "სამშენებლო ხარჯთაღრიცხვა\n========================\n";
+        let text = "სამშენებლო ხარჯთაღრიცხვა - Construction Pro\n========================\n";
         results.forEach(rb => {
-            text += rb.innerText + "\n------------------------\n";
+            text += rb.parentElement.querySelector('h2, h3').innerText + "\n" + rb.innerText + "\n------------------------\n";
         });
         let blob = new Blob([text], {type: "text/plain"});
         let anchor = document.createElement("a");
