@@ -1,216 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ka">
 <head>
 <meta charset="UTF-8">
-<title>Brain Games Hub</title>
+<title>ჰოროსკოპი</title>
+
 <style>
-body{
-  font-family: Arial;
-  margin:0;
-  background:#1e1e2f;
-  color:white;
-  text-align:center;
-}
-h1{margin:20px;}
-.menu button{
-  padding:15px 25px;
-  margin:10px;
-  font-size:18px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  background:#4CAF50;
-  color:white;
-}
-.game{display:none;margin-top:20px;}
-.active{display:block;}
-
-.card{
-  width:80px;height:80px;
-  background:#444;
-  display:inline-block;
-  margin:5px;
-  font-size:30px;
-  line-height:80px;
-  cursor:pointer;
-  border-radius:10px;
+body {
+    margin: 0;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #0b0c2a, #000);
+    font-family: sans-serif;
 }
 
-.hidden{background:#222;color:#222;}
-
-#reactionBox{
-  width:200px;height:200px;
-  margin:20px auto;
-  background:red;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:20px;
-  border-radius:20px;
-  cursor:pointer;
+/* ვარსკვლავები */
+.stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url('https://www.transparenttextures.com/patterns/stardust.png');
+    animation: moveStars 60s linear infinite;
 }
 
-button.back{
-  margin-top:20px;
-  background:#555;
+@keyframes moveStars {
+    from {background-position: 0 0;}
+    to {background-position: 1000px 1000px;}
+}
+
+/* ზოდიაქოს კონტეინერი */
+.zodiac-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+}
+
+/* თითოეული ნიშანი */
+.sign {
+    position: absolute;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.sign:hover {
+    transform: scale(1.3);
+    color: gold;
+}
+
+/* ბრუნვა */
+.rotate {
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
 }
 </style>
+
 </head>
 <body>
 
-<h1>🧠 Brain Games Hub</h1>
+<div class="stars"></div>
 
-<div class="menu">
-  <button onclick="showGame('memory')">Memory Game</button>
-  <button onclick="showGame('reaction')">Reaction Test</button>
-  <button onclick="showGame('iq')">IQ Test</button>
-</div>
+<div class="zodiac-container rotate" id="zodiac">
 
-<!-- MEMORY GAME -->
-<div id="memory" class="game">
-<h2>Memory Game</h2>
-<div id="memoryBoard"></div>
-<button class="back" onclick="back()">Back</button>
-</div>
+    <div class="sign" style="top:0; left:50%;" onclick="go('aries.html')">♈</div>
+    <div class="sign" style="top:20%; left:85%;" onclick="go('taurus.html')">♉</div>
+    <div class="sign" style="top:50%; left:100%;" onclick="go('gemini.html')">♊</div>
+    <div class="sign" style="top:80%; left:85%;" onclick="go('cancer.html')">♋</div>
+    <div class="sign" style="top:100%; left:50%;" onclick="go('leo.html')">♌</div>
+    <div class="sign" style="top:80%; left:15%;" onclick="go('virgo.html')">♍</div>
+    <div class="sign" style="top:50%; left:0%;" onclick="go('libra.html')">♎</div>
+    <div class="sign" style="top:20%; left:15%;" onclick="go('scorpio.html')">♏</div>
+    <div class="sign" style="top:10%; left:30%;" onclick="go('sagittarius.html')">♐</div>
+    <div class="sign" style="top:10%; left:70%;" onclick="go('capricorn.html')">♑</div>
+    <div class="sign" style="top:40%; left:90%;" onclick="go('aquarius.html')">♒</div>
+    <div class="sign" style="top:40%; left:10%;" onclick="go('pisces.html')">♓</div>
 
-<!-- REACTION -->
-<div id="reaction" class="game">
-<h2>Reaction Test</h2>
-<div id="reactionBox">Wait...</div>
-<p id="reactionResult"></p>
-<button class="back" onclick="back()">Back</button>
-</div>
-
-<!-- IQ TEST -->
-<div id="iq" class="game">
-<h2>IQ Test</h2>
-<p id="question"></p>
-<div id="answers"></div>
-<p id="score"></p>
-<button class="back" onclick="back()">Back</button>
 </div>
 
 <script>
-// navigation
-function showGame(id){
-  document.querySelectorAll('.game').forEach(g=>g.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+function go(page) {
+    window.location.href = page;
 }
-function back(){
-  document.querySelectorAll('.game').forEach(g=>g.classList.remove('active'));
-}
-
-// MEMORY GAME
-let emojis=["🍎","🍌","🍇","🍓","🍒","🍍"];
-let cards=[...emojis,...emojis].sort(()=>Math.random()-0.5);
-let first=null,second=null,lock=false;
-
-function initMemory(){
-  let board=document.getElementById("memoryBoard");
-  board.innerHTML="";
-  cards.forEach((e,i)=>{
-    let div=document.createElement("div");
-    div.className="card hidden";
-    div.dataset.value=e;
-    div.onclick=()=>{
-      if(lock||!div.classList.contains("hidden"))return;
-      div.textContent=e;
-      div.classList.remove("hidden");
-      if(!first) first=div;
-      else{
-        second=div;
-        lock=true;
-        if(first.dataset.value===second.dataset.value){
-          first=second=null;
-          lock=false;
-        }else{
-          setTimeout(()=>{
-            first.textContent="";
-            second.textContent="";
-            first.classList.add("hidden");
-            second.classList.add("hidden");
-            first=second=null;
-            lock=false;
-          },800);
-        }
-      }
-    }
-    board.appendChild(div);
-  });
-}
-initMemory();
-
-// REACTION TEST
-let startTime;
-let waiting=true;
-let box=document.getElementById("reactionBox");
-
-box.onclick=()=>{
-  if(waiting){
-    document.getElementById("reactionResult").innerText="Too early!";
-  }else{
-    let time=Date.now()-startTime;
-    document.getElementById("reactionResult").innerText="Reaction: "+time+" ms";
-    startReaction();
-  }
-}
-
-function startReaction(){
-  waiting=true;
-  box.style.background="red";
-  box.innerText="Wait...";
-  setTimeout(()=>{
-    waiting=false;
-    box.style.background="green";
-    box.innerText="Click!";
-    startTime=Date.now();
-  },Math.random()*3000+2000);
-}
-startReaction();
-
-// IQ TEST
-let questions=[
-{
-q:"2,4,8,16, ?",
-a:["18","24","32","20"],
-c:2
-},
-{
-q:"Which is odd?",
-a:["Dog","Cat","Car","Cow"],
-c:2
-},
-{
-q:"5+3×2 = ?",
-a:["16","11","10","13"],
-c:1
-}
-];
-
-let current=0,score=0;
-
-function loadQ(){
-  let q=questions[current];
-  document.getElementById("question").innerText=q.q;
-  let ans=document.getElementById("answers");
-  ans.innerHTML="";
-  q.a.forEach((a,i)=>{
-    let btn=document.createElement("button");
-    btn.innerText=a;
-    btn.onclick=()=>{
-      if(i===q.c) score++;
-      current++;
-      if(current<questions.length) loadQ();
-      else{
-        document.getElementById("question").innerText="Finished!";
-        ans.innerHTML="";
-        document.getElementById("score").innerText="Score: "+score+"/"+questions.length;
-      }
-    }
-    ans.appendChild(btn);
-  });
-}
-loadQ();
 </script>
 
 </body>
