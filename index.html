@@ -1,82 +1,166 @@
 <!DOCTYPE html>
 <html lang="ka">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>მშენებლობის ჰაბი - კალკულატორი</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 20px; }
-        .container { max-width: 600px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: auto; }
-        h2 { color: #2c3e50; text-align: center; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background-color: #e67e22; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        button:hover { background-color: #d35400; }
-        .results { margin-top: 20px; padding: 15px; background: #ecf0f1; border-left: 5px solid #e67e22; display: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Builder</title>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+<style>
+body { font-family: Arial; margin:0; background:#f0f2f5; }
+header { background:#222; color:white; padding:15px; text-align:center; }
+section { background:white; margin:15px; padding:15px; border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,0.1);} 
+input, button, select { padding:10px; margin:5px; }
+button { background:#007bff; color:white; border:none; border-radius:6px; }
+.result { font-weight:bold; margin-top:10px; }
+canvas { border:1px solid #ccc; }
+</style>
 </head>
 <body>
 
-<div class="container">
-    <h2>🏗️ მასალების კალკულატორი</h2>
-    
-    <div class="input-group">
-        <label>კედლის სიგრძე (მეტრი):</label>
-        <input type="number" id="length" placeholder="მაგ: 5">
-    </div>
+<header>
+<h1>🏗️ Smart Builder Platform</h1>
+<button onclick="login()">Login</button>
+<button onclick="logout()">Logout</button>
+</header>
 
-    <div class="input-group">
-        <label>კედლის სიმაღლე (მეტრი):</label>
-        <input type="number" id="height" placeholder="მაგ: 3">
-    </div>
+<section>
+<h2>🧱 აგურის კალკულატორი</h2>
+<input id="w" placeholder="სიგანე">
+<input id="h" placeholder="სიმაღლე">
+<button onclick="calcBricks()">გამოთვლა</button>
+<div class="result" id="brick"></div>
+</section>
 
-    <div class="input-group">
-        <label>მასალის ტიპი:</label>
-        <select id="material">
-            <option value="block">ბეტონის ბლოკი (20x40)</option>
-            <option value="brick">აგური (სტანდარტული)</option>
-        </select>
-    </div>
+<section>
+<h2>🪨 ბეტონი</h2>
+<input id="l" placeholder="სიგრძე">
+<input id="w2" placeholder="სიგანე">
+<input id="d" placeholder="სიღრმე">
+<button onclick="calcConcrete()">გამოთვლა</button>
+<div class="result" id="concrete"></div>
+</section>
 
-    <button onclick="calculate()">გამოთვლა</button>
+<section>
+<h2>🎨 საღებავი</h2>
+<input id="area" placeholder="მ²">
+<button onclick="paint()">გამოთვლა</button>
+<div class="result" id="paint"></div>
+</section>
 
-    <div id="results" class="results">
-        <p id="total-area"></p>
-        <p id="total-units"></p>
-        <p id="total-cost" style="font-weight: bold; color: #c0392b;"></p>
-    </div>
-</div>
+<section>
+<h2>💸 ხარჯები</h2>
+<input id="sqm" placeholder="მ²">
+<button onclick="cost()">გამოთვლა</button>
+<div class="result" id="cost"></div>
+</section>
+
+<section>
+<h2>🧰 ინსტრუმენტები</h2>
+<select id="job">
+<option value="brick">აგური</option>
+<option value="paint">შეღებვა</option>
+<option value="tile">ფილა</option>
+</select>
+<button onclick="tools()">ნახვა</button>
+<div class="result" id="tools"></div>
+</section>
+
+<section>
+<h2>🏡 DIY ვიდეო</h2>
+<iframe width="100%" height="200" src="https://www.youtube.com/embed/4w9WgXcQx4M"></iframe>
+</section>
+
+<section>
+<h2>⚠️ შეცდომები</h2>
+<ul>
+<li>დონე არ გამოიყენო</li>
+<li>ცუდი მასალა</li>
+<li>უსაფრთხოება</li>
+</ul>
+</section>
+
+<section>
+<h2>📐 დიზაინერი</h2>
+<canvas id="canvas" width="300" height="200"></canvas><br>
+<button onclick="draw()">დახატე კედელი</button>
+</section>
 
 <script>
-    function calculate() {
-        const length = document.getElementById('length').value;
-        const height = document.getElementById('height').value;
-        const material = document.getElementById('material').value;
-        
-        if(length > 0 && height > 0) {
-            const area = length * height;
-            let units = 0;
-            let pricePerUnit = 0;
+// Firebase config (ჩასვი შენი)
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-            if(material === "block") {
-                units = Math.ceil(area * 12.5); // საშუალოდ 12.5 ბლოკი 1 კვ.მ-ზე
-                pricePerUnit = 1.50; // პირობითი ფასი
-            } else {
-                units = Math.ceil(area * 50); // საშუალოდ 50 აგური 1 კვ.მ-ზე
-                pricePerUnit = 0.60;
-            }
+function login(){
+let email = prompt("Email");
+let pass = prompt("Password");
+auth.signInWithEmailAndPassword(email,pass).catch(()=>{
+auth.createUserWithEmailAndPassword(email,pass);
+});
+}
 
-            const totalCost = (units * pricePerUnit).toFixed(2);
+function logout(){ auth.signOut(); }
 
-            document.getElementById('total-area').innerText = "კედლის ფართობი: " + area + " კვ.მ.";
-            document.getElementById('total-units').innerText = "საჭირო რაოდენობა: " + units + " ცალი";
-            document.getElementById('total-cost').innerText = "სავარაუდო ფასი: " + totalCost + " ლარი";
-            document.getElementById('results').style.display = "block";
-        } else {
-            alert("გთხოვთ შეიყვანოთ სწორი ზომები");
-        }
-    }
+function calcBricks(){
+let w=document.getElementById('w').value;
+let h=document.getElementById('h').value;
+let bricks=Math.ceil(w*h*50);
+document.getElementById('brick').innerText=bricks+" აგური";
+save('bricks',bricks);
+}
+
+function calcConcrete(){
+let v=document.getElementById('l').value*document.getElementById('w2').value*document.getElementById('d').value;
+document.getElementById('concrete').innerText=v+" მ³";
+save('concrete',v);
+}
+
+function paint(){
+let a=document.getElementById('area').value;
+let p=Math.ceil(a/10);
+document.getElementById('paint').innerText=p+" ლიტრი";
+save('paint',p);
+}
+
+function cost(){
+let sqm=document.getElementById('sqm').value;
+let price=sqm*60;
+document.getElementById('cost').innerText=price+" ლარი";
+save('cost',price);
+}
+
+function tools(){
+let job=document.getElementById('job').value;
+let t='';
+if(job=='brick') t='დონე, სპატული';
+if(job=='paint') t='როლიკი, ფუნჯი';
+if(job=='tile') t='სპატული, საჭრელი';
+document.getElementById('tools').innerText=t;
+}
+
+function save(type,value){
+if(auth.currentUser){
+db.collection('data').add({type,value,user:auth.currentUser.uid});
+}
+}
+
+// Canvas
+function draw(){
+let c=document.getElementById('canvas');
+let ctx=c.getContext('2d');
+ctx.fillStyle='gray';
+ctx.fillRect(50,50,200,100);
+}
 </script>
 
 </body>
