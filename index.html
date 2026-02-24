@@ -2,104 +2,149 @@
 <html lang="ka">
 <head>
   <meta charset="UTF-8">
-  <title>დაჭირე კვადრატი!</title>
+  <title>🚀 Space Shooter - დიდი თამაში</title>
   <style>
     body {
       margin: 0;
-      font-family: sans-serif;
-      text-align: center;
-      background: #111;
-      color: white;
-    }
-    #gameArea {
-      position: relative;
-      width: 100vw;
-      height: 80vh;
-      border: 2px solid #444;
+      background: black;
       overflow: hidden;
+      font-family: sans-serif;
+      color: white;
+      text-align: center;
     }
-    #target {
+    canvas {
+      display: block;
+      margin: 0 auto;
+      background: radial-gradient(circle, #000 40%, #020617);
+    }
+    #ui {
       position: absolute;
-      width: 50px;
-      height: 50px;
-      background: red;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-    #info {
-      padding: 20px;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
       font-size: 20px;
     }
-    button {
-      padding: 10px 20px;
-      font-size: 18px;
+    #startBtn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 15px 30px;
+      font-size: 22px;
       cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-<h1>🎯 დაჭირე მოძრავი კვადრატი!</h1>
-<div id="info">
-  ქულა: <span id="score">0</span> | დრო: <span id="time">30</span>
-</div>
-<button onclick="startGame()">დაწყება</button>
-
-<div id="gameArea">
-  <div id="target" onclick="hit()"></div>
-</div>
+<div id="ui">ქულა: <span id="score">0</span> | სიცოცხლე: <span id="lives">3</span></div>
+<button id="startBtn">თამაშის დაწყება</button>
+<canvas id="gameCanvas" width="800" height="600"></canvas>
 
 <script>
-let score = 0;
-let time = 30;
-let gameInterval;
-let moveInterval;
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
-const target = document.getElementById("target");
-const scoreEl = document.getElementById("score");
-const timeEl = document.getElementById("time");
-const gameArea = document.getElementById("gameArea");
+let player, bullets, enemies, score, lives, gameRunning;
 
-function randomPosition() {
-  const maxX = gameArea.clientWidth - 50;
-  const maxY = gameArea.clientHeight - 50;
+const keys = {};
 
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
+document.addEventListener("keydown", e => keys[e.key] = true);
+document.addEventListener("keyup", e => keys[e.key] = false);
 
-  target.style.left = x + "px";
-  target.style.top = y + "px";
-}
-
-function hit() {
-  score++;
-  scoreEl.textContent = score;
-  randomPosition();
-}
+document.getElementById("startBtn").onclick = startGame;
 
 function startGame() {
+  player = { x: 400, y: 520, w: 40, h: 40, speed: 6 };
+  bullets = [];
+  enemies = [];
   score = 0;
-  time = 30;
-  scoreEl.textContent = score;
-  timeEl.textContent = time;
+  lives = 3;
+  gameRunning = true;
+  document.getElementById("startBtn").style.display = "none";
+  loop();
+}
 
-  randomPosition();
+function spawnEnemy() {
+  enemies.push({
+    x: Math.random() * (canvas.width - 40),
+    y: -40,
+    w: 40,
+    h: 40,
+    speed: 2 + Math.random() * 2
+  });
+}
 
-  clearInterval(gameInterval);
-  clearInterval(moveInterval);
+setInterval(() => {
+  if (gameRunning) spawnEnemy();
+}, 1000);
 
-  gameInterval = setInterval(() => {
-    time--;
-    timeEl.textContent = time;
+function shoot() {
+  bullets.push({ x: player.x + 15, y: player.y, w: 10, h: 20, speed: 7 });
+}
 
-    if (time <= 0) {
-      clearInterval(gameInterval);
-      clearInterval(moveInterval);
-      alert("თამაში დასრულდა! შენი ქულაა: " + score);
+setInterval(() => {
+  if (gameRunning && keys[" "]) shoot();
+}, 200);
+
+function update() {
+  if (keys["ArrowLeft"]) player.x -= player.speed;
+  if (keys["ArrowRight"]) player.x += player.speed;
+
+  bullets.forEach(b => b.y -= b.speed);
+  enemies.forEach(e => e.y += e.speed);
+
+  bullets = bullets.filter(b => b.y > -20);
+  enemies = enemies.filter(e => e.y < canvas.height + 40);
+
+  // collision
+  enemies.forEach((e, ei) => {
+    bullets.forEach((b, bi) => {
+      if (b.x < e.x + e.w && b.x + b.w > e.x && b.y < e.y + e.h && b.y + b.h > e.y) {
+        enemies.splice(ei, 1);
+        bullets.splice(bi, 1);
+        score++;
+      }
+    });
+
+    if (e.y + e.h > player.y && e.x < player.x + player.w && e.x + e.w > player.x) {
+      enemies.splice(ei, 1);
+      lives--;
+      if (lives <= 0) endGame();
     }
-  }, 1000);
+  });
 
-  moveInterval = setInterval(randomPosition, 800);
+  document.getElementById("score").textContent = score;
+  document.getElementById("lives").textContent = lives;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // player
+  ctx.fillStyle = "cyan";
+  ctx.fillRect(player.x, player.y, player.w, player.h);
+
+  // bullets
+  ctx.fillStyle = "yellow";
+  bullets.forEach(b => ctx.fillRect(b.x, b.y, b.w, b.h));
+
+  // enemies
+  ctx.fillStyle = "red";
+  enemies.forEach(e => ctx.fillRect(e.x, e.y, e.w, e.h));
+}
+
+function loop() {
+  if (!gameRunning) return;
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function endGame() {
+  gameRunning = false;
+  alert("თამაში დასრულდა! ქულა: " + score);
+  document.getElementById("startBtn").style.display = "block";
 }
 </script>
 
