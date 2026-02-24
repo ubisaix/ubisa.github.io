@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <title>დაკარგული ოთახი - თავგადასავალი</title>
+    <style>
+        /* რეტრო სტილი: შავი ფონი და მწვანე ტექსტი */
+        body {
+            background-color: #0d0d0d;
+            color: #00ff41;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            border: 2px solid #00ff41;
+            padding: 30px;
+            box-shadow: 0 0 15px #00ff41;
+            text-align: center;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            border-bottom: 1px solid #00ff41;
+            padding-bottom: 10px;
+        }
+
+        .choices {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* ბმულების სტილი, რომელიც ღილაკებს ჰგავს */
+        a {
+            color: #0d0d0d;
+            background-color: #00ff41;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        a:hover {
+            background-color: #ffffff;
+            box-shadow: 0 0 20px #ffffff;
+        }
+
+        .secret-hint {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #008f11;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>თავი 1: გაღვიძება</h1>
+        
+        <p>თქვენ იღვიძებთ ნესტიან, ბნელ ოთახში. თავი გტკივათ და არ გახსოვთ, როგორ მოხვდით აქ. წინ ორი კარია:</p>
+        
+        <div class="choices">
+            <a href="metal_door.html">გააღე რკინის კარი (მარცხნივ)</a>
+            <a href="wooden_door.html">გააღე ძველი ხის კარი (მარჯვნივ)</a>
+        </div>
+
+        <details class="secret-hint">
+            <summary>დაათვალიერე იატაკი...</summary>
+            <p>იატაკზე იპოვეთ ჟანგიანი გასაღები. იქნებ სადმე გამოგადგეთ?</p>
+        </details>
+    </div>
+
+</body>
+</html>
