@@ -2,59 +2,73 @@
 <html lang="ka">
 <head>
 <meta charset="UTF-8">
-<title>ნარდი (Backgammon)</title>
+<title>🎲 გრძელი ნარდი PRO</title>
 <style>
-body { background:#1a1a1a; color:white; text-align:center; font-family:sans-serif; }
-canvas { background:#8b4513; margin-top:20px; border:4px solid #333; }
-button { padding:10px 20px; font-size:18px; margin-top:10px; cursor:pointer; }
+body { margin:0; background:#111; color:white; font-family:sans-serif; text-align:center; }
+#ui { padding:10px; }
+canvas { background:#5b3a1e; border:6px solid #2d1b0f; display:block; margin:0 auto; border-radius:12px; }
+button { padding:10px 20px; font-size:18px; margin:5px; cursor:pointer; }
 </style>
 </head>
 <body>
 
-<h1>🎲 ნარდი</h1>
-<button onclick="rollDice()">კუბიკების გაგორება</button>
-<p id="dice">კუბიკები: -</p>
+<h1>🎲 გრძელი ნარდი (PRO)</h1>
+<div id="ui">
+  <button onclick="rollDice()">კუბიკების გაგორება</button>
+  <span id="info"></span>
+</div>
 
-<canvas id="board" width="800" height="500"></canvas>
+<canvas id="board" width="900" height="500"></canvas>
 
 <script>
 const canvas = document.getElementById('board');
 const ctx = canvas.getContext('2d');
 
-let points = Array(24).fill().map(()=>[]);
+let points = [];
 let dice = [];
-let selected = null;
 let currentPlayer = 1; // 1 white, 2 black
+let selected = null;
 
-// საწყისი განლაგება
-points[0] = [1,1];
-points[23] = [2,2];
-points[5] = [2,2,2,2,2];
-points[18] = [1,1,1,1,1];
+function init() {
+  points = Array(24).fill().map(()=>[]);
 
-function drawBoard() {
-  ctx.clearRect(0,0,800,500);
+  // გრძელი ნარდის საწყისი
+  for(let i=0;i<15;i++){
+    points[0].push(1);
+    points[23].push(2);
+  }
+
+  currentPlayer = 1;
+  dice = [];
+}
+
+function draw() {
+  ctx.clearRect(0,0,900,500);
 
   for(let i=0;i<24;i++){
-    let x = (i%12)*65 + 10;
+    let x = (i%12)*75 + 10;
     let y = i<12 ? 0 : 250;
 
-    ctx.fillStyle = i%2==0 ? '#d2b48c' : '#5c4033';
+    ctx.fillStyle = i%2==0 ? '#d2b48c' : '#6b4423';
     ctx.beginPath();
     ctx.moveTo(x,y);
-    ctx.lineTo(x+60,y);
-    ctx.lineTo(x+30,y+200);
+    ctx.lineTo(x+70,y);
+    ctx.lineTo(x+35,y+230);
     ctx.fill();
 
     drawCheckers(i,x,y);
   }
+
+  document.getElementById('info').textContent =
+    'მოთამაშე: ' + (currentPlayer==1?'თეთრი':'შავი') +
+    ' | კუბიკები: ' + (dice.join(', ') || '-');
 }
 
 function drawCheckers(i,x,y){
   let stack = points[i];
   for(let j=0;j<stack.length;j++){
     ctx.beginPath();
-    ctx.arc(x+30, y + (i<12 ? 220 - j*20 : 30 + j*20), 15, 0, Math.PI*2);
+    ctx.arc(x+35, y + (i<12 ? 240 - j*18 : 20 + j*18), 16, 0, Math.PI*2);
     ctx.fillStyle = stack[j]==1 ? 'white' : 'black';
     ctx.fill();
   }
@@ -65,7 +79,7 @@ canvas.addEventListener('click', function(e){
   let mx = e.clientX - rect.left;
   let my = e.clientY - rect.top;
 
-  let index = Math.floor(mx/65);
+  let index = Math.floor(mx/75);
   if(my>250) index +=12;
 
   if(selected==null){
@@ -73,37 +87,84 @@ canvas.addEventListener('click', function(e){
       selected=index;
     }
   } else {
-    move(selected,index);
+    tryMove(selected,index);
     selected=null;
   }
 
-  drawBoard();
+  draw();
 });
 
-function move(from,to){
+function tryMove(from,to){
   if(dice.length==0) return;
 
-  let step = Math.abs(to-from);
-  let i = dice.indexOf(step);
+  let dir = currentPlayer==1 ? 1 : -1;
+  let step = (to-from)*dir;
 
-  if(i>-1){
-    let piece = points[from].shift();
-    points[to].unshift(piece);
-    dice.splice(i,1);
+  if(step<=0) return;
 
-    if(dice.length==0) currentPlayer = currentPlayer==1?2:1;
+  let dieIndex = dice.indexOf(step);
+  if(dieIndex==-1) return;
+
+  // გრძელი ნარდის წესები
+  if(points[to].some(p=>p!=currentPlayer)) return; // ბლოკი
+
+  // move
+  let piece = points[from].shift();
+  points[to].unshift(piece);
+  dice.splice(dieIndex,1);
+
+  if(dice.length==0){
+    currentPlayer = currentPlayer==1?2:1;
+    if(currentPlayer==2) setTimeout(aiMove,500);
   }
 }
 
 function rollDice(){
-  dice = [rand(), rand()];
-  document.getElementById('dice').textContent = 'კუბიკები: ' + dice.join(', ');
+  if(dice.length>0) return;
+
+  let d1 = rand();
+  let d2 = rand();
+
+  dice = d1==d2 ? [d1,d1,d1,d1] : [d1,d2];
+
+  if(currentPlayer==2) setTimeout(aiMove,500);
+
+  draw();
 }
 
 function rand(){ return Math.floor(Math.random()*6)+1; }
 
+// მარტივი AI
+function aiMove(){
+  if(currentPlayer!=2) return;
 
-drawBoard();
+  let movesMade = false;
+
+  for(let d of [...dice]){
+    for(let i=23;i>=0;i--){
+      if(points[i].length && points[i][0]==2){
+        let to = i - d;
+        if(to>=0 && points[to].every(p=>p==2)){
+          points[i].shift();
+          points[to].unshift(2);
+          dice.splice(dice.indexOf(d),1);
+          movesMade = true;
+          break;
+        }
+      }
+    }
+  }
+
+  if(dice.length==0 || !movesMade){
+    dice=[];
+    currentPlayer=1;
+  }
+
+  draw();
+}
+
+init();
+draw();
 </script>
 
 </body>
