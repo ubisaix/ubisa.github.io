@@ -2,112 +2,170 @@
 <html lang="ka">
 <head>
 <meta charset="UTF-8">
-<title>🎲 ნარდი PRO (Drag & Drop)</title>
+<title>🎲 ნარდი</title>
 <style>
-body { margin:0; background:#2b1b10; font-family:sans-serif; color:white; text-align:center; }
-#board { display:grid; grid-template-columns:repeat(12,60px); grid-template-rows:repeat(2,240px); gap:4px; background:#3d2414; padding:10px; border-radius:20px; margin:20px auto; width:max-content; }
-.point { width:60px; height:240px; position:relative; display:flex; flex-direction:column; align-items:center; }
-.point.bottom { justify-content:flex-end; }
-.point.top { justify-content:flex-start; }
-.point::before { content:""; position:absolute; width:0; height:0; border-left:30px solid transparent; border-right:30px solid transparent; }
-.point.bottom::before { bottom:0; border-top:200px solid #d2b48c; }
-.point.top::before { top:0; border-bottom:200px solid #6b4423; }
-.point.dark.bottom::before { border-top-color:#6b4423; }
-.point.dark.top::before { border-bottom-color:#d2b48c; }
-.checker { width:40px; height:40px; border-radius:50%; margin:2px; cursor:grab; transition:transform 0.2s; }
-.checker:active { transform:scale(1.2); }
-.white { background:radial-gradient(circle,#fff,#bbb); }
-.black { background:radial-gradient(circle,#555,#000); }
-.highlight { outline:3px solid yellow; }
-button { padding:10px 20px; font-size:16px; }
+body{
+  background:#1a1a1a;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
+  font-family:sans-serif;
+}
+
+.board{
+  width:900px;
+  height:500px;
+  background:linear-gradient(145deg,#8b5a2b,#5a3b1f);
+  border-radius:20px;
+  box-shadow:0 0 40px black inset, 0 0 30px black;
+  display:grid;
+  grid-template-columns: repeat(12,1fr);
+  gap:2px;
+  padding:10px;
+}
+
+.point{
+  position:relative;
+  height:100%;
+  border-radius:5px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+}
+
+.point.top{
+  justify-content:flex-start;
+}
+
+.point:nth-child(odd){
+  background:linear-gradient(#f2c57c,#d89a4a);
+}
+.point:nth-child(even){
+  background:linear-gradient(#6a3e1c,#3a1f0d);
+}
+
+.checker{
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  margin:2px;
+  cursor:grab;
+  transition:0.2s;
+}
+
+.white{
+  background:radial-gradient(circle at 30% 30%,white,#ccc);
+}
+
+.black{
+  background:radial-gradient(circle at 30% 30%,#444,#000);
+}
+
+.highlight{
+  outline:4px solid yellow;
+}
+
+.dice{
+  position:absolute;
+  top:10px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:28px;
+  color:white;
+}
 </style>
 </head>
 <body>
 
-<h1>🎲 ნარდი PRO</h1>
-<button onclick="rollDice()">🎲 კუბიკები</button>
-<p id="dice"></p>
+<div class="dice" id="dice">🎲</div>
 
-<div id="board"></div>
+<div class="board" id="board"></div>
 
 <script>
-const boardEl=document.getElementById('board');
-let points=Array(24).fill().map(()=>[]);
-let dice=[];
-let dragged=null;
-let fromIndex=null;
-
-// init
-for(let i=0;i<15;i++){ points[0].push('white'); points[23].push('black'); }
-
-function render(){
- boardEl.innerHTML='';
- for(let i=0;i<24;i++){
-   const p=document.createElement('div');
-   p.className='point '+(i<12?'bottom':'top')+(i%2?' dark':'');
-   p.dataset.index=i;
-   p.ondragover=e=>e.preventDefault();
-   p.ondrop=()=>drop(i);
-
-   points[i].forEach((c,idx)=>{
-     const ch=document.createElement('div');
-     ch.className='checker '+c;
-     if(idx===points[i].length-1){
-       ch.draggable=true;
-       ch.ondragstart=()=>{ dragged=c; fromIndex=i; highlightMoves(i); };
-     }
-     p.appendChild(ch);
-   });
-   boardEl.appendChild(p);
- }
-}
-
-function highlightMoves(from){
- clearHighlights();
- dice.forEach(d=>{
-   let to=from+d;
-   if(to<24){
-     let el=document.querySelector(`[data-index='${to}']`);
-     if(el) el.classList.add('highlight');
-   }
- });
-}
-
-function clearHighlights(){
- document.querySelectorAll('.highlight').forEach(e=>e.classList.remove('highlight'));
-}
-
-function drop(to){
- if(dragged==null) return;
- let step=to-fromIndex;
- let i=dice.indexOf(step);
- if(i>-1 && (points[to].length==0 || points[to][0]===dragged)){
-   animateMove(fromIndex,to);
-   let piece=points[fromIndex].pop();
-   points[to].push(piece);
-   dice.splice(i,1);
- }
- dragged=null;
- clearHighlights();
- render();
-}
-
-function animateMove(from,to){
- let el=document.querySelector(`[data-index='${from}'] .checker:last-child`);
- if(!el) return;
- el.style.transform='translateY(-20px)';
- setTimeout(()=>{ el.style.transform=''; },200);
-}
+const board = document.getElementById("board");
+let selected = null;
+let dice = [];
 
 function rollDice(){
- let d1=rand(), d2=rand();
- dice = d1===d2 ? [d1,d1,d1,d1] : [d1,d2];
- document.getElementById('dice').textContent='კუბიკები: '+dice.join(', ');
+  dice = [rand(), rand()];
+  document.getElementById("dice").innerText = "🎲 "+dice[0]+"-"+dice[1];
 }
 
 function rand(){ return Math.floor(Math.random()*6)+1; }
 
-render();
+// შექმნა 24 წერტილი
+for(let i=0;i<24;i++){
+  let point = document.createElement("div");
+  point.className = "point";
+
+  if(i<12) point.classList.add("top");
+
+  point.dataset.index = i;
+
+  point.ondragover = e => e.preventDefault();
+
+  point.ondrop = e=>{
+    e.preventDefault();
+    if(selected){
+      point.appendChild(selected);
+      clearHighlights();
+    }
+  }
+
+  board.appendChild(point);
+}
+
+// საწყისი განლაგება
+function place(pointIndex, count, color){
+  let point = board.children[pointIndex];
+  for(let i=0;i<count;i++){
+    let c = createChecker(color);
+    point.appendChild(c);
+  }
+}
+
+function createChecker(color){
+  let c = document.createElement("div");
+  c.className = "checker "+color;
+  c.draggable = true;
+
+  c.ondragstart = ()=>{
+    selected = c;
+    highlightMoves(c);
+  }
+
+  return c;
+}
+
+// highlight (დემო ლოგიკა)
+function highlightMoves(c){
+  clearHighlights();
+  for(let i=0;i<24;i++){
+    if(Math.random()<0.2){
+      board.children[i].classList.add("highlight");
+    }
+  }
+}
+
+function clearHighlights(){
+  document.querySelectorAll(".point").forEach(p=>p.classList.remove("highlight"));
+}
+
+// საწყისი ფიშკები
+place(0,2,"white");
+place(11,5,"white");
+place(16,3,"white");
+place(18,5,"white");
+
+place(23,2,"black");
+place(12,5,"black");
+place(7,3,"black");
+place(5,5,"black");
+
+rollDice();
 </script>
 
 </body>
