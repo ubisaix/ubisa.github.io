@@ -1,166 +1,207 @@
 <!DOCTYPE html>
 <html lang="ka">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Builder</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>სამშენებლო ჰაბი - სრული კალკულატორი</title>
+    <style>
+        :root {
+            --primary-color: #f39c12;
+            --dark-bg: #2c3e50;
+        }
+        body { 
+            font-family: 'Helvetica', 'Arial', sans-serif; 
+            margin: 0;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1503387762-592dec5832f2?auto=format&fit=crop&q=80&w=1920');
+            background-size: cover;
+            background-attachment: fixed;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .main-card {
+            background: rgba(255, 255, 255, 0.95);
+            width: 100%;
+            max-width: 900px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+        .tabs {
+            display: flex;
+            background: var(--dark-bg);
+            overflow-x: auto;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            color: white;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            background: var(--primary-color);
+            font-weight: bold;
+        }
+        .content { padding: 30px; display: none; }
+        .content.active { display: block; }
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-
-<style>
-body { font-family: Arial; margin:0; background:#f0f2f5; }
-header { background:#222; color:white; padding:15px; text-align:center; }
-section { background:white; margin:15px; padding:15px; border-radius:12px; box-shadow:0 0 10px rgba(0,0,0,0.1);} 
-input, button, select { padding:10px; margin:5px; }
-button { background:#007bff; color:white; border:none; border-radius:6px; }
-.result { font-weight:bold; margin-top:10px; }
-canvas { border:1px solid #ccc; }
-</style>
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        
+        .calc-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            font-weight: bold;
+        }
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 6px solid var(--primary-color);
+        }
+        ul { padding-left: 20px; line-height: 1.6; }
+    </style>
 </head>
 <body>
 
-<header>
-<h1>🏗️ Smart Builder Platform</h1>
-<button onclick="login()">Login</button>
-<button onclick="logout()">Logout</button>
-</header>
+<div class="main-card">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'walls')">🧱 კედელი/ბლოკი</button>
+        <button class="tab-btn" onclick="openTab(event, 'gypsum')">🏗️ გიფსო</button>
+        <button class="tab-btn" onclick="openTab(event, 'roof')">🏠 სახურავი</button>
+        <button class="tab-btn" onclick="openTab(event, 'electro')">⚡ ელექტრო/სანტ.</button>
+    </div>
 
-<section>
-<h2>🧱 აგურის კალკულატორი</h2>
-<input id="w" placeholder="სიგანე">
-<input id="h" placeholder="სიმაღლე">
-<button onclick="calcBricks()">გამოთვლა</button>
-<div class="result" id="brick"></div>
-</section>
+    <div id="walls" class="content active">
+        <h2>კედლისა და ფასადის გამოთვლა</h2>
+        <div class="input-grid">
+            <div><label>სიგრძე (მ):</label><input type="number" id="w_len"></div>
+            <div><label>სიმაღლე (მ):</label><input type="number" id="w_height"></div>
+        </div>
+        <button class="calc-btn" onclick="calcWalls()">გამოთვლა</button>
+        <div id="res_walls" class="result-box" style="display:none"></div>
+    </div>
 
-<section>
-<h2>🪨 ბეტონი</h2>
-<input id="l" placeholder="სიგრძე">
-<input id="w2" placeholder="სიგანე">
-<input id="d" placeholder="სიღრმე">
-<button onclick="calcConcrete()">გამოთვლა</button>
-<div class="result" id="concrete"></div>
-</section>
+    <div id="gypsum" class="content">
+        <h2>გიფსოკარდონის სისტემა</h2>
+        <div class="input-grid">
+            <div><label>ჭერის/კედლის ფართობი (მ²):</label><input type="number" id="g_area"></div>
+            <div><label>ფენების რაოდენობა:</label>
+                <select id="g_layer"><option value="1">1 ფენა</option><option value="2">2 ფენა</option></select>
+            </div>
+        </div>
+        <button class="calc-btn" onclick="calcGypsum()">მასალების დათვლა</button>
+        <div id="res_gypsum" class="result-box" style="display:none"></div>
+    </div>
 
-<section>
-<h2>🎨 საღებავი</h2>
-<input id="area" placeholder="მ²">
-<button onclick="paint()">გამოთვლა</button>
-<div class="result" id="paint"></div>
-</section>
+    <div id="roof" class="content">
+        <h2>სახურავის მასალები</h2>
+        <div class="input-grid">
+            <div><label>სახლის ფართობი (მ²):</label><input type="number" id="r_area"></div>
+            <div><label>დახრის კუთხე (°):</label><input type="number" id="r_angle" value="30"></div>
+        </div>
+        <button class="calc-btn" onclick="calcRoof()">სახურავის დათვლა</button>
+        <div id="res_roof" class="result-box" style="display:none"></div>
+    </div>
 
-<section>
-<h2>💸 ხარჯები</h2>
-<input id="sqm" placeholder="მ²">
-<button onclick="cost()">გამოთვლა</button>
-<div class="result" id="cost"></div>
-</section>
-
-<section>
-<h2>🧰 ინსტრუმენტები</h2>
-<select id="job">
-<option value="brick">აგური</option>
-<option value="paint">შეღებვა</option>
-<option value="tile">ფილა</option>
-</select>
-<button onclick="tools()">ნახვა</button>
-<div class="result" id="tools"></div>
-</section>
-
-<section>
-<h2>🏡 DIY ვიდეო</h2>
-<iframe width="100%" height="200" src="https://www.youtube.com/embed/4w9WgXcQx4M"></iframe>
-</section>
-
-<section>
-<h2>⚠️ შეცდომები</h2>
-<ul>
-<li>დონე არ გამოიყენო</li>
-<li>ცუდი მასალა</li>
-<li>უსაფრთხოება</li>
-</ul>
-</section>
-
-<section>
-<h2>📐 დიზაინერი</h2>
-<canvas id="canvas" width="300" height="200"></canvas><br>
-<button onclick="draw()">დახატე კედელი</button>
-</section>
+    <div id="electro" class="content">
+        <h2>ელექტროობა და სანტექნიკა (მიახლოებითი)</h2>
+        <div class="input-grid">
+            <div><label>ოთახების რაოდენობა:</label><input type="number" id="e_rooms"></div>
+            <div><label>წერტილების რაოდენობა:</label><input type="number" id="e_points"></div>
+        </div>
+        <button class="calc-btn" onclick="calcElectro()">გამოთვლა</button>
+        <div id="res_electro" class="result-box" style="display:none"></div>
+    </div>
+</div>
 
 <script>
-// Firebase config (ჩასვი შენი)
-const firebaseConfig = {
-  apiKey: "YOUR_KEY",
-  authDomain: "YOUR_DOMAIN",
-  projectId: "YOUR_PROJECT"
-};
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+    function openTab(evt, tabName) {
+        var i, content, tablinks;
+        content = document.getElementsByClassName("content");
+        for (i = 0; i < content.length; i++) content[i].className = "content";
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) tablinks[i].className = "tab-btn";
+        document.getElementById(tabName).className = "content active";
+        evt.currentTarget.className += " active";
+    }
 
-function login(){
-let email = prompt("Email");
-let pass = prompt("Password");
-auth.signInWithEmailAndPassword(email,pass).catch(()=>{
-auth.createUserWithEmailAndPassword(email,pass);
-});
-}
+    function calcWalls() {
+        let a = document.getElementById('w_len').value * document.getElementById('w_height').value;
+        let res = document.getElementById('res_walls');
+        res.innerHTML = `
+            <h3>შედეგი: ${a} მ²</h3>
+            <ul>
+                <li>ბლოკი (20x40): ${Math.ceil(a * 12.5)} ცალი</li>
+                <li>საღებავი (2 ფენა): ${Math.ceil(a / 5)} ლიტრი</li>
+                <li>დეკორატიული ბრიზგი: ${Math.ceil(a * 3.5)} კგ</li>
+            </ul>`;
+        res.style.display = "block";
+    }
 
-function logout(){ auth.signOut(); }
+    function calcGypsum() {
+        let a = parseFloat(document.getElementById('g_area').value);
+        let layer = document.getElementById('g_layer').value;
+        let res = document.getElementById('res_gypsum');
+        res.innerHTML = `
+            <h3>საჭირო მასალა (${a} მ²-ზე):</h3>
+            <ul>
+                <li>გიფსოს ფილა (1.2x2.4): ${Math.ceil(a / 2.88 * layer)} ცალი</li>
+                <li>პროფილი CD (60/27): ${Math.ceil(a * 3.2)} მეტრი</li>
+                <li>პროფილი UD (28/27): ${Math.ceil(a * 0.8)} მეტრი</li>
+                <li>თვითმჭრელი (შურუპი): ${Math.ceil(a * 30 * layer)} ცალი</li>
+            </ul>`;
+        res.style.display = "block";
+    }
 
-function calcBricks(){
-let w=document.getElementById('w').value;
-let h=document.getElementById('h').value;
-let bricks=Math.ceil(w*h*50);
-document.getElementById('brick').innerText=bricks+" აგური";
-save('bricks',bricks);
-}
+    function calcRoof() {
+        let a = document.getElementById('r_area').value;
+        let angle = document.getElementById('r_angle').value;
+        // მარტივი კოსინუსის ფორმულა დახრილი ფართობისთვის
+        let realArea = Math.ceil(a / Math.cos(angle * Math.PI / 180));
+        let res = document.getElementById('res_roof');
+        res.innerHTML = `
+            <h3>რეალური ფართობი: ${realArea} მ²</h3>
+            <ul>
+                <li>თუნუქის ფურცელი (მეტალო-კრამიტი): ${Math.ceil(realArea * 1.15)} მ² (დანაკარგით)</li>
+                <li>ხის მასალა (ლატები): ${Math.ceil(realArea * 1.5)} მეტრი</li>
+                <li>ჰიდროიზოლაცია: ${Math.ceil(realArea / 75)} რულონი</li>
+            </ul>`;
+        res.style.display = "block";
+    }
 
-function calcConcrete(){
-let v=document.getElementById('l').value*document.getElementById('w2').value*document.getElementById('d').value;
-document.getElementById('concrete').innerText=v+" მ³";
-save('concrete',v);
-}
-
-function paint(){
-let a=document.getElementById('area').value;
-let p=Math.ceil(a/10);
-document.getElementById('paint').innerText=p+" ლიტრი";
-save('paint',p);
-}
-
-function cost(){
-let sqm=document.getElementById('sqm').value;
-let price=sqm*60;
-document.getElementById('cost').innerText=price+" ლარი";
-save('cost',price);
-}
-
-function tools(){
-let job=document.getElementById('job').value;
-let t='';
-if(job=='brick') t='დონე, სპატული';
-if(job=='paint') t='როლიკი, ფუნჯი';
-if(job=='tile') t='სპატული, საჭრელი';
-document.getElementById('tools').innerText=t;
-}
-
-function save(type,value){
-if(auth.currentUser){
-db.collection('data').add({type,value,user:auth.currentUser.uid});
-}
-}
-
-// Canvas
-function draw(){
-let c=document.getElementById('canvas');
-let ctx=c.getContext('2d');
-ctx.fillStyle='gray';
-ctx.fillRect(50,50,200,100);
-}
+    function calcElectro() {
+        let rooms = document.getElementById('e_rooms').value;
+        let pts = document.getElementById('e_points').value;
+        let res = document.getElementById('res_electro');
+        res.innerHTML = `
+            <h3>სავარაუდო ხარჯი:</h3>
+            <ul>
+                <li>კაბელი (საშუალოდ): ${rooms * 50 + pts * 4} მეტრი</li>
+                <li>ავტომატური ამომრთველი: ${parseInt(rooms) + 2} ცალი</li>
+                <li>სანტექნიკური მილი (20მმ): ${rooms * 15} მეტრი</li>
+            </ul>`;
+        res.style.display = "block";
+    }
 </script>
 
 </body>
