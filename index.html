@@ -107,7 +107,6 @@
 
         .result { font-size: 28px; color: var(--wine-red); font-weight: 900; }
 
-        /* დაავადებების სექცია */
         .disease-box {
             background: rgba(211, 84, 0, 0.05);
             border-radius: 12px;
@@ -117,7 +116,6 @@
         }
         .disease-box b { color: var(--clay); font-size: 1.1rem; }
 
-        /* ჯიშების სექცია - განცალკევებული */
         .region-title { 
             background: var(--deep-red); 
             color: #fff; 
@@ -139,6 +137,7 @@
 
         .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
         .info-item { background: #f9f9f9; padding: 15px; border-radius: 8px; font-size: 14px; border-top: 3px solid var(--gold); }
+        .info-item b { color: var(--deep-red); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -219,60 +218,136 @@
     </div>
 
     <div class="card">
-        <h2>🧹 მარნის ჰიგიენის სტანდარტი</h2>
-        <ul>
-            <li><b>ქვევრის რეცხვა:</b> გამოიყენეთ კირის წყალი. რეცხეთ მანამ, სანამ წყალი სრულიად გამჭვირვალე არ იქნება.</li>
-            <li><b>გოგირდი:</b> ქვევრის დახურვის წინ დაწვით გოგირდის შოლტი (1 შოლტი 500-1000 ლიტრზე).</li>
-            <li><b>გადაღების დრო:</b> ნოემბერი/დეკემბერი (დუღილის დასრულებიდან 1 თვეში) და მარტი/აპრილი.</li>
-        </ul>
-    </div>
-
-    <div class="card">
         <h2>📖 ქართული ყურძნის ენციკლოპედია</h2>
         
         <div class="region-title">კახეთი</div>
         <details>
-            <summary>🍇 რქაწითელი</summary>
+            <summary>⚪ რქაწითელი</summary>
             <div class="info-grid">
-                <div class="info-item"><b>გამოსავალი:</b> 65-70 ლ / 100კგ</div>
-                <div class="info-item"><b>მიკროზონა:</b> წინანდალი, ნაფარეული</div>
+                <div class="info-item"><b>მიკროზონა:</b> წინანდალი, ნაფარეული, გურჯაანი, კარდენახი.</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 20-24%.</div>
+                <div class="info-item"><b>არომატი:</b> მინდვრის ყვავილები, თეთრი ხილი, ქვევრში - ჩირი და თხილი.</div>
             </div>
         </details>
         <details>
-            <summary>🍇 მანავის მწვანე</summary>
-            <p>საგარეჯოს მიკროზონა. გამოირჩევა ნაზი, ხილის არომატებით.</p>
+            <summary>🔴 საფერავი</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>მიკროზონა:</b> მუკუზანი, ნაფარეული, ქინძმარაული, ახაშენი.</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 20-26% (ქინძმარაულისთვის 23-25%).</div>
+                <div class="info-item"><b>არომატი:</b> ალუბალი, შავი ქლიავი, მაყვალი, ძირტკბილა.</div>
+            </div>
         </details>
         <details>
-            <summary>🍇 ხიხვი</summary>
-            <p>უძველესი ჯიში. საუკეთესოა სხეულიანი ქვევრის ღვინისთვის.</p>
+            <summary>⚪ ქისი</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>მიკროზონა:</b> მაღრაანი, თელავი, ახმეტა.</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 22-25%.</div>
+                <div class="info-item"><b>არომატი:</b> გარგარი, ტროპიკული ხილი, ჩაის ფოთოლი.</div>
+            </div>
+        </details>
+
+        <div class="region-title">ქართლი</div>
+        <details>
+            <summary>⚪ ჩინური (ჩინებული)</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>მიკროზონა:</b> მუხრანის ველი, კასპი, გორი.</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 18-21%.</div>
+                <div class="info-item"><b>არომატი:</b> თეთრი ყვავილები, პიტნა, მწვანე ვაშლი. საუკეთესოა ცქრიალა ღვინისთვის.</div>
+            </div>
         </details>
         <details>
-            <summary>🍇 ქისი</summary>
-            <p>ახმეტისა და თელავის მხარე. გამოირჩევა ეგზოტიკური ტონებით.</p>
+            <summary>⚪ გორული მწვანე</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>მიკროზონა:</b> ატენის ხეობა, გორი.</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 20-22%.</div>
+                <div class="info-item"><b>არომატი:</b> ლაიმი, ყვითელი ხილი, ნაზი სანელებლები.</div>
+            </div>
+        </details>
+        <details>
+            <summary>🔴 თავკვერი</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>მიკროზონა:</b> შიდა ქართლის ვენახები.</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 19-21%.</div>
+                <div class="info-item"><b>არომატი:</b> წითელი მოცხარი, ვარდი, მინდვრის კენკრა.</div>
+            </div>
         </details>
 
         <div class="region-title">იმერეთი</div>
         <details>
-            <summary>🍇 ციცქა</summary>
-            <p>საუკეთესოა ცოცხალი, მჟავიანი თეთრი ღვინოებისთვის.</p>
+            <summary>⚪ ციცქა</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>მიკროზონა:</b> სვირი, კვალითი, ობჩა.</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 18-22% (მაღალი მჟავიანობა).</div>
+                <div class="info-item"><b>არომატი:</b> მწვანე ვაშლი, მსხალი, ციტრუსი. იძლევა ცოცხალ, ენერგიულ ღვინოს.</div>
+            </div>
         </details>
         <details>
-            <summary>🍇 ცოლიკოური</summary>
-            <p>დასავლეთ საქართველოს ყველაზე გავრცელებული ჯიში.</p>
+            <summary>⚪ ცოლიკოური</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>მიკროზონა:</b> ტვიში (ლეჩხუმი), ობჩა, ბაღდათი, ზესტაფონი.</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 20-25%.</div>
+                <div class="info-item"><b>არომატი:</b> ყვითელი ქლიავი, თაფლი, მინდვრის ყვავილები.</div>
+            </div>
         </details>
         <details>
-            <summary>🍇 კრახუნა</summary>
-            <p>მაღალალკოჰოლური და სხეულიანი იმერული ღვინო.</p>
+            <summary>⚪ კრახუნა</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>მიკროზონა:</b> ზესტაფონი, დიმი, ობჩა.</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 21-24%.</div>
+                <div class="info-item"><b>არომატი:</b> მწიფე ხილი, გარგარი, ძლიერი სხეული.</div>
+            </div>
+        </details>
+        <details>
+            <summary>🔴 ოცხანური საფერე</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>მიკროზონა:</b> იმერეთის მთისწინეთი.</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 20-23%.</div>
+                <div class="info-item"><b>არომატი:</b> ტყის კენკრა, მიწის ტონები, ძლიერი ტანინები.</div>
+            </div>
         </details>
 
         <div class="region-title">რაჭა-ლეჩხუმი</div>
         <details>
-            <summary>🍇 წულუკიძის თეთრა</summary>
-            <p>რაჭის რეგიონი. ნაზი და ხავერდოვანი გემო.</p>
+            <summary>🔴 ალექსანდროული & მუჯურეთული</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>მიკროზონა:</b> ხვანჭკარა, ტოლა, ჭრებალო.</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 23-27%.</div>
+                <div class="info-item"><b>არომატი:</b> ჟოლო, ბროწეული, ვარდის მურაბა.</div>
+            </div>
         </details>
         <details>
-            <summary>🍇 მცვივანი რაჭული</summary>
-            <p>იშვიათი და არომატული ჯიში ადგილობრივი წარმოებისთვის.</p>
+            <summary>🔴 უსახელოური</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>მიკროზონა:</b> ოყურეში, ზუბი (ცაგერის რ-ნი).</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 22-26%.</div>
+                <div class="info-item"><b>არომატი:</b> შავი მოცხარი, წიწაკა, ალუბლის ჩირი.</div>
+            </div>
+        </details>
+        <details>
+            <summary>⚪ წულუკიძის თეთრა</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>მიკროზონა:</b> ამბროლაურის რაიონი.</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 20-23%.</div>
+                <div class="info-item"><b>არომატი:</b> თაფლი, ატამი, ნაზი ყვავილები.</div>
+            </div>
+        </details>
+
+        <div class="region-title">სამეგრელო & გურია</div>
+        <details>
+            <summary>🔴 ოჯალეში</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>მიკროზონა:</b> სალხინო, თამაკონი (მარტვილი).</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 21-24%.</div>
+                <div class="info-item"><b>არომატი:</b> ველური ვარდი, წითელი ხილი, სანელებლები.</div>
+            </div>
+        </details>
+        <details>
+            <summary>🔴 ჩხავერი</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>მიკროზონა:</b> ჩოხატაური, აჭარის მთისწინეთი.</div>
+                <div class="info-item"><b>შაქრიანობა:</b> 19-22%.</div>
+                <div class="info-item"><b>არომატი:</b> ციტრუსი, წითელი კენკრა, თაფლი (იძლევა საუკეთესო ვარდისფერ ღვინოს).</div>
+            </div>
         </details>
     </div>
 </div>
