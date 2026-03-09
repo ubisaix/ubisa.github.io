@@ -1,236 +1,327 @@
 <!DOCTYPE html>
 <html lang="ka">
 <head>
-<meta charset="UTF-8">
-<title>მეღვინის დამხმარე</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ღვინის ოსტატი - ციფრული მარანი</title>
+    <style>
+        :root {
+            --wine-red: #800020;
+            --deep-red: #4a0404;
+            --clay: #d35400;
+            --gold: #f1c40f;
+            --glass: rgba(255, 255, 255, 0.9);
+        }
 
-<style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: #2c3e50;
+            margin: 0;
+            padding: 20px;
+        }
 
-body{
-font-family: Arial, sans-serif;
-margin:0;
-background:#f4f4f4;
-color:#333;
-}
+        .container { max-width: 1000px; margin: auto; }
 
-header{
-background:#6b0f1a;
-color:white;
-padding:20px;
-text-align:center;
-}
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
 
-nav{
-background:#8b1e2d;
-padding:10px;
-text-align:center;
-}
+        header h1 { font-size: 3rem; margin-bottom: 10px; }
 
-nav a{
-color:white;
-margin:15px;
-text-decoration:none;
-font-weight:bold;
-}
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: transform 0.3s ease;
+        }
 
-nav a:hover{
-text-decoration:underline;
-}
+        .card:hover { transform: translateY(-5px); }
 
-.container{
-width:90%;
-max-width:1000px;
-margin:auto;
-padding:30px;
-}
+        h2 { 
+            color: var(--deep-red); 
+            border-left: 5px solid var(--clay); 
+            padding-left: 15px; 
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
 
-.card{
-background:white;
-padding:20px;
-margin-bottom:25px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
-}
+        .input-group { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 15px; }
+        .input-item { flex: 1; min-width: 250px; }
 
-h2{
-color:#6b0f1a;
-}
+        label { font-weight: bold; display: block; margin-bottom: 8px; color: #444; }
 
-input{
-padding:10px;
-margin:5px;
-width:120px;
-}
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            outline: none;
+        }
 
-button{
-padding:10px 20px;
-background:#6b0f1a;
-color:white;
-border:none;
-border-radius:5px;
-cursor:pointer;
-}
+        input:focus { border-color: var(--wine-red); }
 
-button:hover{
-background:#8b1e2d;
-}
+        .btn {
+            background: linear-gradient(135deg, var(--wine-red), var(--deep-red));
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(128, 0, 32, 0.3);
+            transition: all 0.3s;
+        }
 
-.result{
-margin-top:15px;
-font-weight:bold;
-}
+        .btn:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 8px 20px rgba(128, 0, 32, 0.4);
+        }
 
-footer{
-background:#222;
-color:white;
-text-align:center;
-padding:20px;
-margin-top:40px;
-}
+        .result-box {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 20px;
+            border: 2px dashed var(--clay);
+            animation: fadeIn 0.5s;
+        }
 
-</style>
+        .result { font-size: 28px; color: var(--wine-red); font-weight: 900; }
 
-<script>
+        /* დაავადებების სექცია */
+        .disease-box {
+            background: rgba(211, 84, 0, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-right: 4px solid var(--clay);
+        }
+        .disease-box b { color: var(--clay); font-size: 1.1rem; }
 
-function calculateQvevri(){
+        /* ჯიშების სექცია - განცალკევებული */
+        .region-title { 
+            background: var(--deep-red); 
+            color: #fff; 
+            padding: 12px 20px; 
+            margin: 30px 0 15px 0; 
+            border-radius: 10px;
+            font-size: 1.3rem;
+        }
 
-let height = document.getElementById("height").value;
-let diameter = document.getElementById("diameter").value;
+        details { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 12px; 
+            margin-bottom: 12px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
 
-height = height/100;
-diameter = diameter/100;
+        summary { font-weight: bold; cursor: pointer; color: var(--wine-red); font-size: 1.1rem; }
 
-let volume = 0.52 * diameter * diameter * height;
-let liters = volume * 1000;
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        .info-item { background: #f9f9f9; padding: 15px; border-radius: 8px; font-size: 14px; border-top: 3px solid var(--gold); }
 
-let grapes = liters / 0.7;
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-document.getElementById("result").innerHTML =
-"ქვევრის მოცულობა ≈ " + Math.round(liters) + " ლიტრი <br>" +
-"საჭირო ყურძენი ≈ " + Math.round(grapes) + " კგ";
-
-}
-
-function calculateAlcohol(){
-
-let brix = document.getElementById("brix").value;
-
-let alcohol = brix * 0.55;
-
-document.getElementById("alcResult").innerHTML =
-"სავარაუდო ალკოჰოლი ≈ " + alcohol.toFixed(1) + "%";
-
-}
-
-</script>
-
+        ul li { margin-bottom: 12px; line-height: 1.6; }
+    </style>
 </head>
-
 <body>
 
-<header>
-<h1>🍇 მეღვინის დამხმარე</h1>
-<p>ქართული მეღვინეობის ონლაინ ინსტრუმენტები</p>
-</header>
-
-<nav>
-<a href="#">მთავარი</a>
-<a href="#">ქვევრის კალკულატორი</a>
-<a href="#">ღვინის ტექნოლოგია</a>
-<a href="#">პრობლემები</a>
-<a href="#">ჯიშები</a>
-<a href="#">კალენდარი</a>
-</nav>
-
 <div class="container">
+    <header>
+        <h1>🍷 ღვინის ოსტატი Pro</h1>
+        <p>თქვენი მარნის თანამედროვე ციფრული ასისტენტი</p>
+    </header>
 
-<div class="card">
-<h2>🧮 ქვევრის მოცულობის გამოთვლა</h2>
+    <div class="card">
+        <h2>🏺 ქვევრისა და მოსავლის გათვლა</h2>
+        <div class="input-group">
+            <div class="input-item">
+                <label>მუცლის გარშემოწერილობა (სმ):</label>
+                <input type="number" id="circ" oninput="autoDiam()" placeholder="მაგ: 190">
+            </div>
+            <div class="input-item">
+                <label>გამოთვლილი დიამეტრი (სმ):</label>
+                <input type="number" id="q_mid" readonly style="background:#f0f0f0; color: #666;">
+            </div>
+        </div>
+        <div class="input-group">
+            <div class="input-item">
+                <label>ყელის დიამეტრი (სმ):</label>
+                <input type="number" id="q_top" value="40">
+            </div>
+            <div class="input-item">
+                <label>სრული სიმაღლე (სმ):</label>
+                <input type="number" id="q_height" value="110">
+            </div>
+        </div>
+        <button class="btn" onclick="calcQvevri()">მონაცემების დამუშავება</button>
+        <div class="result-box" id="q_res_box" style="display:none;">
+            <div class="result" id="q_res"></div>
+            <p id="grapes_needed" style="font-size: 18px; margin: 10px 0;"></p>
+            <p id="chacha_res" style="color:var(--clay); font-weight:bold; font-size: 1.1rem;"></p>
+        </div>
+    </div>
 
-<p>შეიყვანეთ ქვევრის მონაცემები:</p>
+    <div class="card">
+        <h2>🌡️ შაქრიანობა და ტექნოლოგია</h2>
+        <div class="input-group">
+            <div class="input-item">
+                <label>შაქრიანობა (% Brix):</label>
+                <input type="number" id="sugar" placeholder="მაგ: 22">
+            </div>
+            <div class="input-item">
+                <label>სასურველი ალკოჰოლის მატება (%):</label>
+                <input type="number" id="target_plus" placeholder="0">
+            </div>
+        </div>
+        <button class="btn" onclick="calcAlcohol()">ალკოჰოლის პროგნოზი</button>
+        <div id="alc_res" class="result-box" style="display:none;">
+            <div class="result" id="alc_val"></div>
+            <p id="sugar_add_info" style="color: #555; font-style: italic;"></p>
+        </div>
+    </div>
 
-სიმაღლე (სმ)
-<br>
-<input type="number" id="height">
+    <div class="card">
+        <h2>⚠️ დაავადებები და პრევენცია</h2>
+        <div class="disease-box">
+            <b>🍷 დაძმარება (Acetification)</b>
+            <p>ხდება ჰაერთან კონტაქტისას. მკურნალობა: ადრეულ ეტაპზე პასტერიზაცია (60°C) და ჭურჭლის სრული შევსება.</p>
+        </div>
+        <div class="disease-box">
+            <b>🦠 ღვინის "ყვავილი" (Mycoderma)</b>
+            <p>თეთრი აპკი ზედაპირზე. მკურნალობა: აპკის ფრთხილად მოცილება, გოგირდით დამუშავება და ჰერმეტული დახურვა.</p>
+        </div>
+        <div class="disease-box">
+            <b>💨 ჩახუთვა (გოგირდწყალბადის სუნი)</b>
+            <p>დროული გადაღება და ღვინის აერაცია (ჰაერზე დასხმა). ხელს უწყობს არასასიამოვნო სუნის მოცილებას.</p>
+        </div>
+    </div>
 
-<br>
+    <div class="card">
+        <h2>🧹 მარნის ჰიგიენის სტანდარტი</h2>
+        <ul>
+            <li><b>ქვევრის რეცხვა:</b> გამოიყენეთ კირის წყალი. რეცხეთ მანამ, სანამ წყალი სრულიად გამჭვირვალე არ იქნება.</li>
+            <li><b>გოგირდი:</b> ქვევრის დახურვის წინ დაწვით გოგირდის შოლტი (1 შოლტი 500-1000 ლიტრზე).</li>
+            <li><b>გადაღების დრო:</b> ნოემბერი/დეკემბერი (დუღილის დასრულებიდან 1 თვეში) და მარტი/აპრილი.</li>
+        </ul>
+    </div>
 
-შუაგულის დიამეტრი (სმ)
-<br>
-<input type="number" id="diameter">
+    <div class="card">
+        <h2>📖 ქართული ყურძნის ენციკლოპედია</h2>
+        
+        <div class="region-title">კახეთი</div>
+        <details>
+            <summary>🍇 რქაწითელი</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>გამოსავალი:</b> 65-70 ლ / 100კგ</div>
+                <div class="info-item"><b>მიკროზონა:</b> წინანდალი, ნაფარეული</div>
+            </div>
+        </details>
+        <details>
+            <summary>🍇 მანავის მწვანე</summary>
+            <p>საგარეჯოს მიკროზონა. გამოირჩევა ნაზი, ხილის არომატებით.</p>
+        </details>
+        <details>
+            <summary>🍇 ხიხვი</summary>
+            <p>უძველესი ჯიში. საუკეთესოა სხეულიანი ქვევრის ღვინისთვის.</p>
+        </details>
+        <details>
+            <summary>🍇 ქისი</summary>
+            <p>ახმეტისა და თელავის მხარე. გამოირჩევა ეგზოტიკური ტონებით.</p>
+        </details>
 
-<br><br>
+        <div class="region-title">იმერეთი</div>
+        <details>
+            <summary>🍇 ციცქა</summary>
+            <p>საუკეთესოა ცოცხალი, მჟავიანი თეთრი ღვინოებისთვის.</p>
+        </details>
+        <details>
+            <summary>🍇 ცოლიკოური</summary>
+            <p>დასავლეთ საქართველოს ყველაზე გავრცელებული ჯიში.</p>
+        </details>
+        <details>
+            <summary>🍇 კრახუნა</summary>
+            <p>მაღალალკოჰოლური და სხეულიანი იმერული ღვინო.</p>
+        </details>
 
-<button onclick="calculateQvevri()">გამოთვლა</button>
-
-<div class="result" id="result"></div>
-
+        <div class="region-title">რაჭა-ლეჩხუმი</div>
+        <details>
+            <summary>🍇 წულუკიძის თეთრა</summary>
+            <p>რაჭის რეგიონი. ნაზი და ხავერდოვანი გემო.</p>
+        </details>
+        <details>
+            <summary>🍇 მცვივანი რაჭული</summary>
+            <p>იშვიათი და არომატული ჯიში ადგილობრივი წარმოებისთვის.</p>
+        </details>
+    </div>
 </div>
 
+<script>
+    function autoDiam() {
+        const circ = document.getElementById('circ').value;
+        const diam = circ / Math.PI;
+        document.getElementById('q_mid').value = diam.toFixed(1);
+    }
 
-<div class="card">
-<h2>🍷 ალკოჰოლის პროგნოზი</h2>
+    function calcQvevri() {
+        const d = document.getElementById('q_top').value / 2;
+        const D = document.getElementById('q_mid').value / 2;
+        const h = document.getElementById('q_height').value;
+        if(!D || !h) return alert("გთხოვთ შეავსოთ ქვევრის პარამეტრები!");
 
-შაქრიანობა (Brix)
+        const h_half = h / 2;
+        const v_bottom = (1/3) * Math.PI * Math.pow(D, 2) * h_half;
+        const v_top = (1/3) * Math.PI * h_half * (Math.pow(D, 2) + D*d + Math.pow(d, 2));
+        
+        const total = ((v_bottom + v_top) / 1000) * 1.1; 
+        const result = Math.round(total);
+        const grapeKg = Math.round(result * 1.4);
+        
+        document.getElementById('q_res_box').style.display = "block";
+        document.getElementById('q_res').innerText = "ტევადობა: " + result + " ლიტრი";
+        document.getElementById('grapes_needed').innerText = "საჭირო ყურძენი: ~ " + grapeKg + " კგ.";
+        document.getElementById('chacha_res').innerText = "ჭაჭის გამოსავალი: ~ " + Math.round(grapeKg * 0.25) + " კგ.";
+    }
 
-<br>
+    function calcAlcohol() {
+        const sugar = parseFloat(document.getElementById('sugar').value);
+        const plus = parseFloat(document.getElementById('target_plus').value) || 0;
+        if(!sugar) return alert("შეიყვანეთ შაქრიანობა!");
 
-<input type="number" id="brix">
-
-<br><br>
-
-<button onclick="calculateAlcohol()">გამოთვლა</button>
-
-<div class="result" id="alcResult"></div>
-
-</div>
-
-
-<div class="card">
-<h2>🩺 ღვინის პრობლემები</h2>
-
-<ul>
-<li><b>ღვინის ყვავილი</b> – ზედაპირზე თეთრი აპკი</li>
-<li><b>დაძმარება</b> – ძმრის სუნი</li>
-<li><b>ჩახუთვა</b> – უსიამოვნო გოგირდის სუნი</li>
-</ul>
-
-</div>
-
-
-<div class="card">
-<h2>🍇 ქართული ყურძნის ჯიშები</h2>
-
-<ul>
-<li>რქაწითელი</li>
-<li>საფერავი</li>
-<li>ციცქა</li>
-<li>ხიხვი</li>
-<li>ალექსანდროული</li>
-</ul>
-
-</div>
-
-
-<div class="card">
-<h2>📅 რთველის კალენდარი</h2>
-
-<ul>
-<li>გაზაფხული – ვენახის გასხვლა</li>
-<li>ზაფხული – წამლობა</li>
-<li>შემოდგომა – რთველი</li>
-<li>ზამთარი – ქვევრის მოვლა</li>
-</ul>
-
-</div>
-
-</div>
-
-<footer>
-
-ქართული მეღვინეობა • ღვინის ონლაინ ინსტრუმენტები
-
-</footer>
+        const alc = sugar * 0.59;
+        document.getElementById('alc_res').style.display = "block";
+        document.getElementById('alc_val').innerText = "ალკოჰოლი: " + alc.toFixed(1) + "%";
+        
+        if(plus > 0) {
+            const addSugar = plus * 17;
+            document.getElementById('sugar_add_info').innerText = 
+                "გრადუსის " + plus + "%-ით ასაწევად საჭიროა " + addSugar + " გრ შაქარი 1 ლიტრზე.";
+        } else {
+            document.getElementById('sugar_add_info').innerText = "";
+        }
+    }
+</script>
 
 </body>
 </html>
