@@ -2,46 +2,91 @@
 <html lang="ka">
 <head>
     <meta charset="UTF-8">
-    <title>ჩემი ხარჯების კალკულატორი</title>
+    <title>ავტო-ასისტენტი: ელექტროობა და სერვისი</title>
 </head>
 <body>
 
-    <section id="calculator">
-        <h2>💰 ხარჯების აღრიცხვა</h2>
-        <p>შეიტანეთ მონაცემები თქვენი ბიუჯეტის გასაკონტროლებლად:</p>
+    <header>
+        <h1>🛠️ ავტომობილის ტექნიკური გზამკვლევი</h1>
+        <p>პრაქტიკული ინსტრუმენტი დაშლა-აწყობისა და ელექტროობის კონტროლისთვის</p>
+    </header>
 
-        <form id="expense-form">
+    <hr>
+
+    <section id="electrical">
+        <h2>⚡ ელექტროობის შემოწმების ჩეკლისტი</h2>
+        <p>მონიშნეთ შემოწმებული კომპონენტები, რომ არაფერი გამოგრჩეთ:</p>
+        
+        <form id="checklist">
+            <input type="checkbox" id="battery" name="check">
+            <label for="battery">აკუმულატორის ძაბვის შემოწმება (უნდა იყოს ~12.6V)</label><br>
             
-            <label for="amount">თანხა (₾):</label><br>
-            <input type="number" id="amount" name="amount" placeholder="მაგ: 50" required>
-            <br><br>
-
-            <label for="category">კატეგორია:</label><br>
-            <select id="category" name="category">
-                <option value="food">🍱 საკვები</option>
-                <option value="transport">🚗 ტრანსპორტი</option>
-                <option value="entertainment">🎮 გართობა</option>
-                <option value="bills">📑 კომუნალურები</option>
-                <option value="other">✨ სხვა</option>
-            </select>
-            <br><br>
-
-            <label for="date">თარიღი:</label><br>
-            <input type="date" id="date" name="date">
-            <br><br>
-
-            <button type="button" onclick="addExpense()">დამატება</button>
+            <input type="checkbox" id="fuses" name="check">
+            <label for="fuses">მცველების (Fuses) ვიზუალური დათვალიერება</label><br>
+            
+            <input type="checkbox" id="alternator" name="check">
+            <label for="alternator">გენერატორის დატენვის შემოწმება (დაქოქილზე ~14V)</label><br>
+            
+            <input type="checkbox" id="ground" name="check">
+            <label for="ground">"მასის" (Ground) კაბელების კონტაქტის შემოწმება</label>
         </form>
-
-        <hr>
-
-        <h3>ისტორია:</h3>
-        <ul id="expense-list">
-            <li>ჯერჯერობით ჩანაწერი არ არის...</li>
-        </ul>
-
-        <h4>ჯამური ხარჯი: <span id="total-amount">0</span> ₾</h4>
     </section>
+
+    <br>
+
+    <section id="assembly">
+        <h2>🔧 დაშლა-აწყობის ეტაპები</h2>
+        <p>დააწკაპუნეთ სათაურს დეტალური ინსტრუქციის სანახავად:</p>
+
+        <details>
+            <summary>📦 ძრავის ზედა ხუფის (Valve Cover) მოხსნა</summary>
+            <ul>
+                <li>მოხსენით დეკორატიული პლასტმასი.</li>
+                <li>გამორთეთ აალების სანთლების (Coils) კონექტორები.</li>
+                <li>მოუშვით ბოლტები "ჯვარედინი" პრინციპით.</li>
+            </ul>
+        </details>
+
+        <details>
+            <summary>🔌 ფარების ელექტროობის დაერთება</summary>
+            <p>დარწმუნდით, რომ ფერები ემთხვევა სქემას:</p>
+            <table border="1">
+                <tr>
+                    <th>სადენის ფერი</th>
+                    <th>ფუნქცია</th>
+                </tr>
+                <tr>
+                    <td>წითელი</td>
+                    <td>+12V კვება</td>
+                </tr>
+                <tr>
+                    <td>შავი</td>
+                    <td>მასა (GND)</td>
+                </tr>
+                <tr>
+                    <td>ყვითელი</td>
+                    <td>მომტრიალებელი სიგნალი</td>
+                </tr>
+            </table>
+        </details>
+    </section>
+
+    <br>
+
+    <section id="parts-calculator">
+        <h2>🧮 ხარჯების წინასწარი გათვლა</h2>
+        <label>სათადარიგო ნაწილის ფასი:</label>
+        <input type="number" id="part-price" placeholder="მაგ: 150 ₾">
+        <br><br>
+        <label>ხელობის ღირებულება:</label>
+        <input type="number" id="labor-price" placeholder="მაგ: 50 ₾">
+        <br><br>
+        <button type="button">ჯამის დათვლა</button>
+    </section>
+
+    <footer>
+        <p>© 2024 ავტო-ტექნიკური პლატფორმა</p>
+    </footer>
 
 </body>
 </html>
