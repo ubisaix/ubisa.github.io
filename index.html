@@ -1,148 +1,158 @@
 <!DOCTYPE html>
 <html lang="ka">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>მანქანის ბორტკომპიუტერი და დიაგნოსტიკა</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    /* Reset & Base */
-    * {margin:0; padding:0; box-sizing:border-box;}
-    body {font-family:'Roboto', sans-serif; background:#f4f4f9; color:#333;}
-    a {text-decoration:none; color:inherit;}
-
-    /* Header */
-    header {background:#1e90ff; color:white; padding:20px 0; text-align:center;}
-    header h1 {font-size:2em;}
-    header p {margin-top:5px; font-size:1em;}
-
-    /* Container */
-    .container {width:90%; max-width:1200px; margin:30px auto;}
-
-    /* Sections */
-    h2 {margin-bottom:20px; color:#1e90ff;}
-
-    /* Grid Layout */
-    .grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:20px;}
-
-    /* Card */
-    .card {
-      background:white; 
-      border-radius:10px; 
-      padding:20px; 
-      text-align:center;
-      box-shadow:0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
-      cursor:pointer;
-    }
-    .card:hover {transform: translateY(-5px);}
-    .card img {width:60px; height:60px; margin-bottom:10px;}
-    .card h3 {margin-bottom:10px; font-size:1.1em;}
-    .card p {font-size:0.9em; color:#666;}
-
-    /* Modal */
-    .modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;}
-    .modal-content {background:white; padding:30px; border-radius:10px; width:90%; max-width:500px; position:relative;}
-    .modal-content h3 {color:#1e90ff; margin-bottom:15px;}
-    .close {position:absolute; top:10px; right:15px; font-size:1.5em; cursor:pointer;}
-
-    /* Footer */
-    footer {text-align:center; padding:20px; color:#888; font-size:0.9em; margin-top:50px;}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>მანქანის ბორტკომპიუტერი & დიაგნოსტიკა</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * {margin:0; padding:0; box-sizing:border-box;}
+  body {font-family:'Roboto', sans-serif; background:#f4f4f9; color:#333;}
+  a {text-decoration:none; color:inherit;}
+  header {background:#1e90ff; color:white; padding:20px 0; text-align:center;}
+  header h1 {font-size:2em;}
+  header p {margin-top:5px; font-size:1em;}
+  .container {width:90%; max-width:1200px; margin:30px auto;}
+  h2 {margin-bottom:20px; color:#1e90ff;}
+  .grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:20px;}
+  .card {
+    background:white; border-radius:10px; padding:20px; text-align:center;
+    box-shadow:0 4px 8px rgba(0,0,0,0.1); transition: transform 0.2s; cursor:pointer;
+  }
+  .card:hover {transform: translateY(-5px);}
+  .card img {width:60px; height:60px; margin-bottom:10px;}
+  .card h3 {margin-bottom:10px; font-size:1.1em;}
+  .card p {font-size:0.9em; color:#666;}
+  .modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;}
+  .modal-content {background:white; padding:30px; border-radius:10px; width:90%; max-width:600px; position:relative;}
+  .modal-content h3 {color:#1e90ff; margin-bottom:15px;}
+  .close {position:absolute; top:10px; right:15px; font-size:1.5em; cursor:pointer;}
+  footer {text-align:center; padding:20px; color:#888; font-size:0.9em; margin-top:50px;}
+</style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header>
-    <h1>მანქანის ბორტკომპიუტერი & დიაგნოსტიკა</h1>
-    <p>ყველაფერი მძღოლებისთვის – დამწყებთათვის და გამოცდილთათვის</p>
-  </header>
+<header>
+  <h1>მანქანის ბორტკომპიუტერი & დიაგნოსტიკა</h1>
+  <p>ყველაფერი მძღოლებისთვის – დამწყებთათვის და გამოცდილთათვის</p>
+</header>
 
-  <!-- Container -->
-  <div class="container">
+<div class="container">
 
-    <!-- Dashboard Indicators -->
-    <section>
-      <h2>ბორტკომპიუტერის ნიშნები</h2>
-      <div class="grid">
-        <div class="card" onclick="openModal('Check Engine','ძრავის პრობლემა. შეიძლება იყოს სენსორი, საწვავის სისტემა ან ძრავის სხვა პრობლემა. უნდა შეამოწმოთ მანქანის დიაგნოსტიკა.')">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Check_Engine_light.svg" alt="Check Engine">
-          <h3>Check Engine</h3>
-          <p>ძრავის პრობლემა</p>
-        </div>
-        <div class="card" onclick="openModal('Battery','აკუმულატორის დატვირთვა ან სირბილე. საჭიროა შემოწმება.')">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Battery_light.svg" alt="Battery">
-          <h3>Battery</h3>
-          <p>ბატარეის პრობლემა</p>
-        </div>
-        <div class="card" onclick="openModal('Oil Pressure','ზეთის წნევა ძალიან დაბალია. შეჩერება და ზეთის დონის შემოწმება აუცილებელია.')">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Oil_pressure_light.svg" alt="Oil Pressure">
-          <h3>Oil Pressure</h3>
-          <p>ზეთის წნევა</p>
-        </div>
-        <div class="card" onclick="openModal('Engine Temperature','ძრავის ტემპერატურა ძალიან მაღალია. შეწყვიტეთ მართვა და აცივეთ ძრავა.')">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Engine_temperature.svg" alt="Engine Temperature">
-          <h3>Engine Temp</h3>
-          <p>ძრავის გადახურება</p>
-        </div>
-        <div class="card" onclick="openModal('ABS','სამუხრუჭე სისტემის პრობლემა. უსაფრთხოების მიზნით შეამოწმეთ სისტემები.')">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/ABS_light.svg" alt="ABS">
-          <h3>ABS</h3>
-          <p>სამუხრუჭე სისტემა</p>
-        </div>
+  <!-- Dashboard Indicators -->
+  <section>
+    <h2>ბორტკომპიუტერის ნიშნები</h2>
+    <div class="grid">
+      <!-- 50+ Symbols -->
+      <div class="card" onclick="openModal('Check Engine','ძრავის პრობლემა. შესაძლოა სენსორი, საწვავის სისტემა ან ძრავის სხვა პრობლემა. OBD2 დიაგნოსტიკა რეკომენდებულია.')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Check_Engine_light.svg" alt="Check Engine">
+        <h3>Check Engine</h3>
+        <p>ძრავის პრობლემა</p>
       </div>
-    </section>
-
-    <!-- Diagnostics -->
-    <section>
-      <h2>მძიმე პრობლემების დიაგნოსტიკა</h2>
-      <div class="grid">
-        <div class="card" onclick="openModal('ძრავის პრობლემები','ძრავის პრობლემა შეიძლება იყოს სენსორის, საწვავის სისტემის ან ცილინდრების პრობლემით გამოწვეული. რეკომენდებულია OBD2 დიაგნოსტიკა.')">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Check_Engine_light.svg" alt="Engine Problem">
-          <h3>ძრავის პრობლემები</h3>
-          <p>OBD2 დიაგნოსტიკა</p>
-        </div>
-        <div class="card" onclick="openModal('ტრანსმისია','ტრანსმისიის პრობლემა: შეიძლება იყოს სითხის დონის პრობლემა ან მექანიკური დაზიანება.')">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Transmission_light.svg" alt="Transmission Problem">
-          <h3>ტრანსმისია</h3>
-          <p>სითხის დონის შემოწმება</p>
-        </div>
-        <div class="card" onclick="openModal('მუხრუჭები','მუხრუჭების სიგნალი: შეიძლება დახარჯული საცხურები ან ჰიდრავლიკური პრობლემა.')">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Brake_light.svg" alt="Brake Problem">
-          <h3>მუხრუჭები</h3>
-          <p>შეამოწმეთ საცხურები და ჰიდრავლიკა</p>
-        </div>
+      <div class="card" onclick="openModal('Battery','ბატარეის დატვირთვა არასაკმარისია. შეამოწმეთ აკუმულატორი.')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Battery_light.svg" alt="Battery">
+        <h3>Battery</h3>
+        <p>ბატარეის პრობლემა</p>
       </div>
-    </section>
-
-  </div>
-
-  <!-- Modal -->
-  <div class="modal" id="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <h3 id="modal-title"></h3>
-      <p id="modal-text"></p>
+      <div class="card" onclick="openModal('Oil Pressure','ზეთის წნევა დაბალია. შეწყვიტეთ მართვა და შეამოწმეთ ზეთის დონე.')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Oil_pressure_light.svg" alt="Oil Pressure">
+        <h3>Oil Pressure</h3>
+        <p>ზეთის წნევა</p>
+      </div>
+      <div class="card" onclick="openModal('Engine Temperature','ძრავის ტემპერატურა მაღალია. აცივეთ ძრავა.')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Engine_temperature.svg" alt="Engine Temperature">
+        <h3>Engine Temp</h3>
+        <p>ძრავის გადახურება</p>
+      </div>
+      <div class="card" onclick="openModal('ABS','ABS სისტემა არ მუშაობს. უსაფრთხოების მიზნით შეამოწმეთ მუხრუჭები.')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/ABS_light.svg" alt="ABS">
+        <h3>ABS</h3>
+        <p>სამუხრუჭე სისტემა</p>
+      </div>
+      <div class="card" onclick="openModal('Brake','მუხრუჭის პრობლემა. შეამოწმეთ საცხურები.')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Brake_light.svg" alt="Brake">
+        <h3>Brake</h3>
+        <p>მუხრუჭი</p>
+      </div>
+      <div class="card" onclick="openModal('Seatbelt','კრედიტი შეამოწმეთ. უსაფრთხოების ქამარი არ შეიკრა.')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Seatbelt_light.svg" alt="Seatbelt">
+        <h3>Seatbelt</h3>
+        <p>უსაფრთხოების ქამარი</p>
+      </div>
+      <div class="card" onclick="openModal('Fuel','საწვავი დაბალია. შეავსეთ.')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e2/Fuel_light.svg" alt="Fuel">
+        <h3>Fuel</h3>
+        <p>საწვავი</p>
+      </div>
+      <div class="card" onclick="openModal('Airbag','Airbag სისტემა პრობლემურია. უსაფრთხოების შემოწმება აუცილებელია.')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Airbag_light.svg" alt="Airbag">
+        <h3>Airbag</h3>
+        <p>სადააგენბელი სისტემა</p>
+      </div>
+      <div class="card" onclick="openModal('Traction Control','Traction Control გამორთულია ან პრობლემური მდგომარეობა.')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fb/Traction_control_light.svg" alt="Traction Control">
+        <h3>Traction</h3>
+        <p>გადატრიალების კონტროლი</p>
+      </div>
+      <!-- შეგიძლია დაამატო სხვა ნიშნები აქ 40+ -->
     </div>
+  </section>
+
+  <!-- Diagnostics -->
+  <section>
+    <h2>მძიმე პრობლემების დიაგნოსტიკა</h2>
+    <div class="grid">
+      <div class="card" onclick="openModal('ძრავის პრობლემები','ძრავის პრობლემა შეიძლება იყოს სენსორის, საწვავის სისტემის ან ცილინდრების დაზიანებით გამოწვეული. OBD2 დიაგნოსტიკა რეკომენდებულია.')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Check_Engine_light.svg" alt="Engine Problem">
+        <h3>ძრავის პრობლემები</h3>
+        <p>OBD2 დიაგნოსტიკა</p>
+      </div>
+      <div class="card" onclick="openModal('ტრანსმისია','ტრანსმისიის პრობლემა: სითხის დონის პრობლემა ან მექანიკური დაზიანება.')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Transmission_light.svg" alt="Transmission Problem">
+        <h3>ტრანსმისია</h3>
+        <p>სითხის შემოწმება</p>
+      </div>
+      <div class="card" onclick="openModal('მუხრუჭები','მუხრუჭების პრობლემები: შესაძლოა დახარჯული საცხურები ან ჰიდრავლიკური პრობლემა.')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Brake_light.svg" alt="Brake Problem">
+        <h3>მუხრუჭები</h3>
+        <p>ჰიდრავლიკის შემოწმება</p>
+      </div>
+      <div class="card" onclick="openModal('გადახურება','ძრავის გადახურება. შეაჩერეთ მანქანა, აცივეთ ძრავა, შეამოწმეთ წყლის დონე.')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Engine_temperature.svg" alt="Overheat">
+        <h3>გადახურება</h3>
+        <p>ძრავის დაცვა</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h3 id="modal-title"></h3>
+    <p id="modal-text"></p>
   </div>
+</div>
 
-  <!-- Footer -->
-  <footer>
-    &copy; 2026 მანქანის ბორტკომპიუტერი. ყველა უფლება დაცულია.
-  </footer>
+<footer>
+  &copy; 2026 მანქანის ბორტკომპიუტერი. ყველა უფლება დაცულია.
+</footer>
 
-  <script>
-    function openModal(title, text) {
-      document.getElementById('modal-title').innerText = title;
-      document.getElementById('modal-text').innerText = text;
-      document.getElementById('modal').style.display = 'flex';
-    }
-    function closeModal() {
-      document.getElementById('modal').style.display = 'none';
-    }
-    window.onclick = function(e) {
-      if(e.target == document.getElementById('modal')) closeModal();
-    }
-  </script>
+<script>
+  function openModal(title, text) {
+    document.getElementById('modal-title').innerText = title;
+    document.getElementById('modal-text').innerText = text;
+    document.getElementById('modal').style.display = 'flex';
+  }
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+  }
+  window.onclick = function(e) {
+    if(e.target == document.getElementById('modal')) closeModal();
+  }
+</script>
+
 </body>
 </html>
