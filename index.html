@@ -1,168 +1,148 @@
 <!DOCTYPE html>
 <html lang="ka">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>მძღოლის ენციკლოპედია | ყველაფერი ავტომობილზე</title>
-    <style>
-        :root {
-            --primary: #2c3e50;
-            --accent: #e67e22;
-            --danger: #e74c3c;
-            --warning: #f1c40f;
-            --success: #27ae60;
-            --light: #ecf0f1;
-        }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: #f9f9f9; color: #333; line-height: 1.6; }
-        header { background: var(--primary); color: white; padding: 40px 20px; text-align: center; }
-        nav { background: #34495e; padding: 10px; text-align: center; sticky: top; position: sticky; top: 0; z-index: 100; }
-        nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; }
-        .container { max-width: 1100px; margin: 20px auto; padding: 20px; }
-        
-        /* Dashboard Icons */
-        .icon-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .icon-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; transition: 0.3s; }
-        .icon-card:hover { transform: translateY(-5px); }
-        .icon-card i { font-size: 50px; display: block; margin-bottom: 10px; }
-        
-        /* Seasonal Sections */
-        .season-box { display: flex; gap: 20px; margin-top: 30px; }
-        .season { flex: 1; padding: 20px; border-radius: 10px; color: white; }
-        .winter { background: #3498db; }
-        .summer { background: #f39c12; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>მანქანის ბორტკომპიუტერი და დიაგნოსტიკა</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & Base */
+    * {margin:0; padding:0; box-sizing:border-box;}
+    body {font-family:'Roboto', sans-serif; background:#f4f4f9; color:#333;}
+    a {text-decoration:none; color:inherit;}
 
-        h2 { border-left: 5px solid var(--accent); padding-left: 15px; margin-top: 50px; color: var(--primary); }
-        table { width: 100%; border-collapse: collapse; background: white; margin-top: 20px; }
-        th, td { padding: 15px; border: 1px solid #ddd; text-align: left; }
-        th { background: var(--primary); color: white; }
-        
-        .must-know { background: #fff; border: 2px solid var(--success); padding: 20px; border-radius: 10px; margin-top: 20px; }
-        .badge { padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; color: white; }
-    </style>
+    /* Header */
+    header {background:#1e90ff; color:white; padding:20px 0; text-align:center;}
+    header h1 {font-size:2em;}
+    header p {margin-top:5px; font-size:1em;}
+
+    /* Container */
+    .container {width:90%; max-width:1200px; margin:30px auto;}
+
+    /* Sections */
+    h2 {margin-bottom:20px; color:#1e90ff;}
+
+    /* Grid Layout */
+    .grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:20px;}
+
+    /* Card */
+    .card {
+      background:white; 
+      border-radius:10px; 
+      padding:20px; 
+      text-align:center;
+      box-shadow:0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+      cursor:pointer;
+    }
+    .card:hover {transform: translateY(-5px);}
+    .card img {width:60px; height:60px; margin-bottom:10px;}
+    .card h3 {margin-bottom:10px; font-size:1.1em;}
+    .card p {font-size:0.9em; color:#666;}
+
+    /* Modal */
+    .modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;}
+    .modal-content {background:white; padding:30px; border-radius:10px; width:90%; max-width:500px; position:relative;}
+    .modal-content h3 {color:#1e90ff; margin-bottom:15px;}
+    .close {position:absolute; top:10px; right:15px; font-size:1.5em; cursor:pointer;}
+
+    /* Footer */
+    footer {text-align:center; padding:20px; color:#888; font-size:0.9em; margin-top:50px;}
+  </style>
 </head>
 <body>
 
-<header>
-    <h1>🚗 მძღოლის ციფრული ენციკლოპედია</h1>
-    <p>გზამკვლევი დამწყები და გამოცდილი მძღოლებისთვის</p>
-</header>
+  <!-- Header -->
+  <header>
+    <h1>მანქანის ბორტკომპიუტერი & დიაგნოსტიკა</h1>
+    <p>ყველაფერი მძღოლებისთვის – დამწყებთათვის და გამოცდილთათვის</p>
+  </header>
 
-<nav>
-    <a href="#dashboard">მაჩვენებლები</a>
-    <a href="#essential">აუცილებელი ცოდნა</a>
-    <a href="#seasons">სეზონური რჩევები</a>
-    <a href="#fuses">მცველები</a>
-</nav>
+  <!-- Container -->
+  <div class="container">
 
-<div class="container">
-
-    <section id="dashboard">
-        <h2>⚠️ ბორტკომპიუტერის სიმბოლოები</h2>
-        <p>დაიხსომეთ: <b>წითელი</b> ნიშნავს სასწრაფო გაჩერებას, <b>ყვითელი</b> - ყურადღებას.</p>
-        
-        
-
-        <div class="icon-grid">
-            <div class="icon-card">
-                <span style="font-size: 40px;">🧡</span>
-                <h3>Check Engine</h3>
-                <span class="badge" style="background: var(--warning);">ყვითელი</span>
-                <p>ძრავის სისტემური ხარვეზი. საჭიროა კომპიუტერული დიაგნოსტიკა.</p>
-            </div>
-            <div class="icon-card">
-                <span style="font-size: 40px;">🛢️</span>
-                <h3>ზეთის წნევა</h3>
-                <span class="badge" style="background: var(--danger);">კრიტიკული</span>
-                <p>დაბალი წნევა ძრავში. გააჩერეთ მანქანა მაშინვე!</p>
-            </div>
-            <div class="icon-card">
-                <span style="font-size: 40px;">(!)</span>
-                <h3>საბურავის წნევა</h3>
-                <span class="badge" style="background: var(--warning);">ყურადღება</span>
-                <p>ერთ-ერთი საბურავი დაშვებულია. შეამოწმეთ წნევა (PSI/BAR).</p>
-            </div>
-            <div class="icon-card">
-                <span style="font-size: 40px;">🛑</span>
-                <h3>ABS სისტემა</h3>
-                <span class="badge" style="background: var(--warning);">ყვითელი</span>
-                <p>მუხრუჭების დამხმარე სისტემა გათიშულია. დამუხრუჭება მაინც შესაძლებელია.</p>
-            </div>
+    <!-- Dashboard Indicators -->
+    <section>
+      <h2>ბორტკომპიუტერის ნიშნები</h2>
+      <div class="grid">
+        <div class="card" onclick="openModal('Check Engine','ძრავის პრობლემა. შეიძლება იყოს სენსორი, საწვავის სისტემა ან ძრავის სხვა პრობლემა. უნდა შეამოწმოთ მანქანის დიაგნოსტიკა.')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Check_Engine_light.svg" alt="Check Engine">
+          <h3>Check Engine</h3>
+          <p>ძრავის პრობლემა</p>
         </div>
-    </section>
-
-    <section id="essential">
-        <h2>🛠️ რა უნდა იცოდეს ყოველმა მძღოლმა</h2>
-        <div class="must-know">
-            <ul>
-                <li><b>სითხეების კონტროლი:</b> კვირაში ერთხელ შეამოწმეთ ზეთი, ანტიფრიზი და მუხრუჭის სითხე.</li>
-                <li><b>საბურავების ვადა:</b> საბურავს აქვს 4-ნიშნა კოდი (მაგ: 1223), რაც ნიშნავს 2023 წლის მე-12 კვირას. 5-6 წელზე ძველი საბურავი სახიფათოა.</li>
-                <li><b>აკუმულატორი:</b> თუ დაქოქვისას ხმა უჭირს, აკუმულატორი ჯდება. საშუალო ვადა 3-4 წელია.</li>
-            </ul>
+        <div class="card" onclick="openModal('Battery','აკუმულატორის დატვირთვა ან სირბილე. საჭიროა შემოწმება.')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Battery_light.svg" alt="Battery">
+          <h3>Battery</h3>
+          <p>ბატარეის პრობლემა</p>
         </div>
-    </section>
-
-    <section id="seasons">
-        <h2>❄️ სეზონური მომზადება</h2>
-        <div class="season-box">
-            <div class="season winter">
-                <h3>ზამთარი</h3>
-                <ul>
-                    <li>აუცილებლად ზამთრის საბურავები (M+S არ არის საკმარისი ყინვაში).</li>
-                    <li>შეამოწმეთ ანტიფრიზის სიმკვრივე, რომ არ გაიყინოს.</li>
-                    <li>დაამატეთ მინის საწმენდი სითხე, რომელიც არ იყინება.</li>
-                </ul>
-            </div>
-            <div class="season summer">
-                <h3>ზაფხული</h3>
-                <ul>
-                    <li>შეამოწმეთ კონდიციონერის ფრეონი.</li>
-                    <li>აკონტროლეთ ძრავის ტემპერატურა (არ უნდა გადასცდეს შუა ხაზს).</li>
-                    <li>დაიცავით სალონი მზისგან დამცავი ფარით.</li>
-                </ul>
-            </div>
+        <div class="card" onclick="openModal('Oil Pressure','ზეთის წნევა ძალიან დაბალია. შეჩერება და ზეთის დონის შემოწმება აუცილებელია.')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Oil_pressure_light.svg" alt="Oil Pressure">
+          <h3>Oil Pressure</h3>
+          <p>ზეთის წნევა</p>
         </div>
+        <div class="card" onclick="openModal('Engine Temperature','ძრავის ტემპერატურა ძალიან მაღალია. შეწყვიტეთ მართვა და აცივეთ ძრავა.')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Engine_temperature.svg" alt="Engine Temperature">
+          <h3>Engine Temp</h3>
+          <p>ძრავის გადახურება</p>
+        </div>
+        <div class="card" onclick="openModal('ABS','სამუხრუჭე სისტემის პრობლემა. უსაფრთხოების მიზნით შეამოწმეთ სისტემები.')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/ABS_light.svg" alt="ABS">
+          <h3>ABS</h3>
+          <p>სამუხრუჭე სისტემა</p>
+        </div>
+      </div>
     </section>
 
-    <section id="fuses">
-        <h2>🔌 მცველების (Fuses) ცხრილი</h2>
-        <p>მცველი იცავს მანქანას ხანძრისგან. თუ მაგნიტოფონი ან ფარები ჩაქრა, ნახეთ ეს ცხრილი:</p>
-        
-        
-
-        <table>
-            <tr>
-                <th>კოდი</th>
-                <th>მნიშვნელობა</th>
-                <th>სიმპტომი</th>
-            </tr>
-            <tr>
-                <td><b>ACC / CIG</b></td>
-                <td>სანთებელა</td>
-                <td>არ იტენება ტელეფონი</td>
-            </tr>
-            <tr>
-                <td><b>WIPER</b></td>
-                <td>საწმენდები</td>
-                <td>არ მუშაობს "დვორნიკები"</td>
-            </tr>
-            <tr>
-                <td><b>H-LP</b></td>
-                <td>ფარები</td>
-                <td>წინ ხედვა გაქრა ღამით</td>
-            </tr>
-            <tr>
-                <td><b>FUEL PUMP</b></td>
-                <td>ბენზონასოსი</td>
-                <td>მანქანა საერთოდ არ იქოქება</td>
-            </tr>
-        </table>
+    <!-- Diagnostics -->
+    <section>
+      <h2>მძიმე პრობლემების დიაგნოსტიკა</h2>
+      <div class="grid">
+        <div class="card" onclick="openModal('ძრავის პრობლემები','ძრავის პრობლემა შეიძლება იყოს სენსორის, საწვავის სისტემის ან ცილინდრების პრობლემით გამოწვეული. რეკომენდებულია OBD2 დიაგნოსტიკა.')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Check_Engine_light.svg" alt="Engine Problem">
+          <h3>ძრავის პრობლემები</h3>
+          <p>OBD2 დიაგნოსტიკა</p>
+        </div>
+        <div class="card" onclick="openModal('ტრანსმისია','ტრანსმისიის პრობლემა: შეიძლება იყოს სითხის დონის პრობლემა ან მექანიკური დაზიანება.')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Transmission_light.svg" alt="Transmission Problem">
+          <h3>ტრანსმისია</h3>
+          <p>სითხის დონის შემოწმება</p>
+        </div>
+        <div class="card" onclick="openModal('მუხრუჭები','მუხრუჭების სიგნალი: შეიძლება დახარჯული საცხურები ან ჰიდრავლიკური პრობლემა.')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Brake_light.svg" alt="Brake Problem">
+          <h3>მუხრუჭები</h3>
+          <p>შეამოწმეთ საცხურები და ჰიდრავლიკა</p>
+        </div>
+      </div>
     </section>
 
-</div>
+  </div>
 
-<footer style="text-align: center; padding: 20px; background: var(--primary); color: white; margin-top: 50px;">
-    <p>&copy; 2024 ავტო-გზამკვლევი მძღოლებისთვის</p>
-</footer>
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h3 id="modal-title"></h3>
+      <p id="modal-text"></p>
+    </div>
+  </div>
 
+  <!-- Footer -->
+  <footer>
+    &copy; 2026 მანქანის ბორტკომპიუტერი. ყველა უფლება დაცულია.
+  </footer>
+
+  <script>
+    function openModal(title, text) {
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-text').innerText = text;
+      document.getElementById('modal').style.display = 'flex';
+    }
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+    window.onclick = function(e) {
+      if(e.target == document.getElementById('modal')) closeModal();
+    }
+  </script>
 </body>
 </html>
