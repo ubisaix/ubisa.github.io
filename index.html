@@ -3,91 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoTech - ციფრული სახელმძღვანელო</title>
+    <title>ღვინის ოსტატი - ციფრული მარანი</title>
     <style>
-        /* ძირითადი დიზაინი */
+        :root {
+            --wine-red: #6b1111;
+            --clay: #b35a38;
+            --gold: #d4af37;
+            --bg: #fdf5e6;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1a1a1a; /* მუქი ფონი */
-            color: #e0e0e0;
-            line-height: 1.6;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: #333;
             margin: 0;
             padding: 20px;
         }
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-        }
+        .container { max-width: 900px; margin: auto; }
 
         header {
             text-align: center;
-            padding: 20px;
-            background: #2d2d2d;
-            border-radius: 10px;
-            border-bottom: 4px solid #f39c12; /* ნარინჯისფერი აქცენტი */
-        }
-
-        /* ბარათების სტილი */
-        .card {
-            background: #2d2d2d;
-            margin: 20px 0;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
-
-        h2 { color: #f39c12; border-bottom: 1px solid #444; padding-bottom: 10px; }
-
-        /* ტერმინოლოგიის განმარტება */
-        .term {
-            background: #3d3d3d;
-            padding: 10px;
-            border-left: 4px solid #3498db;
-            margin-bottom: 10px;
-        }
-
-        .term b { color: #3498db; }
-
-        /* ღილაკის სტილი */
-        .btn {
-            background: #f39c12;
+            background: var(--wine-red);
             color: white;
-            padding: 10px 20px;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--clay);
+        }
+
+        h2 { color: var(--wine-red); border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .btn {
+            background: var(--clay);
+            color: white;
             border: none;
+            padding: 15px 30px;
             border-radius: 5px;
             cursor: pointer;
-            font-weight: bold;
+            width: 100%;
+            font-size: 18px;
+            transition: 0.3s;
         }
 
-        .btn:hover { background: #e67e22; }
+        .btn:hover { background: var(--wine-red); }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #444; padding: 10px; text-align: left; }
-        th { background: #444; }
+        /* ყურძნის ჯიშების სექცია */
+        details {
+            background: #fff8f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: 1px solid #eee;
+        }
+
+        details summary { font-weight: bold; color: var(--wine-red); font-size: 18px; }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .info-item { background: white; padding: 10px; border-radius: 5px; font-size: 14px; }
+        
+        .result {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--clay);
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>🔧 AutoTech Pro</h1>
-        <p>მანქანის დაშლა, აწყობა და ელექტროობა</p>
+        <h1>🍇 ღვინის ოსტატი</h1>
+        <p>ქვევრისა და ყურძნის პროფესიონალური ასისტენტი</p>
     </header>
 
     <div class="card">
-        <h2>🧐 ძირითადი ტერმინების განმარტება</h2>
-        
-        <div class="term">
-            <b>OBD-II პორტი:</b> ეს არის მანქანის "ტვინთან" დასაკავშირებელი ბუდე. მისი მეშვეობით კომპიუტერი გვეუბნება, თუ სად არის ელექტროობის პრობლემა.
-        </div>
-        
-
-        <div class="term">
-            <b>გენერატორი (Alternator):</b> მოწყობილობა, რომელიც ძრავის მუშაობისას გამოიმუშავებს დენს და მუხტავს აკუმულატორს.
-        </div>
-
-        <div class="term">
-            <b>ECU (ძრავის მართვის ბლოკი):</b> მანქანის მთავარი კომპიუტერი, რომელიც აკონტროლებს აალებას, საწვავის მიწოდებას და სენსორებს.
-        </div>
+        <h2>🏺 ქვევრის ტევადობა (წვეთის ფორმა)</h2>
+        <p>შეიყვანეთ მონაცემები სანტიმეტრებში:</p>
+        <label>ყელის დიამეტრი (სმ):</label>
+        <input type="number" id="q_top" placeholder="მაგ: 40">
+        <label>შუაგულის (მუცლის) დიამეტრი (სმ):</label>
+        <input type="number" id="q_mid" placeholder="მაგ: 190">
+        <label>სრული სიმაღლე (სმ):</label>
+        <input type="number" id="q_height" placeholder="მაგ: 110">
+        <p><i>* ფსკერი ჩათვლილია როგორც 0 (წვეთი)</i></p>
+        <button class="btn" onclick="calcQvevri()">მოცულობის გამოთვლა</button>
+        <div id="q_res" class="result"></div>
     </div>
+
+    <div class="card">
+        <h2>🌡️ შაქრიანობისა და გრადუსის გამოთვლა</h2>
+        <label>ყურძნის შაქრიანობა (% Brix):</label>
+        <input type="number" id="sugar" placeholder="მაგ: 22">
+        <button class="btn" onclick="calcAlcohol()">გამოთვალე სავარაუდო გრადუსი</button>
+        <div id="alc_res" class="result"></div>
+        <p style="font-size: 12px; color: #666; margin-top: 10px;">
+            * გათვლა ეფუძნება ფორმულას: შაქარი x 0.59 = ალკოჰოლი
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>📖 ყურძნის ჯიშები და მიკროზონები</h2>
+        
+        <details>
+            <summary>🍇 რქაწითელი</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>საუკეთესო ადგილი:</b> კახეთი, ალაზნის ველი.</div>
+                <div class="info-item"><b>მიკროზონა:</b> წინანდალი, ნაფარეული.</div>
+                <div class="info-item"><b>გამოსავალი:</b> 100კგ = 65-70 ლიტრი.</div>
+                <div class="info-item"><b>იდეალური შაქარი:</b> 20-22%</div>
+            </div>
+        </details>
+
+        <details>
+            <summary>🍇 საფერავი</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>საუკეთესო ადგილი:</b> კახეთი, ყვარელი.</div>
+                <div class="info-item"><b>მიკროზონა:</b> მუკუზანი, ქინძმარაული.</div>
+                <div class="info-item"><b>გამოსავალი:</b> 100კგ = 60-65 ლიტრი (სქელკანიანია).</div>
+                <div class="info-item"><b>იდეალური შაქარი:</b> 22-24%</div>
+            </div>
+        </details>
+
+        <details>
+            <summary>🍇 ცოლიკოური</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>საუკეთესო ადგილი:</b> იმერეთი.</div>
+                <div class="info-item"><b>მიკროზონა:</b> სვირი, ობჩა.</div>
+                <div class="info-item"><b>გამოსავალი:</b> 100კგ = 70-75 ლიტრი (წვნიანია).</div>
+                <div class="info-item"><b>იდეალური შაქარი:</b> 19-21%</div>
+            </div>
+        </details>
+    </div>
+</div>
+
+<script>
+    function calcQvevri() {
+        const d = document.getElementById('q_top').value / 2; // ყელის რადიუსი
+        const D = document.getElementById('q_mid').value / 2; // მუცლის რადიუსი
+        const h = document.getElementById('q_height').value;
+        
+        const h_half = h / 2;
+        // ქვედა კონუსი (ფსკერი 0)
+        const v_bottom = (1/3) * Math.PI * Math.pow(D, 2) * h_half;
+        // ზედა წაკვეთილი კონუსი
+        const v_top = (1/3) * Math.PI * h_half * (Math.pow(D, 2) + D*d + Math.pow(d, 2));
+        
+        // ჯამი და კორექცია მომრგვალებული ფორმისთვის (10%-იანი მატება)
+        const total = ((v_bottom + v_top) / 1000) * 1.1;
+        document.getElementById('q_res').innerText = "მოცულობა: ~ " + Math.round(total) + " ლიტრი";
+    }
+
+    function calcAlcohol() {
+        const sugar = document.getElementById('sugar').value;
+        const alc = sugar * 0.59;
+        document.getElementById('alc_res').innerText = "სავარაუდო ალკოჰოლი: " + alc.toFixed(1) + "%";
+    }
+</script>
+
+</body>
+</html>
