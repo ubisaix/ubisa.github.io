@@ -6,105 +6,143 @@
     <title>ღვინის ოსტატი - ციფრული მარანი</title>
     <style>
         :root {
-            --wine-red: #6b1111;
-            --clay: #b35a38;
-            --gold: #d4af37;
-            --bg: #fdf5e6;
-            --leaf-green: #4a6741;
-            --warning-orange: #d35400;
+            --wine-red: #800020;
+            --deep-red: #4a0404;
+            --clay: #d35400;
+            --gold: #f1c40f;
+            --glass: rgba(255, 255, 255, 0.9);
         }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--bg);
-            color: #333;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1516594915697-87eb3b1c14ea?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: #2c3e50;
             margin: 0;
             padding: 20px;
         }
 
-        .container { max-width: 950px; margin: auto; }
+        .container { max-width: 1000px; margin: auto; }
 
         header {
             text-align: center;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1510853675132-58241c941e4f?auto=format&fit=crop&w=1000&q=80');
-            background-size: cover;
-            color: white;
             padding: 60px 20px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
+
+        header h1 { font-size: 3rem; margin-bottom: 10px; }
 
         .card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            border-top: 4px solid var(--clay);
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: transform 0.3s ease;
         }
 
-        h2 { color: var(--wine-red); border-bottom: 2px solid var(--gold); padding-bottom: 10px; margin-top: 0; }
-        h3 { color: var(--clay); margin-top: 20px; }
+        .card:hover { transform: translateY(-5px); }
 
-        .input-group { display: flex; gap: 15px; flex-wrap: wrap; }
-        .input-item { flex: 1; min-width: 200px; }
+        h2 { 
+            color: var(--deep-red); 
+            border-left: 5px solid var(--clay); 
+            padding-left: 15px; 
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
 
-        input, select {
+        .input-group { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 15px; }
+        .input-item { flex: 1; min-width: 250px; }
+
+        label { font-weight: bold; display: block; margin-bottom: 8px; color: #444; }
+
+        input {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            outline: none;
         }
+
+        input:focus { border-color: var(--wine-red); }
 
         .btn {
-            background: var(--clay);
+            background: linear-gradient(135deg, var(--wine-red), var(--deep-red));
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 5px;
+            padding: 18px;
+            border-radius: 12px;
             cursor: pointer;
             width: 100%;
             font-size: 18px;
             font-weight: bold;
-            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(128, 0, 32, 0.3);
+            transition: all 0.3s;
         }
 
-        .btn:hover { background: var(--wine-red); transform: translateY(-2px); }
-
-        /* დაავადებების სტილი */
-        .disease-box {
-            background: #fff5f0;
-            border-left: 5px solid var(--warning-orange);
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
+        .btn:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 8px 20px rgba(128, 0, 32, 0.4);
         }
-        .disease-box b { color: var(--warning-orange); }
-
-        /* რეგიონების სტილი */
-        .region-title { background: var(--wine-red); color: white; padding: 10px; margin: 20px 0 10px 0; border-radius: 5px; }
-        details { background: #fff8f0; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #eee; }
-        details summary { font-weight: bold; cursor: pointer; color: #555; }
-
-        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 10px; }
-        .info-item { background: white; padding: 10px; border-radius: 5px; font-size: 14px; border: 1px dashed var(--clay); }
 
         .result-box {
-            background: #fdf2f2;
-            padding: 20px;
-            border-radius: 8px;
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
             text-align: center;
-            margin-top: 15px;
-            border: 2px solid var(--wine-red);
+            margin-top: 20px;
+            border: 2px dashed var(--clay);
+            animation: fadeIn 0.5s;
         }
-        .result { font-size: 24px; color: var(--wine-red); font-weight: bold; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background: var(--leaf-green); color: white; }
+        .result { font-size: 28px; color: var(--wine-red); font-weight: 900; }
+
+        /* დაავადებების სექცია */
+        .disease-box {
+            background: rgba(211, 84, 0, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-right: 4px solid var(--clay);
+        }
+        .disease-box b { color: var(--clay); font-size: 1.1rem; }
+
+        /* ჯიშების სექცია - განცალკევებული */
+        .region-title { 
+            background: var(--deep-red); 
+            color: #fff; 
+            padding: 12px 20px; 
+            margin: 30px 0 15px 0; 
+            border-radius: 10px;
+            font-size: 1.3rem;
+        }
+
+        details { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 12px; 
+            margin-bottom: 12px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        summary { font-weight: bold; cursor: pointer; color: var(--wine-red); font-size: 1.1rem; }
+
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        .info-item { background: #f9f9f9; padding: 15px; border-radius: 8px; font-size: 14px; border-top: 3px solid var(--gold); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        ul li { margin-bottom: 12px; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -112,7 +150,7 @@
 <div class="container">
     <header>
         <h1>🍷 ღვინის ოსტატი Pro</h1>
-        <p>ქვევრის, ყურძნისა და მარნის სრული ციფრული გზამკვლევი</p>
+        <p>თქვენი მარნის თანამედროვე ციფრული ასისტენტი</p>
     </header>
 
     <div class="card">
@@ -124,7 +162,7 @@
             </div>
             <div class="input-item">
                 <label>გამოთვლილი დიამეტრი (სმ):</label>
-                <input type="number" id="q_mid" readonly style="background:#eee">
+                <input type="number" id="q_mid" readonly style="background:#f0f0f0; color: #666;">
             </div>
         </div>
         <div class="input-group">
@@ -137,16 +175,16 @@
                 <input type="number" id="q_height" value="110">
             </div>
         </div>
-        <button class="btn" onclick="calcQvevri()">გამოთვალე ტევადობა და მოსავალი</button>
+        <button class="btn" onclick="calcQvevri()">მონაცემების დამუშავება</button>
         <div class="result-box" id="q_res_box" style="display:none;">
             <div class="result" id="q_res"></div>
-            <p id="grapes_needed"></p>
-            <p id="chacha_res" style="color:var(--leaf-green); font-weight:bold;"></p>
+            <p id="grapes_needed" style="font-size: 18px; margin: 10px 0;"></p>
+            <p id="chacha_res" style="color:var(--clay); font-weight:bold; font-size: 1.1rem;"></p>
         </div>
     </div>
 
     <div class="card">
-        <h2>🌡️ შაქრიანობა და ალკოჰოლი</h2>
+        <h2>🌡️ შაქრიანობა და ტექნოლოგია</h2>
         <div class="input-group">
             <div class="input-item">
                 <label>შაქრიანობა (% Brix):</label>
@@ -157,60 +195,84 @@
                 <input type="number" id="target_plus" placeholder="0">
             </div>
         </div>
-        <button class="btn" onclick="calcAlcohol()">გამოთვლა</button>
+        <button class="btn" onclick="calcAlcohol()">ალკოჰოლის პროგნოზი</button>
         <div id="alc_res" class="result-box" style="display:none;">
             <div class="result" id="alc_val"></div>
-            <p id="sugar_add_info"></p>
+            <p id="sugar_add_info" style="color: #555; font-style: italic;"></p>
         </div>
     </div>
 
     <div class="card">
-        <h2>⚠️ ღვინის დაავადებები და მკურნალობა</h2>
+        <h2>⚠️ დაავადებები და პრევენცია</h2>
         <div class="disease-box">
-            <b>დაძმარება:</b> ჩნდება ჰაერთან კონტაქტისას. სიმპტომი: მძაფრი ძმრის სუნი. 
-            <br><i>მკურნალობა:</i> ადრეულ ეტაპზე პასტერიზაცია (60°C) და ჭურჭლის სრული შევსება.
+            <b>🍷 დაძმარება (Acetification)</b>
+            <p>ხდება ჰაერთან კონტაქტისას. მკურნალობა: ადრეულ ეტაპზე პასტერიზაცია (60°C) და ჭურჭლის სრული შევსება.</p>
         </div>
         <div class="disease-box">
-            <b>ღვინის "ყვავილი":</b> თეთრი აპკი ზედაპირზე. 
-            <br><i>მკურნალობა:</i> აპკის ფრთხილად მოცილება, გოგირდით დამუშავება და ჰერმეტული დახურვა.
+            <b>🦠 ღვინის "ყვავილი" (Mycoderma)</b>
+            <p>თეთრი აპკი ზედაპირზე. მკურნალობა: აპკის ფრთხილად მოცილება, გოგირდით დამუშავება და ჰერმეტული დახურვა.</p>
         </div>
         <div class="disease-box">
-            <b>ჩახუთვა (გოგირდწყალბადის სუნი):</b> სიმპტომი: დამპალი კვერცხის სუნი.
-            <br><i>მკურნალობა:</i> დროული გადაღება და ღვინის აერაცია (ჰაერზე დასხმა).
+            <b>💨 ჩახუთვა (გოგირდწყალბადის სუნი)</b>
+            <p>დროული გადაღება და ღვინის აერაცია (ჰაერზე დასხმა). ხელს უწყობს არასასიამოვნო სუნის მოცილებას.</p>
         </div>
     </div>
 
     <div class="card">
-        <h2>🧹 მარნის ჰიგიენა და მოვლა</h2>
+        <h2>🧹 მარნის ჰიგიენის სტანდარტი</h2>
         <ul>
             <li><b>ქვევრის რეცხვა:</b> გამოიყენეთ კირის წყალი. რეცხეთ მანამ, სანამ წყალი სრულიად გამჭვირვალე არ იქნება.</li>
             <li><b>გოგირდი:</b> ქვევრის დახურვის წინ დაწვით გოგირდის შოლტი (1 შოლტი 500-1000 ლიტრზე).</li>
-            <li><b>გადაღების დრო:</b> 
-                <br>1. ნოემბერი/დეკემბერი (დუღილის დასრულებიდან 1 თვეში).
-                <br>2. მარტი/აპრილი (სითბოების დაწყებამდე).
-            </li>
+            <li><b>გადაღების დრო:</b> ნოემბერი/დეკემბერი (დუღილის დასრულებიდან 1 თვეში) და მარტი/აპრილი.</li>
         </ul>
     </div>
 
     <div class="card">
-        <h2>🍇 ყურძნის ჯიშების კატალოგი</h2>
+        <h2>📖 ქართული ყურძნის ენციკლოპედია</h2>
         
         <div class="region-title">კახეთი</div>
-        <details><summary>რქაწითელი, მანავის მწვანე, ხიხვი, ქისი</summary>
-            <p>ამ ჯიშებს ახასიათებთ მაღალი გამოსავლიანობა (65-72%) და საუკეთესოა ქვევრის ღვინისთვის.</p>
+        <details>
+            <summary>🍇 რქაწითელი</summary>
+            <div class="info-grid">
+                <div class="info-item"><b>გამოსავალი:</b> 65-70 ლ / 100კგ</div>
+                <div class="info-item"><b>მიკროზონა:</b> წინანდალი, ნაფარეული</div>
+            </div>
         </details>
-        <details><summary>კახური მცვივანი</summary>
-            <p>ადრეული ჯიშია, გამოირჩევა ნაზი არომატებით.</p>
+        <details>
+            <summary>🍇 მანავის მწვანე</summary>
+            <p>საგარეჯოს მიკროზონა. გამოირჩევა ნაზი, ხილის არომატებით.</p>
+        </details>
+        <details>
+            <summary>🍇 ხიხვი</summary>
+            <p>უძველესი ჯიში. საუკეთესოა სხეულიანი ქვევრის ღვინისთვის.</p>
+        </details>
+        <details>
+            <summary>🍇 ქისი</summary>
+            <p>ახმეტისა და თელავის მხარე. გამოირჩევა ეგზოტიკური ტონებით.</p>
         </details>
 
         <div class="region-title">იმერეთი</div>
-        <details><summary>ციცქა, ცოლიკოური, კრახუნა, დონდღლაბი</summary>
-            <p>იმერული ჯიშები გამოირჩევა მაღალი მჟავიანობით და ცოცხალი ხასიათით.</p>
+        <details>
+            <summary>🍇 ციცქა</summary>
+            <p>საუკეთესოა ცოცხალი, მჟავიანი თეთრი ღვინოებისთვის.</p>
+        </details>
+        <details>
+            <summary>🍇 ცოლიკოური</summary>
+            <p>დასავლეთ საქართველოს ყველაზე გავრცელებული ჯიში.</p>
+        </details>
+        <details>
+            <summary>🍇 კრახუნა</summary>
+            <p>მაღალალკოჰოლური და სხეულიანი იმერული ღვინო.</p>
         </details>
 
         <div class="region-title">რაჭა-ლეჩხუმი</div>
-        <details><summary>წულუკიძის თეთრა, მცვივანი რაჭული</summary>
-            <p>მაღალი შაქრიანობა და ნაზი, ხავერდოვანი გემო.</p>
+        <details>
+            <summary>🍇 წულუკიძის თეთრა</summary>
+            <p>რაჭის რეგიონი. ნაზი და ხავერდოვანი გემო.</p>
+        </details>
+        <details>
+            <summary>🍇 მცვივანი რაჭული</summary>
+            <p>იშვიათი და არომატული ჯიში ადგილობრივი წარმოებისთვის.</p>
         </details>
     </div>
 </div>
@@ -226,7 +288,7 @@
         const d = document.getElementById('q_top').value / 2;
         const D = document.getElementById('q_mid').value / 2;
         const h = document.getElementById('q_height').value;
-        if(!D || !h) return alert("შეავსეთ მონაცემები!");
+        if(!D || !h) return alert("გთხოვთ შეავსოთ ქვევრის პარამეტრები!");
 
         const h_half = h / 2;
         const v_bottom = (1/3) * Math.PI * Math.pow(D, 2) * h_half;
@@ -237,9 +299,9 @@
         const grapeKg = Math.round(result * 1.4);
         
         document.getElementById('q_res_box').style.display = "block";
-        document.getElementById('q_res').innerText = "ტევადობა: ~ " + result + " ლიტრი";
+        document.getElementById('q_res').innerText = "ტევადობა: " + result + " ლიტრი";
         document.getElementById('grapes_needed').innerText = "საჭირო ყურძენი: ~ " + grapeKg + " კგ.";
-        document.getElementById('chacha_res').innerText = "ნარჩენი ჭაჭა (არყისთვის): ~ " + Math.round(grapeKg * 0.25) + " კგ.";
+        document.getElementById('chacha_res').innerText = "ჭაჭის გამოსავალი: ~ " + Math.round(grapeKg * 0.25) + " კგ.";
     }
 
     function calcAlcohol() {
@@ -252,9 +314,9 @@
         document.getElementById('alc_val').innerText = "ალკოჰოლი: " + alc.toFixed(1) + "%";
         
         if(plus > 0) {
-            const addSugar = plus * 17; // საშუალოდ 17გ შაქარი 1 ლიტრზე 1%-ისთვის
+            const addSugar = plus * 17;
             document.getElementById('sugar_add_info').innerText = 
-                "გრადუსის " + plus + "%-ით ასაწევად დაამატეთ " + addSugar + " გრ შაქარი ყოველ 1 ლიტრზე.";
+                "გრადუსის " + plus + "%-ით ასაწევად საჭიროა " + addSugar + " გრ შაქარი 1 ლიტრზე.";
         } else {
             document.getElementById('sugar_add_info').innerText = "";
         }
