@@ -2,91 +2,92 @@
 <html lang="ka">
 <head>
     <meta charset="UTF-8">
-    <title>ავტო-ასისტენტი: ელექტროობა და სერვისი</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoTech - ციფრული სახელმძღვანელო</title>
+    <style>
+        /* ძირითადი დიზაინი */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a; /* მუქი ფონი */
+            color: #e0e0e0;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background: #2d2d2d;
+            border-radius: 10px;
+            border-bottom: 4px solid #f39c12; /* ნარინჯისფერი აქცენტი */
+        }
+
+        /* ბარათების სტილი */
+        .card {
+            background: #2d2d2d;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        h2 { color: #f39c12; border-bottom: 1px solid #444; padding-bottom: 10px; }
+
+        /* ტერმინოლოგიის განმარტება */
+        .term {
+            background: #3d3d3d;
+            padding: 10px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 10px;
+        }
+
+        .term b { color: #3498db; }
+
+        /* ღილაკის სტილი */
+        .btn {
+            background: #f39c12;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn:hover { background: #e67e22; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #444; padding: 10px; text-align: left; }
+        th { background: #444; }
+    </style>
 </head>
 <body>
 
+<div class="container">
     <header>
-        <h1>🛠️ ავტომობილის ტექნიკური გზამკვლევი</h1>
-        <p>პრაქტიკული ინსტრუმენტი დაშლა-აწყობისა და ელექტროობის კონტროლისთვის</p>
+        <h1>🔧 AutoTech Pro</h1>
+        <p>მანქანის დაშლა, აწყობა და ელექტროობა</p>
     </header>
 
-    <hr>
-
-    <section id="electrical">
-        <h2>⚡ ელექტროობის შემოწმების ჩეკლისტი</h2>
-        <p>მონიშნეთ შემოწმებული კომპონენტები, რომ არაფერი გამოგრჩეთ:</p>
+    <div class="card">
+        <h2>🧐 ძირითადი ტერმინების განმარტება</h2>
         
-        <form id="checklist">
-            <input type="checkbox" id="battery" name="check">
-            <label for="battery">აკუმულატორის ძაბვის შემოწმება (უნდა იყოს ~12.6V)</label><br>
-            
-            <input type="checkbox" id="fuses" name="check">
-            <label for="fuses">მცველების (Fuses) ვიზუალური დათვალიერება</label><br>
-            
-            <input type="checkbox" id="alternator" name="check">
-            <label for="alternator">გენერატორის დატენვის შემოწმება (დაქოქილზე ~14V)</label><br>
-            
-            <input type="checkbox" id="ground" name="check">
-            <label for="ground">"მასის" (Ground) კაბელების კონტაქტის შემოწმება</label>
-        </form>
-    </section>
+        <div class="term">
+            <b>OBD-II პორტი:</b> ეს არის მანქანის "ტვინთან" დასაკავშირებელი ბუდე. მისი მეშვეობით კომპიუტერი გვეუბნება, თუ სად არის ელექტროობის პრობლემა.
+        </div>
+        
 
-    <br>
+        <div class="term">
+            <b>გენერატორი (Alternator):</b> მოწყობილობა, რომელიც ძრავის მუშაობისას გამოიმუშავებს დენს და მუხტავს აკუმულატორს.
+        </div>
 
-    <section id="assembly">
-        <h2>🔧 დაშლა-აწყობის ეტაპები</h2>
-        <p>დააწკაპუნეთ სათაურს დეტალური ინსტრუქციის სანახავად:</p>
-
-        <details>
-            <summary>📦 ძრავის ზედა ხუფის (Valve Cover) მოხსნა</summary>
-            <ul>
-                <li>მოხსენით დეკორატიული პლასტმასი.</li>
-                <li>გამორთეთ აალების სანთლების (Coils) კონექტორები.</li>
-                <li>მოუშვით ბოლტები "ჯვარედინი" პრინციპით.</li>
-            </ul>
-        </details>
-
-        <details>
-            <summary>🔌 ფარების ელექტროობის დაერთება</summary>
-            <p>დარწმუნდით, რომ ფერები ემთხვევა სქემას:</p>
-            <table border="1">
-                <tr>
-                    <th>სადენის ფერი</th>
-                    <th>ფუნქცია</th>
-                </tr>
-                <tr>
-                    <td>წითელი</td>
-                    <td>+12V კვება</td>
-                </tr>
-                <tr>
-                    <td>შავი</td>
-                    <td>მასა (GND)</td>
-                </tr>
-                <tr>
-                    <td>ყვითელი</td>
-                    <td>მომტრიალებელი სიგნალი</td>
-                </tr>
-            </table>
-        </details>
-    </section>
-
-    <br>
-
-    <section id="parts-calculator">
-        <h2>🧮 ხარჯების წინასწარი გათვლა</h2>
-        <label>სათადარიგო ნაწილის ფასი:</label>
-        <input type="number" id="part-price" placeholder="მაგ: 150 ₾">
-        <br><br>
-        <label>ხელობის ღირებულება:</label>
-        <input type="number" id="labor-price" placeholder="მაგ: 50 ₾">
-        <br><br>
-        <button type="button">ჯამის დათვლა</button>
-    </section>
-
-    <footer>
-        <p>© 2024 ავტო-ტექნიკური პლატფორმა</p>
-    </footer>
-
-</body>
-</html>
+        <div class="term">
+            <b>ECU (ძრავის მართვის ბლოკი):</b> მანქანის მთავარი კომპიუტერი, რომელიც აკონტროლებს აალებას, საწვავის მიწოდებას და სენსორებს.
+        </div>
+    </div>
