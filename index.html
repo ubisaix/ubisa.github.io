@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Prompt Studio | პრომპტების კონსტრუქტორი</title>
+    <title>AI Prompt Studio | Visual Preview</title>
     <style>
         :root {
             --bg: #0f172a;
             --card-bg: #1e293b;
             --accent: #38bdf8;
-            --accent-glow: rgba(56, 189, 248, 0.3);
             --text: #f1f5f9;
             --grad: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
         }
@@ -17,7 +16,7 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0;
             display: flex;
             flex-direction: column;
@@ -26,217 +25,109 @@
             padding: 20px;
         }
 
-        .container {
-            max-width: 900px;
-            width: 100%;
-        }
+        .container { max-width: 900px; width: 100%; }
 
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
+        header { text-align: center; margin-bottom: 30px; }
         header h1 {
             font-size: 2.5rem;
             background: var(--grad);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
         }
 
-        /* ნაბიჯების სექცია */
         .step {
             background: var(--card-bg);
-            padding: 25px;
+            padding: 20px;
             border-radius: 16px;
             margin-bottom: 20px;
             border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .step-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .step-title { font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .step-number { background: var(--grad); width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white; font-size: 0.8rem;}
 
-        .step-number {
-            background: var(--grad);
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 0.9rem;
-            color: white;
-        }
-
-        /* Input ველები */
         input[type="text"] {
-            width: 100%;
-            padding: 15px;
-            border-radius: 10px;
-            border: 2px solid #334155;
-            background: #0f172a;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            transition: 0.3s;
-            box-sizing: border-box;
+            width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #334155;
+            background: #0f172a; color: white; box-sizing: border-box;
         }
 
-        input[type="text"]:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
+        input[type="text"]:focus { border-color: var(--accent); outline: none; }
 
-        /* სტილის ბარათების Grid */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 15px;
-        }
-
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
         .card {
-            background: #334155;
-            border-radius: 12px;
-            padding: 10px;
-            cursor: pointer;
-            text-align: center;
-            transition: 0.3s;
-            border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
+            background: #334155; border-radius: 10px; padding: 8px; cursor: pointer; text-align: center;
+            transition: 0.2s; border: 2px solid transparent;
         }
+        .card:hover { background: #475569; }
+        .card.selected { border-color: var(--accent); background: rgba(56, 189, 248, 0.1); }
+        .card img { width: 100%; height: 80px; object-fit: cover; border-radius: 6px; margin-bottom: 5px; }
 
-        .card:hover {
-            transform: translateY(-5px);
-            background: #475569;
-        }
+        .chip-container { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip { padding: 6px 12px; background: #334155; border-radius: 15px; cursor: pointer; font-size: 0.8rem; }
+        .chip.selected { background: var(--accent); color: #0f172a; font-weight: bold; }
 
-        .card.selected {
-            border-color: var(--accent);
-            background: rgba(56, 189, 248, 0.1);
-        }
-
-        .card img {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 8px;
-        }
-
-        /* ღილაკები */
-        .chip-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .chip {
-            padding: 8px 16px;
-            background: #334155;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: 0.2s;
-            border: 1px solid transparent;
-        }
-
-        .chip.selected {
-            background: var(--accent);
-            color: #0f172a;
-            font-weight: bold;
-        }
-
-        /* Preview სექცია */
+        /* Preview & Result */
         .preview-box {
-            position: sticky;
-            bottom: 20px;
-            background: rgba(30, 41, 59, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 25px;
-            border-radius: 20px;
-            border: 2px solid var(--accent);
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
-            margin-top: 40px;
+            background: rgba(30, 41, 59, 0.95); padding: 20px; border-radius: 16px;
+            border: 2px solid var(--accent); margin-top: 30px; text-align: center;
         }
 
         #finalPrompt {
-            background: rgba(0,0,0,0.3);
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            margin: 15px 0;
-            word-break: break-all;
-            color: #38bdf8;
+            background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px;
+            font-family: monospace; margin: 10px 0; color: #38bdf8; word-break: break-all;
         }
 
-        .actions {
-            display: flex;
-            gap: 10px;
+        .result-image-container {
+            margin-top: 20px;
+            display: none; /* დამალულია საწყის ეტაპზე */
+            animation: fadeIn 0.5s;
         }
 
-        button {
-            flex: 1;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
+        #resultImage {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 4px solid white;
         }
 
+        .actions { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
+        button { padding: 10px 20px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; }
         .btn-copy { background: var(--grad); color: white; }
         .btn-boost { background: #10b981; color: white; }
-        button:active { transform: scale(0.98); }
 
-        .toast {
-            position: fixed;
-            bottom: 100px;
-            background: #10b981;
-            padding: 10px 20px;
-            border-radius: 5px;
-            display: none;
-            animation: fadeIn 0.3s;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>AI Prompt Studio</h1>
-        <p>ააწყვე შენი შედევრი ვიზუალური ბარათებით</p>
+        <h1>AI Prompt Studio + Preview</h1>
+        <p>ააწყვე პრომპტი და ნახე სავარაუდო შედეგი</p>
     </header>
 
     <div class="step">
-        <div class="step-title"><div class="step-number">1</div> რისი დახატვა გსურს?</div>
-        <input type="text" id="subject" placeholder="მაგალითად: აბჯრიანი კატა კოსმოსში..." oninput="updatePrompt()">
+        <div class="step-title"><div class="step-number">1</div> ობიექტი</div>
+        <input type="text" id="subject" placeholder="მაგალითად: კატა, რობოტი, მთა..." oninput="updatePrompt()">
     </div>
 
     <div class="step">
-        <div class="step-title"><div class="step-number">2</div> აირჩიე სტილი</div>
+        <div class="step-title"><div class="step-number">2</div> სტილი</div>
         <div class="grid">
-            <div class="card" onclick="selectStyle(this, 'Cyberpunk style, neon lights')">
-                <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=200" alt="Cyber">
+            <div class="card" onclick="selectStyle(this, 'Cyberpunk style, neon lights', 'https://images.unsplash.com/photo-1549887552-cb1071d3e5ca?w=600')">
+                <img src="https://images.unsplash.com/photo-1549887552-cb1071d3e5ca?w=200" alt="Cyber">
                 <div>Cyberpunk</div>
             </div>
-            <div class="card" onclick="selectStyle(this, 'Renaissance oil painting, classical')">
+            <div class="card" onclick="selectStyle(this, 'Renaissance oil painting', 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600')">
                 <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=200" alt="Art">
                 <div>Renaissance</div>
             </div>
-            <div class="card" onclick="selectStyle(this, 'Studio Ghibli anime style, whimsical')">
+            <div class="card" onclick="selectStyle(this, 'Studio Ghibli anime style', 'https://images.unsplash.com/photo-1578632738908-4521c726eeb8?w=600')">
                 <img src="https://images.unsplash.com/photo-1578632738908-4521c726eeb8?w=200" alt="Anime">
                 <div>Anime</div>
             </div>
-            <div class="card" onclick="selectStyle(this, '3D Render, Pixar style, C4D')">
+             <div class="card" onclick="selectStyle(this, '3D Render, Pixar style', 'https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=600')">
                 <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=200" alt="3D">
                 <div>3D / Pixar</div>
             </div>
@@ -244,80 +135,96 @@
     </div>
 
     <div class="step">
-        <div class="step-title"><div class="step-number">3</div> განათება და ხედი</div>
+        <div class="step-title"><div class="step-number">3</div> დეტალები</div>
         <div class="chip-container">
-            <div class="chip" onclick="toggleSetting(this, 'Cinematic Lighting')">Cinematic Lighting</div>
-            <div class="chip" onclick="toggleSetting(this, 'Golden Hour')">Golden Hour</div>
-            <div class="chip" onclick="toggleSetting(this, 'Close-up Shot')">Close-up</div>
+            <div class="chip" onclick="toggleSetting(this, 'Cinematic Lighting')">Cinematic</div>
             <div class="chip" onclick="toggleSetting(this, 'Wide Angle')">Wide Angle</div>
-            <div class="chip" onclick="toggleSetting(this, 'Hyper-realistic')">Hyper-realistic</div>
         </div>
     </div>
 
     <div class="preview-box">
-        <div style="font-weight: bold; color: var(--accent);">LIVE PROMPT PREVIEW:</div>
         <div id="finalPrompt">/imagine prompt: დაიწყე წერა...</div>
+        
+        <div class="result-image-container" id="resultContainer">
+            <img src="" id="resultImage" alt="AI Generated Result">
+            <p style="font-size: 0.8rem; color: #888;">*ეს არის სავარაუდო შედეგის სიმულაცია</p>
+        </div>
+
         <div class="actions">
-            <button class="btn-boost" onclick="boostQuality()">✨ Boost Quality</button>
-            <button class="btn-copy" onclick="copyToClipboard()">📋 Copy Prompt</button>
+            <button class="btn-boost" id="boostBtn" onclick="generateVisual()">✨ Generate Visual</button>
+            <button class="btn-copy" onclick="copyToClipboard()">📋 Copy Text</button>
         </div>
     </div>
 </div>
 
-<div class="toast" id="toast">კოპირებულია! ✅</div>
-
 <script>
     let subject = "";
     let selectedStyle = "";
+    let stylePreviewImg = ""; // ინახავს არჩეული სტილის სურათის ლინკს
     let activeSettings = new Set();
-    let isBoosted = false;
 
     function updatePrompt() {
         subject = document.getElementById('subject').value || "A masterpiece";
-        render();
+        renderPrompt();
     }
 
-    function selectStyle(el, style) {
+    function selectStyle(el, style, imgUrl) {
         document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
         el.classList.add('selected');
         selectedStyle = style;
-        render();
+        stylePreviewImg = imgUrl; // ვინახავთ სურათს
+        
+        // ვმალავთ წინა შედეგს, თუ ახალი სტილი აირჩია
+        document.getElementById('resultContainer').style.display = 'none';
+        document.getElementById('boostBtn').innerText = "✨ Generate Visual";
+        
+        renderPrompt();
     }
 
     function toggleSetting(el, setting) {
         el.classList.toggle('selected');
-        if (activeSettings.has(setting)) {
-            activeSettings.delete(setting);
-        } else {
-            activeSettings.add(setting);
-        }
-        render();
+        if (activeSettings.has(setting)) { activeSettings.delete(setting); } 
+        else { activeSettings.add(setting); }
+        renderPrompt();
     }
 
-    function boostQuality() {
-        isBoosted = !isBoosted;
-        const btn = document.querySelector('.btn-boost');
-        btn.style.background = isBoosted ? "#059669" : "#10b981";
-        btn.innerText = isBoosted ? "✨ Quality Boosted" : "✨ Boost Quality";
-        render();
-    }
-
-    function render() {
+    function renderPrompt() {
         let promptParts = [subject];
         if (selectedStyle) promptParts.push(selectedStyle);
         if (activeSettings.size > 0) promptParts.push(Array.from(activeSettings).join(", "));
-        if (isBoosted) promptParts.push("8k resolution, highly detailed, masterpiece, unreal engine 5, photorealistic");
-
+        
         const finalString = "/imagine prompt: " + promptParts.join(", ");
         document.getElementById('finalPrompt').innerText = finalString;
+    }
+
+    // მთავარი ფუნქცია, რომელიც "ქმნის" ვიზუალს
+    function generateVisual() {
+        if (!selectedStyle) {
+            alert("გთხოვთ, ჯერ აირჩიოთ სტილი!");
+            return;
+        }
+
+        const container = document.getElementById('resultContainer');
+        const img = document.getElementById('resultImage');
+        const btn = document.getElementById('boostBtn');
+
+        // ვცვლით ღილაკის ტექსტს "ჩატვირთვის" სიმულაციისთვის
+        btn.innerText = "Generating...";
+        btn.disabled = true;
+
+        // 1.5 წამიანი პაუზა რეალისტურობისთვის
+        setTimeout(() => {
+            img.src = stylePreviewImg; // ვსვამთ წინასწარ შენახულ სურათს
+            container.style.display = 'block'; // ვაჩენთ კონტეინერს
+            btn.innerText = "✨ Regenerate";
+            btn.disabled = false;
+        }, 1500);
     }
 
     function copyToClipboard() {
         const text = document.getElementById('finalPrompt').innerText;
         navigator.clipboard.writeText(text).then(() => {
-            const toast = document.getElementById('toast');
-            toast.style.display = 'block';
-            setTimeout(() => toast.style.display = 'none', 2000);
+            alert("პრომპტი კოპირებულია!");
         });
     }
 </script>
