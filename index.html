@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ubisa - სამშენებლო კალკულატორები</title>
+    <title>Ubisa - სამშენებლო ასისტენტი</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent: #f59e0b; /* თქვენი საიტის ყვითელი ფერი */
-            --text-white: #f8fafc;
-            --input-bg: #334155;
+            --primary: #f59e0b; /* Ubisa-ს ყვითელი */
+            --glass: rgba(15, 23, 42, 0.85);
             --border: rgba(255, 255, 255, 0.1);
+            --text: #f8fafc;
         }
 
         * {
@@ -23,234 +21,284 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-white);
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            min-height: 100vh;
+            /* უკანა ფონის სურათი - მშენებლობის თემატიკა */
+            background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.8)), 
+                        url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 40px;
         }
 
-        .container {
-            width: 100%;
-            max-width: 600px;
+        .app-wrapper {
+            width: 95%;
+            max-width: 500px;
         }
 
-        h1 {
+        .header {
             text-align: center;
-            font-size: 1.8rem;
             margin-bottom: 30px;
-            color: var(--accent);
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 2rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            margin: 0;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
-        .calc-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
+        /* კატეგორიების (Accordion) სტილი */
+        .calc-category {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-radius: 16px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
 
-        h2 {
-            font-size: 1.2rem;
-            margin-top: 0;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--accent);
-            padding-left: 10px;
-            color: var(--text-white);
+        .category-header {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 1.1rem;
         }
 
-        .input-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .category-header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .category-header span.arrow {
+            transition: transform 0.3s;
+            color: var(--primary);
+        }
+
+        /* გახსნილი კატეგორიის სტილი */
+        .calc-content {
+            max-height: 0;
+            padding: 0 20px;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            overflow: hidden;
+        }
+
+        .calc-category.active .calc-content {
+            max-height: 800px; /* საკმარისი სიმაღლე შიგთავსისთვის */
+            padding: 10px 20px 25px 20px;
+        }
+
+        .calc-category.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        /* ინპუტების დიზაინი */
+        .input-row {
+            display: flex;
             gap: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        .full-width {
-            grid-column: span 2;
+        .input-group {
+            flex: 1;
         }
 
-        .input-box label {
+        label {
             display: block;
             font-size: 0.8rem;
             color: #94a3b8;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
 
         input {
             width: 100%;
-            background: var(--input-bg);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border);
-            padding: 12px;
             border-radius: 10px;
+            padding: 12px;
             color: white;
             font-size: 1rem;
             outline: none;
-            transition: border-color 0.3s;
         }
 
         input:focus {
-            border-color: var(--accent);
+            border-color: var(--primary);
         }
 
-        .btn-calc {
+        .btn-main {
             width: 100%;
-            background: var(--accent);
+            background: var(--primary);
             color: #000;
             border: none;
-            padding: 15px;
-            border-radius: 12px;
+            padding: 14px;
+            border-radius: 10px;
             font-weight: 700;
             font-size: 1rem;
             cursor: pointer;
-            transition: transform 0.2s, opacity 0.2s;
+            margin-top: 10px;
         }
 
-        .btn-calc:active {
-            transform: scale(0.97);
-        }
-
-        .result-box {
-            margin-top: 20px;
+        /* შედეგის ბლოკი */
+        .res-display {
+            margin-top: 15px;
             padding: 15px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 12px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
             display: none;
+            border-left: 3px solid var(--primary);
         }
 
-        .res-row {
+        .res-line {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
+            margin-bottom: 5px;
         }
 
-        .res-row b {
-            color: var(--accent);
-        }
+        .res-line b { color: var(--primary); }
 
-        @media (max-width: 480px) {
-            .input-grid { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
-        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Ubisa კალკულატორი</h1>
+<div class="app-wrapper">
+    <div class="header">
+        <h1>UBISA</h1>
+    </div>
 
-    <div class="calc-card">
-        <h2>1. ბლოკის დათვლა</h2>
-        <div class="input-grid">
-            <div class="input-box">
-                <label>სიგრძე (მ)</label>
-                <input type="number" id="b_len" placeholder="0">
-            </div>
-            <div class="input-box">
-                <label>სიმაღლე (მ)</label>
-                <input type="number" id="b_height" placeholder="0">
-            </div>
-            <div class="input-box">
-                <label>კარი/ფანჯარა (მ²)</label>
-                <input type="number" id="b_minus" value="0">
-            </div>
-            <div class="input-box">
-                <label>ბლოკი 1მ²-ზე</label>
-                <input type="number" id="b_per_m" value="12.5">
-            </div>
+    <div class="calc-category" onclick="toggleCategory(this)">
+        <div class="category-header">
+            <span>ბლოკის კალკულატორი</span>
+            <span class="arrow">▼</span>
         </div>
-        <button class="btn-calc" onclick="calcBlock()">გამოთვლა</button>
-        <div id="res_block" class="result-box">
-            <div class="res-row"><span>ფართობი:</span> <b id="r_b_area">0</b> მ²</div>
-            <div class="res-row"><span>რაოდენობა:</span> <b id="r_b_count">0</b> ცალი</div>
+        <div class="calc-content" onclick="event.stopPropagation()">
+            <div class="input-row">
+                <div class="input-group">
+                    <label>სიგრძე (მ)</label>
+                    <input type="number" id="b_l" placeholder="0">
+                </div>
+                <div class="input-group">
+                    <label>სიმაღლე (მ)</label>
+                    <input type="number" id="b_h" placeholder="0">
+                </div>
+            </div>
+            <div class="input-row">
+                <div class="input-group">
+                    <label>აკლება (მ²)</label>
+                    <input type="number" id="b_m" value="0">
+                </div>
+                <div class="input-group">
+                    <label>ბლოკი 1მ²-ზე</label>
+                    <input type="number" id="b_p" value="12.5">
+                </div>
+            </div>
+            <button class="btn-main" onclick="calcB()">გამოთვლა</button>
+            <div id="res_b" class="res-display">
+                <div class="res-line"><span>ფართობი:</span> <b id="out_b_a">0</b> მ²</div>
+                <div class="res-line"><span>რაოდენობა:</span> <b id="out_b_c">0</b> ცალი</div>
+            </div>
         </div>
     </div>
 
-    <div class="calc-card">
-        <h2>2. ქვიშა და ცემენტი (შელესვა)</h2>
-        <div class="input-grid">
-            <div class="input-box">
-                <label>ფართობი (მ²)</label>
-                <input type="number" id="s_area" placeholder="0">
-            </div>
-            <div class="input-box">
-                <label>სისქე (სმ)</label>
-                <input type="number" id="s_thick" value="2">
-            </div>
+    <div class="calc-category" onclick="toggleCategory(this)">
+        <div class="category-header">
+            <span>ქვიშა და ცემენტი</span>
+            <span class="arrow">▼</span>
         </div>
-        <button class="btn-calc" onclick="calcSand()">გამოთვლა</button>
-        <div id="res_sand" class="result-box">
-            <div class="res-row"><span>ცემენტი (50კგ):</span> <b id="r_s_cement">0</b> ტომარა</div>
-            <div class="res-row"><span>ქვიშა:</span> <b id="r_s_sand">0</b> მ³</div>
+        <div class="calc-content" onclick="event.stopPropagation()">
+            <div class="input-row">
+                <div class="input-group">
+                    <label>ფართობი (მ²)</label>
+                    <input type="number" id="s_a" placeholder="0">
+                </div>
+                <div class="input-group">
+                    <label>სისქე (სმ)</label>
+                    <input type="number" id="s_t" value="2">
+                </div>
+            </div>
+            <button class="btn-main" onclick="calcS()">გამოთვლა</button>
+            <div id="res_s" class="res-display">
+                <div class="res-line"><span>ცემენტი (50კგ):</span> <b id="out_s_c">0</b> ტომარა</div>
+                <div class="res-line"><span>ქვიშა:</span> <b id="out_s_s">0</b> მ³</div>
+            </div>
         </div>
     </div>
 
-    <div class="calc-card">
-        <h2>3. ბეტონის მოცულობა</h2>
-        <div class="input-grid">
-            <div class="input-box">
-                <label>სიგრძე (მ)</label>
-                <input type="number" id="c_len" placeholder="0">
+    <div class="calc-category" onclick="toggleCategory(this)">
+        <div class="category-header">
+            <span>ბეტონის მოცულობა</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="calc-content" onclick="event.stopPropagation()">
+            <div class="input-row">
+                <div class="input-group">
+                    <label>სიგრძე (მ)</label>
+                    <input type="number" id="c_l" placeholder="0">
+                </div>
+                <div class="input-group">
+                    <label>სიგანე (მ)</label>
+                    <input type="number" id="c_w" placeholder="0">
+                </div>
             </div>
-            <div class="input-box">
-                <label>სიგანე (მ)</label>
-                <input type="number" id="c_width" placeholder="0">
-            </div>
-            <div class="input-box full-width">
+            <div class="input-group" style="margin-bottom: 15px;">
                 <label>სისქე/სიმაღლე (მ)</label>
-                <input type="number" id="c_height" placeholder="0.2">
+                <input type="number" id="c_h" placeholder="0.2">
+            </div>
+            <button class="btn-main" onclick="calcC()">გამოთვლა</button>
+            <div id="res_c" class="res-display">
+                <div class="res-line"><span>მოცულობა:</span> <b id="out_c_v">0</b> მ³</div>
             </div>
         </div>
-        <button class="btn-calc" onclick="calcConcrete()">გამოთვლა</button>
-        <div id="res_concrete" class="result-box">
-            <div class="res-row"><span>მოცულობა:</span> <b id="r_c_vol">0</b> მ³</div>
-        </div>
     </div>
+
 </div>
 
 <script>
-    function calcBlock() {
-        let l = parseFloat(document.getElementById('b_len').value) || 0;
-        let h = parseFloat(document.getElementById('b_height').value) || 0;
-        let m = parseFloat(document.getElementById('b_minus').value) || 0;
-        let p = parseFloat(document.getElementById('b_per_m').value) || 0;
+    // აკორდეონის მართვა
+    function toggleCategory(element) {
+        const isActive = element.classList.contains('active');
         
-        let area = (l * h) - m;
-        let count = Math.ceil(area * p);
-        
-        document.getElementById('r_b_area').innerText = area.toFixed(2);
-        document.getElementById('r_b_count').innerText = count;
-        document.getElementById('res_block').style.display = 'block';
+        // ვხურავთ ყველა სხვა კატეგორიას
+        document.querySelectorAll('.calc-category').forEach(cat => {
+            cat.classList.remove('active');
+        });
+
+        // თუ არ იყო აქტიური, ვაქტიურებთ
+        if (!isActive) {
+            element.classList.add('active');
+        }
     }
 
-    function calcSand() {
-        let a = parseFloat(document.getElementById('s_area').value) || 0;
-        let t = parseFloat(document.getElementById('s_thick').value) || 0;
-        
-        // საშუალო ხარჯი: 1მ²-ზე 2სმ სისქეზე ~0.25 ტომარა ცემენტი
-        let cement = Math.ceil(a * (t / 2) * 0.25);
-        let sand = (a * (t / 100)).toFixed(2);
-        
-        document.getElementById('r_s_cement').innerText = cement;
-        document.getElementById('r_s_sand').innerText = sand;
-        document.getElementById('res_sand').style.display = 'block';
+    // ფუნქციონალი
+    function calcB() {
+        let area = (parseFloat(document.getElementById('b_l').value || 0) * parseFloat(document.getElementById('b_h').value || 0)) - parseFloat(document.getElementById('b_m').value || 0);
+        let count = Math.ceil(area * parseFloat(document.getElementById('b_p').value || 0));
+        document.getElementById('out_b_a').innerText = area.toFixed(2);
+        document.getElementById('out_b_c').innerText = count;
+        document.getElementById('res_b').style.display = 'block';
     }
 
-    function calcConcrete() {
-        let l = parseFloat(document.getElementById('c_len').value) || 0;
-        let w = parseFloat(document.getElementById('c_width').value) || 0;
-        let h = parseFloat(document.getElementById('c_height').value) || 0;
-        
-        let vol = (l * w * h).toFixed(2);
-        
-        document.getElementById('r_c_vol').innerText = vol;
-        document.getElementById('res_concrete').style.display = 'block';
+    function calcS() {
+        let a = parseFloat(document.getElementById('s_a').value || 0);
+        let t = parseFloat(document.getElementById('s_t').value || 0);
+        document.getElementById('out_s_c').innerText = Math.ceil(a * (t/2) * 0.25);
+        document.getElementById('out_s_s').innerText = (a * (t/100)).toFixed(2);
+        document.getElementById('res_s').style.display = 'block';
+    }
+
+    function calcC() {
+        let v = (parseFloat(document.getElementById('c_l').value || 0) * parseFloat(document.getElementById('c_w').value || 0) * parseFloat(document.getElementById('c_h').value || 0)).toFixed(2);
+        document.getElementById('out_c_v').innerText = v;
+        document.getElementById('res_c').style.display = 'block';
     }
 </script>
 
