@@ -3,239 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ბედის ბორბალი - Decision Maker</title>
+    <title>Neon Decision Maker</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --secondary: #a29bfe;
-            --dark: #2d3436;
-            --light: #fab1a0;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--dark);
+            margin: 0;
+            background: #0f0c29;
+            background: linear-gradient(to bottom, #24243e, #302b63, #0f0c29);
             color: white;
+            font-family: 'Helvetica Neue', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
-            margin: 0;
-        }
-
-        h1 { margin-bottom: 10px; color: var(--light); }
-
-        .container {
-            display: flex;
-            flex-wrap: wrap;
             justify-content: center;
-            gap: 40px;
-            margin-top: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* ბორბლის სექცია */
-        .wheel-container {
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #00d2ff;
+            text-shadow: 0 0 20px #00d2ff;
+        }
+
+        .main-layout {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
+        }
+
+        /* ბორბლის სტილი */
+        .wheel-box {
             position: relative;
-            width: 400px;
-            height: 400px;
-        }
-
-        #canvas {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 50%;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            border: 5px solid var(--secondary);
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
         }
 
-        /* ისარი */
-        .arrow {
+        canvas {
+            border-radius: 50%;
+            transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
+        }
+
+        .pointer {
             position: absolute;
-            top: -20px;
+            top: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 0; 
-            height: 0; 
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-top: 40px solid var(--light);
-            z-index: 10;
+            width: 40px;
+            filter: drop-shadow(0 0 10px #ff0055);
+            z-index: 100;
         }
 
         /* მართვის პანელი */
-        .controls {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 15px;
-            width: 300px;
+        .ui-panel {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 350px;
+            text-align: center;
         }
 
         input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: none;
-            box-sizing: border-box;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #00d2ff;
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            width: 80%;
+            margin-bottom: 15px;
+            outline: none;
         }
 
-        button {
-            width: 100%;
-            padding: 12px;
+        .spin-btn {
+            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
             cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
             transition: 0.3s;
-            margin-bottom: 10px;
         }
 
-        .btn-add { background: var(--secondary); color: white; }
-        .btn-spin { background: var(--light); color: var(--dark); font-size: 1.2rem; }
-        .btn-spin:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        ul { list-style: none; padding: 0; max-height: 150px; overflow-y: auto; }
-        li {
-            background: rgba(255,255,255,0.05);
-            margin-bottom: 5px;
-            padding: 8px;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
+        .spin-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.6);
         }
 
-        #result {
-            margin-top: 20px;
-            font-size: 1.5rem;
+        /* მოგებულის ტექსტი */
+        #winner-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            color: #222;
+            padding: 40px;
+            border-radius: 20px;
+            font-size: 2rem;
             font-weight: bold;
-            color: var(--light);
-            min-height: 1.6em;
+            z-index: 1000;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+        }
+
+        #winner-popup.active { transform: translate(-50%, -50%) scale(1); }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            z-index: 999;
         }
     </style>
 </head>
 <body>
 
-    <h1>გადაწყვეტილების მიმღები</h1>
-    
-    <div class="container">
-        <div class="wheel-container">
-            <div class="arrow"></div>
-            <canvas id="canvas" width="400" height="400"></canvas>
+    <div class="header">
+        <h1>ბედის ბორბალი</h1>
+        <p>მიეცი სამყაროს საშუალება, აირჩიოს შენთვის</p>
+    </div>
+
+    <div class="main-layout">
+        <div class="wheel-box">
+            <svg class="pointer" viewBox="0 0 20 20" fill="#ff0055">
+                <path d="M10 0 L20 20 L0 20 Z" />
+            </svg>
+            <canvas id="wheel" width="450" height="450"></canvas>
         </div>
 
-        <div class="controls">
-            <input type="text" id="optionInput" placeholder="ჩაწერეთ ვარიანტი...">
-            <button class="btn-add" onclick="addOption()">დამატება</button>
-            <ul id="optionsList"></ul>
-            <button class="btn-spin" id="spinBtn" onclick="spin()">დაატრიალე!</button>
+        <div class="ui-panel">
+            <input type="text" id="itemInput" placeholder="დაამატე ვარიანტი...">
+            <button class="spin-btn" onclick="spinWheel()">დაატრიალე</button>
         </div>
     </div>
 
-    <div id="result"></div>
+    <div id="winner-popup">
+        <small>არჩევანი გაკეთებულია:</small>
+        <div id="winner-text"></div>
+        <button onclick="closePopup()" style="margin-top:20px; padding:10px 20px; cursor:pointer;">OK</button>
+    </div>
+    <div class="overlay" id="overlay"></div>
 
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const input = document.getElementById('optionInput');
-        const listDisplay = document.getElementById('optionsList');
-        const spinBtn = document.getElementById('spinBtn');
-        const resultDisplay = document.getElementById('result');
-
-        let options = ["პიცა", "ბურგერი", "სუში", "ხინკალი"];
-        let startAngle = 0;
-        let arc = Math.PI / (options.length / 2);
-        let spinTimeout = null;
-
-        const colors = ["#6c5ce7", "#fd79a8", "#00b894", "#ffeaa7", "#fab1a0", "#0984e3"];
+        const canvas = document.getElementById("wheel");
+        const ctx = canvas.getContext("2d");
+        const input = document.getElementById("itemInput");
+        
+        let items = ["Netflix", "კითხვა", "ვარჯიში", "ძილი", "თამაში"];
+        let currentRotation = 0;
 
         function drawWheel() {
-            arc = Math.PI / (options.length / 2);
-            ctx.clearRect(0, 0, 400, 400);
+            const numSegments = items.length;
+            const angle = (2 * Math.PI) / numSegments;
+            ctx.clearRect(0, 0, 450, 450);
 
-            options.forEach((text, i) => {
-                const angle = startAngle + i * arc;
-                ctx.fillStyle = colors[i % colors.length];
-                
+            items.forEach((item, i) => {
                 ctx.beginPath();
-                ctx.moveTo(200, 200);
-                ctx.arc(200, 200, 190, angle, angle + arc, false);
-                ctx.lineTo(200, 200);
+                ctx.fillStyle = i % 2 === 0 ? "#1e1e2f" : "#2a2a40";
+                ctx.strokeStyle = "#00d2ff";
+                ctx.lineWidth = 2;
+                ctx.moveTo(225, 225);
+                ctx.arc(225, 225, 220, i * angle, (i + 1) * angle);
                 ctx.fill();
+                ctx.stroke();
 
+                // ტექსტი
                 ctx.save();
-                ctx.fillStyle = "white";
-                ctx.translate(200 + Math.cos(angle + arc / 2) * 130, 200 + Math.sin(angle + arc / 2) * 130);
-                ctx.rotate(angle + arc / 2 + Math.PI / 2);
-                ctx.font = 'bold 16px Arial';
-                ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
+                ctx.translate(225, 225);
+                ctx.rotate(i * angle + angle / 2);
+                ctx.fillStyle = "#fff";
+                ctx.font = "bold 18px Arial";
+                ctx.fillText(item, 100, 10);
                 ctx.restore();
             });
         }
 
-        function addOption() {
-            if (input.value) {
-                options.push(input.value);
-                input.value = "";
-                updateUI();
-            }
+        function spinWheel() {
+            const randomSpin = Math.floor(Math.random() * 360) + 3600; // მინიმუმ 10 ბრუნი
+            currentRotation += randomSpin;
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                const actualDeg = currentRotation % 360;
+                const segmentAngle = 360 / items.length;
+                // გამოთვლა რომელი მოხვდა ისართან (ისარი ზემოთაა, ანუ 270 გრადუსზე)
+                const winningIndex = Math.floor((360 - (actualDeg % 360)) / segmentAngle);
+                showWinner(items[winningIndex]);
+            }, 4000);
         }
 
-        function updateUI() {
-            listDisplay.innerHTML = "";
-            options.forEach((opt, idx) => {
-                const li = document.createElement('li');
-                li.innerHTML = `${opt} <span style="cursor:pointer" onclick="removeOption(${idx})">❌</span>`;
-                listDisplay.appendChild(li);
+        function showWinner(text) {
+            document.getElementById("winner-text").innerText = text;
+            document.getElementById("winner-popup").classList.add("active");
+            document.getElementById("overlay").style.display = "block";
+            
+            // კონფეტის გაშვება
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
             });
-            drawWheel();
         }
 
-        function removeOption(idx) {
-            options.splice(idx, 1);
-            updateUI();
+        function closePopup() {
+            document.getElementById("winner-popup").classList.remove("active");
+            document.getElementById("overlay").style.display = "none";
         }
 
-        let spinAngleStart = 0;
-        let spinTime = 0;
-        let spinTimeTotal = 0;
-
-        function spin() {
-            if (options.length < 2) return alert("დაამატეთ მინიმუმ 2 ვარიანტი!");
-            spinAngleStart = Math.random() * 10 + 10;
-            spinTime = 0;
-            spinTimeTotal = Math.random() * 3 + 4 * 1000;
-            spinBtn.disabled = true;
-            resultDisplay.innerText = "ირჩევა...";
-            rotateWheel();
-        }
-
-        function rotateWheel() {
-            spinTime += 30;
-            if (spinTime >= spinTimeTotal) {
-                stopRotateWheel();
-                return;
+        input.addEventListener("keypress", (e) => {
+            if (e.key === "Enter" && input.value) {
+                items.push(input.value);
+                input.value = "";
+                drawWheel();
             }
-            const spinAngle = spinAngleStart - easeOut(spinTime, 0, spinAngleStart, spinTimeTotal);
-            startAngle += (spinAngle * Math.PI / 180);
-            drawWheel();
-            spinTimeout = setTimeout(rotateWheel, 30);
-        }
+        });
 
-        function stopRotateWheel() {
-            clearTimeout(spinTimeout);
-            const degrees = startAngle * 180 / Math.PI + 90;
-            const arcd = arc * 180 / Math.PI;
-            const index = Math.floor((360 - degrees % 360) / arcd);
-            const winner = options[(index + options.length) % options.length];
-            resultDisplay.innerText = "შენი არჩევანია: " + winner;
-            spinBtn.disabled = false;
-        }
-
-        function easeOut(t, b, c, d) {
-            const ts = (t /= d) * t;
-            const tc = ts * t;
-            return b + c * (tc + -3 * ts + 3 * t);
-        }
-
-        updateUI(); // საწყისი ჩატვირთვა
+        drawWheel();
     </script>
 </body>
 </html>
