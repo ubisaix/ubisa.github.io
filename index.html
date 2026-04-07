@@ -3,216 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ubisa - სამშენებლო კალკულატორი</title>
+    <title>Ubisa - სამშენებლო კალკულატორები</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
         :root {
-            --primary-color: #3b82f6;
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --input-border: #e2e8f0;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #f59e0b; /* თქვენი საიტის ყვითელი ფერი */
+            --text-white: #f8fafc;
+            --input-bg: #334155;
+            --border: rgba(255, 255, 255, 0.1);
         }
 
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
+            color: var(--text-white);
             margin: 0;
             padding: 20px;
             display: flex;
-            justify-content: center;
-            color: var(--text-main);
+            flex-direction: column;
+            align-items: center;
         }
 
-        .app-container {
+        .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calc-card {
             background: var(--card-bg);
-            border-radius: 24px;
-            padding: 24px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         h2 {
-            text-align: center;
-            font-size: 1.5rem;
-            margin-bottom: 24px;
-            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent);
+            padding-left: 10px;
+            color: var(--text-white);
         }
 
-        .input-group {
-            margin-bottom: 16px;
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
-        label {
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .input-box label {
             display: block;
-            font-size: 0.9rem;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: #64748b;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 5px;
         }
 
         input {
             width: 100%;
-            padding: 12px 16px;
-            border: 2px solid var(--input-border);
-            border-radius: 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: 10px;
+            color: white;
             font-size: 1rem;
-            transition: border-color 0.2s;
             outline: none;
+            transition: border-color 0.3s;
         }
 
         input:focus {
-            border-color: var(--primary-color);
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            border-color: var(--accent);
         }
 
         .btn-calc {
             width: 100%;
-            background: var(--primary-color);
-            color: white;
+            background: var(--accent);
+            color: #000;
             border: none;
-            padding: 16px;
+            padding: 15px;
             border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1rem;
             cursor: pointer;
-            margin-top: 10px;
-            transition: transform 0.1s;
+            transition: transform 0.2s, opacity 0.2s;
         }
 
         .btn-calc:active {
-            transform: scale(0.98);
+            transform: scale(0.97);
         }
 
-        .result-card {
-            margin-top: 24px;
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid #e2e8f0;
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            display: none;
         }
 
-        .result-item {
+        .res-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 1rem;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
         }
 
-        .result-item span:last-child {
-            font-weight: 700;
-            color: var(--primary-color);
+        .res-row b {
+            color: var(--accent);
         }
 
-        .divider {
-            height: 1px;
-            background: #e2e8f0;
-            margin: 10px 0;
-        }
-
-        /* მობილურისთვის მორგება */
-        @media (max-width: 400px) {
-            body { padding: 10px; }
-            .app-container { border-radius: 16px; padding: 16px; }
+        @media (max-width: 480px) {
+            .input-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
         }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <h2>კედლის ბლოკის კალკულატორი</h2>
+<div class="container">
+    <h1>Ubisa კალკულატორი</h1>
 
-    <div class="input-group">
-        <label>კედლის სიგრძე (მეტრი)</label>
-        <input type="number" id="length" placeholder="მაგ: 10">
+    <div class="calc-card">
+        <h2>1. ბლოკის დათვლა</h2>
+        <div class="input-grid">
+            <div class="input-box">
+                <label>სიგრძე (მ)</label>
+                <input type="number" id="b_len" placeholder="0">
+            </div>
+            <div class="input-box">
+                <label>სიმაღლე (მ)</label>
+                <input type="number" id="b_height" placeholder="0">
+            </div>
+            <div class="input-box">
+                <label>კარი/ფანჯარა (მ²)</label>
+                <input type="number" id="b_minus" value="0">
+            </div>
+            <div class="input-box">
+                <label>ბლოკი 1მ²-ზე</label>
+                <input type="number" id="b_per_m" value="12.5">
+            </div>
+        </div>
+        <button class="btn-calc" onclick="calcBlock()">გამოთვლა</button>
+        <div id="res_block" class="result-box">
+            <div class="res-row"><span>ფართობი:</span> <b id="r_b_area">0</b> მ²</div>
+            <div class="res-row"><span>რაოდენობა:</span> <b id="r_b_count">0</b> ცალი</div>
+        </div>
     </div>
 
-    <div class="input-group">
-        <label>კედლის სიმაღლე (მეტრი)</label>
-        <input type="number" id="height" placeholder="მაგ: 3">
+    <div class="calc-card">
+        <h2>2. ქვიშა და ცემენტი (შელესვა)</h2>
+        <div class="input-grid">
+            <div class="input-box">
+                <label>ფართობი (მ²)</label>
+                <input type="number" id="s_area" placeholder="0">
+            </div>
+            <div class="input-box">
+                <label>სისქე (სმ)</label>
+                <input type="number" id="s_thick" value="2">
+            </div>
+        </div>
+        <button class="btn-calc" onclick="calcSand()">გამოთვლა</button>
+        <div id="res_sand" class="result-box">
+            <div class="res-row"><span>ცემენტი (50კგ):</span> <b id="r_s_cement">0</b> ტომარა</div>
+            <div class="res-row"><span>ქვიშა:</span> <b id="r_s_sand">0</b> მ³</div>
+        </div>
     </div>
 
-    <div class="grid-2">
-        <div class="input-group">
-            <label>კარის ფართობი (მ²)</label>
-            <input type="number" id="door" value="0">
+    <div class="calc-card">
+        <h2>3. ბეტონის მოცულობა</h2>
+        <div class="input-grid">
+            <div class="input-box">
+                <label>სიგრძე (მ)</label>
+                <input type="number" id="c_len" placeholder="0">
+            </div>
+            <div class="input-box">
+                <label>სიგანე (მ)</label>
+                <input type="number" id="c_width" placeholder="0">
+            </div>
+            <div class="input-box full-width">
+                <label>სისქე/სიმაღლე (მ)</label>
+                <input type="number" id="c_height" placeholder="0.2">
+            </div>
         </div>
-        <div class="input-group">
-            <label>ფანჯრის ფართობი (მ²)</label>
-            <input type="number" id="window" value="0">
-        </div>
-    </div>
-
-    <div class="input-group">
-        <label>ბლოკის რაოდენობა 1 კვადრატულზე</label>
-        <input type="number" id="perSquare" value="12.5">
-    </div>
-
-    <div class="input-group">
-        <label>1 ბლოკის ფასი (₾)</label>
-        <input type="number" id="price" value="1.50">
-    </div>
-
-    <button class="btn-calc" onclick="calculate()">დათვლა</button>
-
-    <div id="result" class="result-card" style="display: none;">
-        <div class="result-item">
-            <span>კედლის ფართობი:</span>
-            <span id="resArea">0 მ²</span>
-        </div>
-        <div class="result-item">
-            <span>სუფთა ფართობი:</span>
-            <span id="resNetArea">0 მ²</span>
-        </div>
-        <div class="divider"></div>
-        <div class="result-item">
-            <span>ბლოკის რაოდენობა:</span>
-            <span id="resCount">0 ცალი</span>
-        </div>
-        <div class="result-item" style="font-size: 1.2rem; color: #000;">
-            <span>ჯამური ფასი:</span>
-            <span id="resTotal">0 ₾</span>
+        <button class="btn-calc" onclick="calcConcrete()">გამოთვლა</button>
+        <div id="res_concrete" class="result-box">
+            <div class="res-row"><span>მოცულობა:</span> <b id="r_c_vol">0</b> მ³</div>
         </div>
     </div>
 </div>
 
 <script>
-    function calculate() {
-        const length = parseFloat(document.getElementById('length').value) || 0;
-        const height = parseFloat(document.getElementById('height').value) || 0;
-        const door = parseFloat(document.getElementById('door').value) || 0;
-        const windowArea = parseFloat(document.getElementById('window').value) || 0;
-        const perSquare = parseFloat(document.getElementById('perSquare').value) || 0;
-        const price = parseFloat(document.getElementById('price').value) || 0;
+    function calcBlock() {
+        let l = parseFloat(document.getElementById('b_len').value) || 0;
+        let h = parseFloat(document.getElementById('b_height').value) || 0;
+        let m = parseFloat(document.getElementById('b_minus').value) || 0;
+        let p = parseFloat(document.getElementById('b_per_m').value) || 0;
+        
+        let area = (l * h) - m;
+        let count = Math.ceil(area * p);
+        
+        document.getElementById('r_b_area').innerText = area.toFixed(2);
+        document.getElementById('r_b_count').innerText = count;
+        document.getElementById('res_block').style.display = 'block';
+    }
 
-        if (length <= 0 || height <= 0) {
-            alert("გთხოვთ შეიყვანოთ კედლის ზომები");
-            return;
-        }
+    function calcSand() {
+        let a = parseFloat(document.getElementById('s_area').value) || 0;
+        let t = parseFloat(document.getElementById('s_thick').value) || 0;
+        
+        // საშუალო ხარჯი: 1მ²-ზე 2სმ სისქეზე ~0.25 ტომარა ცემენტი
+        let cement = Math.ceil(a * (t / 2) * 0.25);
+        let sand = (a * (t / 100)).toFixed(2);
+        
+        document.getElementById('r_s_cement').innerText = cement;
+        document.getElementById('r_s_sand').innerText = sand;
+        document.getElementById('res_sand').style.display = 'block';
+    }
 
-        const totalArea = length * height;
-        const netArea = totalArea - (door + windowArea);
-        const blockCount = Math.ceil(netArea * perSquare);
-        const totalPrice = (blockCount * price).toFixed(2);
-
-        document.getElementById('resArea').innerText = totalArea + " მ²";
-        document.getElementById('resNetArea').innerText = netArea + " მ²";
-        document.getElementById('resCount').innerText = blockCount + " ცალი";
-        document.getElementById('resTotal').innerText = totalPrice + " ₾";
-
-        document.getElementById('result').style.display = 'block';
+    function calcConcrete() {
+        let l = parseFloat(document.getElementById('c_len').value) || 0;
+        let w = parseFloat(document.getElementById('c_width').value) || 0;
+        let h = parseFloat(document.getElementById('c_height').value) || 0;
+        
+        let vol = (l * w * h).toFixed(2);
+        
+        document.getElementById('r_c_vol').innerText = vol;
+        document.getElementById('res_concrete').style.display = 'block';
     }
 </script>
 
