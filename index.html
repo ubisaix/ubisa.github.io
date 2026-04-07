@@ -3,238 +3,324 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Decision Maker</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <title>AI Prompt Studio | პრომპტების კონსტრუქტორი</title>
     <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.3);
+            --text: #f1f5f9;
+            --grad: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+        }
+
         body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             margin: 0;
-            background: #0f0c29;
-            background: linear-gradient(to bottom, #24243e, #302b63, #0f0c29);
-            color: white;
-            font-family: 'Helvetica Neue', sans-serif;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        /* ნაბიჯების სექცია */
+        .step {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            background: var(--grad);
+            width: 28px;
+            height: 28px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: #00d2ff;
-            text-shadow: 0 0 20px #00d2ff;
-        }
-
-        .main-layout {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 50px;
-        }
-
-        /* ბორბლის სტილი */
-        .wheel-box {
-            position: relative;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
             border-radius: 50%;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            font-size: 0.9rem;
+            color: white;
         }
 
-        canvas {
-            border-radius: 50%;
-            transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
-        }
-
-        .pointer {
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            filter: drop-shadow(0 0 10px #ff0055);
-            z-index: 100;
-        }
-
-        /* მართვის პანელი */
-        .ui-panel {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
-            width: 350px;
-            text-align: center;
-        }
-
-        input {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid #00d2ff;
+        /* Input ველები */
+        input[type="text"] {
+            width: 100%;
             padding: 15px;
             border-radius: 10px;
+            border: 2px solid #334155;
+            background: #0f172a;
             color: white;
-            width: 80%;
-            margin-bottom: 15px;
+            font-size: 1rem;
             outline: none;
-        }
-
-        .spin-btn {
-            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
-            border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
             transition: 0.3s;
+            box-sizing: border-box;
         }
 
-        .spin-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 210, 255, 0.6);
+        input[type="text"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        /* მოგებულის ტექსტი */
-        #winner-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: white;
-            color: #222;
-            padding: 40px;
-            border-radius: 20px;
-            font-size: 2rem;
-            font-weight: bold;
-            z-index: 1000;
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* სტილის ბარათების Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            background: #334155;
+            border-radius: 12px;
+            padding: 10px;
+            cursor: pointer;
             text-align: center;
+            transition: 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
         }
 
-        #winner-popup.active { transform: translate(-50%, -50%) scale(1); }
+        .card:hover {
+            transform: translateY(-5px);
+            background: #475569;
+        }
 
-        .overlay {
+        .card.selected {
+            border-color: var(--accent);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .card img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        /* ღილაკები */
+        .chip-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .chip {
+            padding: 8px 16px;
+            background: #334155;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .chip.selected {
+            background: var(--accent);
+            color: #0f172a;
+            font-weight: bold;
+        }
+
+        /* Preview სექცია */
+        .preview-box {
+            position: sticky;
+            bottom: 20px;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 20px;
+            border: 2px solid var(--accent);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+            margin-top: 40px;
+        }
+
+        #finalPrompt {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            word-break: break-all;
+            color: #38bdf8;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-copy { background: var(--grad); color: white; }
+        .btn-boost { background: #10b981; color: white; }
+        button:active { transform: scale(0.98); }
+
+        .toast {
             position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
+            bottom: 100px;
+            background: #10b981;
+            padding: 10px 20px;
+            border-radius: 5px;
             display: none;
-            z-index: 999;
+            animation: fadeIn 0.3s;
         }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>ბედის ბორბალი</h1>
-        <p>მიეცი სამყაროს საშუალება, აირჩიოს შენთვის</p>
+<div class="container">
+    <header>
+        <h1>AI Prompt Studio</h1>
+        <p>ააწყვე შენი შედევრი ვიზუალური ბარათებით</p>
+    </header>
+
+    <div class="step">
+        <div class="step-title"><div class="step-number">1</div> რისი დახატვა გსურს?</div>
+        <input type="text" id="subject" placeholder="მაგალითად: აბჯრიანი კატა კოსმოსში..." oninput="updatePrompt()">
     </div>
 
-    <div class="main-layout">
-        <div class="wheel-box">
-            <svg class="pointer" viewBox="0 0 20 20" fill="#ff0055">
-                <path d="M10 0 L20 20 L0 20 Z" />
-            </svg>
-            <canvas id="wheel" width="450" height="450"></canvas>
+    <div class="step">
+        <div class="step-title"><div class="step-number">2</div> აირჩიე სტილი</div>
+        <div class="grid">
+            <div class="card" onclick="selectStyle(this, 'Cyberpunk style, neon lights')">
+                <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=200" alt="Cyber">
+                <div>Cyberpunk</div>
+            </div>
+            <div class="card" onclick="selectStyle(this, 'Renaissance oil painting, classical')">
+                <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=200" alt="Art">
+                <div>Renaissance</div>
+            </div>
+            <div class="card" onclick="selectStyle(this, 'Studio Ghibli anime style, whimsical')">
+                <img src="https://images.unsplash.com/photo-1578632738908-4521c726eeb8?w=200" alt="Anime">
+                <div>Anime</div>
+            </div>
+            <div class="card" onclick="selectStyle(this, '3D Render, Pixar style, C4D')">
+                <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=200" alt="3D">
+                <div>3D / Pixar</div>
+            </div>
         </div>
+    </div>
 
-        <div class="ui-panel">
-            <input type="text" id="itemInput" placeholder="დაამატე ვარიანტი...">
-            <button class="spin-btn" onclick="spinWheel()">დაატრიალე</button>
+    <div class="step">
+        <div class="step-title"><div class="step-number">3</div> განათება და ხედი</div>
+        <div class="chip-container">
+            <div class="chip" onclick="toggleSetting(this, 'Cinematic Lighting')">Cinematic Lighting</div>
+            <div class="chip" onclick="toggleSetting(this, 'Golden Hour')">Golden Hour</div>
+            <div class="chip" onclick="toggleSetting(this, 'Close-up Shot')">Close-up</div>
+            <div class="chip" onclick="toggleSetting(this, 'Wide Angle')">Wide Angle</div>
+            <div class="chip" onclick="toggleSetting(this, 'Hyper-realistic')">Hyper-realistic</div>
         </div>
     </div>
 
-    <div id="winner-popup">
-        <small>არჩევანი გაკეთებულია:</small>
-        <div id="winner-text"></div>
-        <button onclick="closePopup()" style="margin-top:20px; padding:10px 20px; cursor:pointer;">OK</button>
+    <div class="preview-box">
+        <div style="font-weight: bold; color: var(--accent);">LIVE PROMPT PREVIEW:</div>
+        <div id="finalPrompt">/imagine prompt: დაიწყე წერა...</div>
+        <div class="actions">
+            <button class="btn-boost" onclick="boostQuality()">✨ Boost Quality</button>
+            <button class="btn-copy" onclick="copyToClipboard()">📋 Copy Prompt</button>
+        </div>
     </div>
-    <div class="overlay" id="overlay"></div>
+</div>
 
-    <script>
-        const canvas = document.getElementById("wheel");
-        const ctx = canvas.getContext("2d");
-        const input = document.getElementById("itemInput");
-        
-        let items = ["Netflix", "კითხვა", "ვარჯიში", "ძილი", "თამაში"];
-        let currentRotation = 0;
+<div class="toast" id="toast">კოპირებულია! ✅</div>
 
-        function drawWheel() {
-            const numSegments = items.length;
-            const angle = (2 * Math.PI) / numSegments;
-            ctx.clearRect(0, 0, 450, 450);
+<script>
+    let subject = "";
+    let selectedStyle = "";
+    let activeSettings = new Set();
+    let isBoosted = false;
 
-            items.forEach((item, i) => {
-                ctx.beginPath();
-                ctx.fillStyle = i % 2 === 0 ? "#1e1e2f" : "#2a2a40";
-                ctx.strokeStyle = "#00d2ff";
-                ctx.lineWidth = 2;
-                ctx.moveTo(225, 225);
-                ctx.arc(225, 225, 220, i * angle, (i + 1) * angle);
-                ctx.fill();
-                ctx.stroke();
+    function updatePrompt() {
+        subject = document.getElementById('subject').value || "A masterpiece";
+        render();
+    }
 
-                // ტექსტი
-                ctx.save();
-                ctx.translate(225, 225);
-                ctx.rotate(i * angle + angle / 2);
-                ctx.fillStyle = "#fff";
-                ctx.font = "bold 18px Arial";
-                ctx.fillText(item, 100, 10);
-                ctx.restore();
-            });
+    function selectStyle(el, style) {
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedStyle = style;
+        render();
+    }
+
+    function toggleSetting(el, setting) {
+        el.classList.toggle('selected');
+        if (activeSettings.has(setting)) {
+            activeSettings.delete(setting);
+        } else {
+            activeSettings.add(setting);
         }
+        render();
+    }
 
-        function spinWheel() {
-            const randomSpin = Math.floor(Math.random() * 360) + 3600; // მინიმუმ 10 ბრუნი
-            currentRotation += randomSpin;
-            canvas.style.transform = `rotate(${currentRotation}deg)`;
+    function boostQuality() {
+        isBoosted = !isBoosted;
+        const btn = document.querySelector('.btn-boost');
+        btn.style.background = isBoosted ? "#059669" : "#10b981";
+        btn.innerText = isBoosted ? "✨ Quality Boosted" : "✨ Boost Quality";
+        render();
+    }
 
-            setTimeout(() => {
-                const actualDeg = currentRotation % 360;
-                const segmentAngle = 360 / items.length;
-                // გამოთვლა რომელი მოხვდა ისართან (ისარი ზემოთაა, ანუ 270 გრადუსზე)
-                const winningIndex = Math.floor((360 - (actualDeg % 360)) / segmentAngle);
-                showWinner(items[winningIndex]);
-            }, 4000);
-        }
+    function render() {
+        let promptParts = [subject];
+        if (selectedStyle) promptParts.push(selectedStyle);
+        if (activeSettings.size > 0) promptParts.push(Array.from(activeSettings).join(", "));
+        if (isBoosted) promptParts.push("8k resolution, highly detailed, masterpiece, unreal engine 5, photorealistic");
 
-        function showWinner(text) {
-            document.getElementById("winner-text").innerText = text;
-            document.getElementById("winner-popup").classList.add("active");
-            document.getElementById("overlay").style.display = "block";
-            
-            // კონფეტის გაშვება
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
-        }
+        const finalString = "/imagine prompt: " + promptParts.join(", ");
+        document.getElementById('finalPrompt').innerText = finalString;
+    }
 
-        function closePopup() {
-            document.getElementById("winner-popup").classList.remove("active");
-            document.getElementById("overlay").style.display = "none";
-        }
-
-        input.addEventListener("keypress", (e) => {
-            if (e.key === "Enter" && input.value) {
-                items.push(input.value);
-                input.value = "";
-                drawWheel();
-            }
+    function copyToClipboard() {
+        const text = document.getElementById('finalPrompt').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 2000);
         });
+    }
+</script>
 
-        drawWheel();
-    </script>
 </body>
 </html>
