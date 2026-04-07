@@ -8,7 +8,7 @@
         :root {
             --primary-color: #f39c12;
             --dark-bg: rgba(0, 0, 0, 0.7);
-            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.15);
         }
 
         body {
@@ -19,9 +19,9 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            /* ფონი სარემონტო თემატიკით */
-            background: linear-gradient(var(--dark-bg), var(--dark-bg)), 
-                        url('https://images.unsplash.com/photo-1503387762-592dea58292b?auto=format&fit=crop&q=80&w=1600');
+            /* უკანა ფონის სურათი */
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -29,99 +29,153 @@
         }
 
         .container {
-            width: 90%;
-            max-width: 500px;
+            width: 95%;
+            max-width: 450px;
             background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-sizing: border-box;
         }
 
-        h2 { text-align: center; margin-bottom: 25px; font-weight: 300; }
+        h2 { 
+            text-align: center; 
+            margin-bottom: 25px; 
+            font-weight: 600; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fff;
+        }
 
         .category-btn {
             width: 100%;
-            padding: 15px;
+            padding: 18px;
             background: var(--primary-color);
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
             font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
         }
 
-        .category-btn:hover { background: #e67e22; }
+        .category-btn:hover { 
+            background: #e67e22; 
+            transform: translateY(-2px);
+        }
 
         .calc-window {
             display: none;
-            margin-top: 20px;
-            animation: fadeIn 0.5s;
+            margin-top: 25px;
+            animation: slideDown 0.4s ease-out;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { 
+            from { opacity: 0; transform: translateY(-20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
 
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-size: 14px; color: #ddd; }
+        .input-group { margin-bottom: 18px; }
+        
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-size: 14px; 
+            color: #efefef; 
+            font-weight: 500;
+        }
         
         input, select {
             width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.95);
+            color: #222;
             box-sizing: border-box;
             font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(243, 156, 18, 0.4);
         }
 
         .calculate-btn {
             width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            background: #27ae60;
+            padding: 15px;
+            margin-top: 15px;
+            background: #2ecc71;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             color: white;
+            font-size: 17px;
             font-weight: bold;
             cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
         }
+
+        .calculate-btn:hover { background: #27ae60; }
 
         .results {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
             display: none;
+            border-left: 4px solid var(--primary-color);
         }
 
-        .results p { margin: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
-        .results span { color: var(--primary-color); font-weight: bold; }
+        .results p { 
+            margin: 10px 0; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); 
+            padding-bottom: 8px; 
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+        }
+        
+        .results span { 
+            color: var(--primary-color); 
+            font-weight: bold; 
+        }
+
+        .total-row {
+            font-size: 18px !important;
+            margin-top: 15px !important;
+            border-bottom: none !important;
+            color: #fff;
+        }
 
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>მშენებლობის კალკულატორი</h2>
+    <h2>რემონტის ხარჯი</h2>
 
     <button class="category-btn" onclick="toggleWindow()">
-        კედლის აშენება 🧱 <span>▼</span>
+        🧱 კედლის აშენება <span>▼</span>
     </button>
 
     <div id="wallWindow" class="calc-window">
         <div class="input-group">
             <label>კედლის სიგრძე (მეტრი)</label>
-            <input type="number" id="length" placeholder="მაგ: 5">
+            <input type="number" id="length" step="0.1" placeholder="მაგ: 5.5">
         </div>
         <div class="input-group">
             <label>კედლის სიმაღლე (მეტრი)</label>
-            <input type="number" id="height" placeholder="მაგ: 3">
+            <input type="number" id="height" step="0.1" placeholder="მაგ: 3.0">
         </div>
         <div class="input-group">
             <label>აირჩიეთ მასალა</label>
@@ -131,21 +185,20 @@
             </select>
         </div>
         <div class="input-group">
-            <label>ერთი ერთეულის ფასი (ლარი)</label>
-            <input type="number" id="unitPrice" placeholder="მაგ: 1.50">
+            <label>ბლოკის/აგურის 1 ცალის ფასი (₾)</label>
+            <input type="number" id="unitPrice" step="0.01" placeholder="მაგ: 1.80">
         </div>
 
-        <button class="calculate-btn" onclick="calculateWall()">დათვლა</button>
+        <button class="calculate-btn" onclick="calculateWall()">გამოთვლა</button>
 
         <div id="results" class="results">
             <p>კედლის ფართობი: <span id="resArea">0</span> მ²</p>
             <p>საჭირო რაოდენობა: <span id="resCount">0</span> ცალი</p>
-            <p>მასალის ღირებულება: <span id="resMaterialPrice">0</span> ₾</p>
+            <p>მასალის ჯამური ფასი: <span id="resMaterialPrice">0</span> ₾</p>
             <p>ცემენტი (40კგ): <span id="resCement">0</span> მეშოკი</p>
             <p>ქვიშა: <span id="resSand">0</span> კუბი</p>
-            <p>ხსნარის ჯამური ფასი: <span id="resMortarPrice">0</span> ₾</p>
-            <hr>
-            <p><strong>ჯამური ხარჯი: <span id="resTotal">0</span> ₾</strong></p>
+            <p>ხსნარის (ცემენტი+ქვიშა) ფასი: <span id="resMortarPrice">0</span> ₾</p>
+            <p class="total-row"><strong>სულ ჯამი: <span id="resTotal">0</span> ₾</strong></p>
         </div>
     </div>
 </div>
@@ -153,18 +206,24 @@
 <script>
     function toggleWindow() {
         const win = document.getElementById('wallWindow');
-        win.style.display = (win.style.display === 'block') ? 'none' : 'block';
+        const btnSpan = document.querySelector('.category-btn span');
+        if (win.style.display === 'block') {
+            win.style.display = 'none';
+            btnSpan.innerText = '▼';
+        } else {
+            win.style.display = 'block';
+            btnSpan.innerText = '▲';
+        }
     }
 
     function calculateWall() {
-        // მონაცემების წამოღება
         const length = parseFloat(document.getElementById('length').value);
         const height = parseFloat(document.getElementById('height').value);
         const materialSize = parseFloat(document.getElementById('material').value);
         const unitPrice = parseFloat(document.getElementById('unitPrice').value) || 0;
 
         if (!length || !height) {
-            alert("გთხოვთ შეავსოთ ზომები");
+            alert("გთხოვთ, შეიყვანოთ კედლის ზომები!");
             return;
         }
 
@@ -175,10 +234,9 @@
         const count = Math.ceil(area / materialSize * 1.05);
         const materialTotalPrice = count * unitPrice;
 
-        // 3. ხსნარის გათვლა (საშუალო მაჩვენებელი 1მ2-ზე)
-        // ბლოკისთვის საჭიროა დაახლ. 0.02 კუბი ხსნარი 1მ2-ზე
+        // 3. ხსნარის გათვლა 
         const sandVolume = (area * 0.025).toFixed(2); 
-        const cementBags = Math.ceil(area * 0.25); // დაახლ. 1 მეშოკი 4 კვადრატზე
+        const cementBags = Math.ceil(area * 0.25); 
 
         const sandPrice = sandVolume * 55;
         const cementPrice = cementBags * 17;
