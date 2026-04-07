@@ -4,158 +4,127 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Pro | UBISA</title>
+    <script async src="https://cse.google.com/cse.js?cx=00008e50948c04f2a"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            font-family: 'YS Text', Arial, sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 10vh;
             min-height: 100vh;
+            padding-top: 15vh;
         }
 
         .logo {
-            font-size: 60px;
+            font-size: 70px;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             letter-spacing: -2px;
         }
-
         .logo span:nth-child(1) { color: #ff0000; }
         .logo span:nth-child(2) { color: #000; }
 
         .search-container {
             width: 100%;
-            max-width: 700px;
+            max-width: 600px;
             padding: 0 20px;
-            margin-bottom: 30px;
         }
 
-        /* Google-ის ძებნის ველის სტილის მორგება */
-        .gcse-search-wrapper {
-            background: #fff;
+        /* ჩვენი საკუთარი დიზაინი ძებნისთვის */
+        .custom-search-box {
+            display: flex;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.1);
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid #dfe1e5;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
-        .gcse-search-wrapper:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        input#myQuery {
+            flex: 1;
+            height: 50px;
+            border: none;
+            padding: 0 20px;
+            font-size: 18px;
+            outline: none;
         }
 
-        /* ვმალავთ Google-ის სტანდარტულ დიზაინს, რომ ჩვენსას დაემსგავსოს */
-        .gsc-control-cse {
-            padding: 5px !important;
-            border: none !important;
-            background-color: transparent !important;
+        .btn-search {
+            background-color: #ffcc00;
+            border: none;
+            padding: 0 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
         }
+        .btn-search:hover { background-color: #f5c400; }
 
-        .gsc-search-button-v2 {
-            background-color: #ffcc00 !important;
-            border-color: #ffcc00 !important;
-            padding: 10px 20px !important;
-        }
-
-        .gsc-input-box {
-            border: none !important;
-            background: transparent !important;
-        }
-
-        /* შედეგების კონტეინერი */
-        .results-area {
+        /* ადგილი სადაც Google შედეგებს ჩასვამს */
+        .results-box {
             width: 100%;
             max-width: 900px;
-            padding: 20px;
+            margin-top: 20px;
         }
 
         .info-panel {
-            margin-top: 30px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            margin-top: 50px;
+            display: flex;
             gap: 20px;
-            max-width: 900px;
-            width: 100%;
-            padding: 0 20px;
         }
-
         .card {
             padding: 15px;
             border: 1px solid #eee;
             border-radius: 8px;
-            text-align: left;
-            font-size: 13px;
-        }
-
-        .card h4 { margin-bottom: 5px; color: #555; }
-
-        .footer-links {
-            margin-top: 40px;
-            padding-bottom: 40px;
-            display: flex;
-            gap: 20px;
-        }
-
-        .footer-links a {
-            color: #000080;
-            text-decoration: none;
             font-size: 14px;
+            min-width: 150px;
         }
     </style>
 </head>
 <body>
 
     <div class="logo">
-        <span>S</span>earch<span>Pro</span>
+        <span>S</span><span>earchPro</span>
     </div>
 
     <div class="search-container">
-        <script async src="https://cse.google.com/cse.js?cx=00008e50948c04f2a"></script>
-        
-        <div class="gcse-search-wrapper">
-            <div class="gcse-search"></div>
+        <div class="custom-search-box">
+            <input type="text" id="myQuery" placeholder="მოძებნე ყველაფერი..." onkeypress="handleKeyPress(event)">
+            <button class="btn-search" onclick="executeSearch()">Search</button>
         </div>
     </div>
 
-    <div class="results-area">
-        </div>
-
-    <div class="info-panel" id="homeWidgets">
-        <div class="card">
-            <h4>ამინდი</h4>
-            <p>თბილისი: +18°C</p>
-        </div>
-        <div class="card">
-            <h4>ვალუტა</h4>
-            <p>USD: 2.65 GEL</p>
-        </div>
-        <div class="card">
-            <h4>სიახლეები</h4>
-            <p>ტექნოლოგიური სიახლეები საქართველოში...</p>
-        </div>
+    <div class="results-box">
+        <div class="gcse-searchresults-only"></div>
     </div>
 
-    <div class="footer-links">
-        <a href="#">Images</a>
-        <a href="#">Video</a>
-        <a href="#">Maps</a>
-        <a href="#">Translate</a>
+    <div class="info-panel">
+        <div class="card"><h4>ამინდი</h4><p>თბილისი: +18°C</p></div>
+        <div class="card"><h4>ვალუტა</h4><p>USD: 2.65 GEL</p></div>
     </div>
 
     <script>
-        // მცირე ლოგიკა: როცა მომხმარებელი ძებნას დაიწყებს, ვიჯეტები დავიმალოთ
-        window.onload = function() {
-            const searchButton = document.querySelector('.gsc-search-button');
-            if(searchButton) {
-                searchButton.addEventListener('click', function() {
-                    document.getElementById('homeWidgets').style.display = 'none';
+        // ფუნქცია რომელიც Google-ის ძებნას "აღვიძებს"
+        function executeSearch() {
+            const query = document.getElementById('myQuery').value;
+            if (query) {
+                // ვეუბნებით Google-ს რომ მოძებნოს ჩვენი ტექსტი
+                const element = google.search.cse.element.getElement('results-only');
+                if (element) {
+                    element.execute(query);
+                    // ვმალავთ ლოგოს და პანელს რომ ადგილი გათავისუფლდეს
                     document.querySelector('.logo').style.fontSize = '30px';
-                });
+                    document.querySelector('.info-panel').style.display = 'none';
+                } else {
+                    // თუ API ჯერ არ ჩაიტვირთა, ვიყენებთ ალტერნატივას
+                    console.log("Search is loading...");
+                }
             }
-        };
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') executeSearch();
+        }
     </script>
 
 </body>
