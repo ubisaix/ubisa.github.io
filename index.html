@@ -492,13 +492,20 @@
         const item = data.find(x => x.id === id);
         if(!item) return;
 
-        const similarItems = data
-            .filter(x => x.cat === item.cat && x.id !== item.id)
-            .slice(0, 3);
-
-        if(similarItems.length < 1) {
-            similarItems.push(...data.filter(x => x.id !== item.id).slice(0, 3));
+        // მსგავსი რეცეპტების რენდომიზაცია
+        let similarItems = data.filter(x => x.cat === item.cat && x.id !== item.id);
+        
+        // თუ იმავე კატეგორიაში ცოტაა, დავამატოთ სხვა კატეგორიებიდანაც (გარდა მიმდინარესი)
+        if(similarItems.length < 3) {
+            let otherItems = data.filter(x => x.id !== item.id && x.cat !== item.cat);
+            similarItems = [...similarItems, ...otherItems];
         }
+
+        // სიის არევა (Shuffle)
+        similarItems.sort(() => Math.random() - 0.5);
+        
+        // მხოლოდ 3 ცალის აღება
+        const randomThree = similarItems.slice(0, 3);
 
         document.getElementById('main-content').style.display = 'none';
         const page = document.getElementById('recipe-page');
@@ -516,7 +523,7 @@
                 <div class="similar-section">
                     <h4 style="font-size:12px; color:var(--text-gray); text-transform:uppercase; margin:0">მსგავსი რეცეპტები</h4>
                     <div class="similar-grid">
-                        ${similarItems.map(s => `
+                        ${randomThree.map(s => `
                             <div class="similar-card" onclick="openRecipe(${s.id})">
                                 <img src="${s.img}">
                                 <span>${s.name}</span>
