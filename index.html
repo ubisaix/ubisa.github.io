@@ -3,182 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fiber Style Menu</title>
+    <title>Fiber Style - Premium Menu</title>
     <style>
         :root {
-            --bg-color: #f4f4f4;
-            --text-gold: #d4af37;
-            --card-shadow: rgba(0, 0, 0, 0.4);
+            --bg-body: #fdfdfd;
+            --text-main: #333;
+            --text-gold: #c19e5d; /* ოქროსფერი აქცენტი */
+            --card-shadow: rgba(0, 0, 0, 0.1);
         }
 
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: white;
-            color: #333;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Header */
+        /* HEADER */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 10%;
-            border-bottom: 1px solid #eee;
+            padding: 15px 10%;
+            background-color: white;
+            border-bottom: 1px solid #f1f1f1;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
 
-        .logo { font-weight: bold; font-size: 24px; color: #2d5a27; }
+        .logo { 
+            font-weight: 900; 
+            font-size: 26px; 
+            color: #2d5a27; 
+            letter-spacing: -1px;
+        }
 
-        /* Main Section */
+        /* CONTAINER */
         .container {
             max-width: 1200px;
-            margin: 40px auto;
+            margin: 50px auto;
             padding: 0 20px;
         }
 
-        .title-section {
-            margin-bottom: 30px;
+        /* TITLE & DROPDOWN SECTION */
+        .title-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
         }
 
-        h1 { font-size: 32px; color: #222; margin-bottom: 5px; }
-        .subtitle { font-size: 14px; color: #666; max-width: 600px; }
-
-        /* Grid System */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+        .main-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin: 0;
+            color: #222;
         }
 
-        @media (max-width: 1024px) { .menu-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 768px) { .menu-grid { grid-template-columns: repeat(2, 1fr); } }
-
-        /* Card Style */
-        .card {
+        /* Dropdown Styling */
+        .dropdown {
             position: relative;
-            height: 250px;
-            border-radius: 5px;
-            overflow: hidden;
-            background-color: #000;
-            cursor: pointer;
-            transition: transform 0.3s;
+            display: inline-block;
         }
 
-        .card:hover { transform: scale(1.02); }
-
-        .card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.7; /* მუქი ეფექტისთვის */
-        }
-
-        .card-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            color: white;
-            box-sizing: border-box;
-        }
-
-        .card-tag {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: white;
-            color: black;
-            padding: 2px 8px;
-            font-size: 10px;
-            border-radius: 3px;
-            text-transform: uppercase;
-        }
-
-        .item-name {
+        .dropbtn {
+            background-color: white;
+            color: var(--text-main);
+            padding: 12px 20px;
             font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-        }
-
-        .item-info {
+            font-weight: 600;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
             display: flex;
-            font-size: 11px;
-            gap: 15px;
-            opacity: 0.8;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* Pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin: 40px 0;
-            gap: 10px;
+        .dropbtn:hover {
+            border-color: var(--text-gold);
+            box-shadow: 0 4px 12px rgba(193, 158, 93, 0.1);
         }
 
-        .page-link { color: #3498db; text-decoration: none; font-size: 14px; }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 180px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            z-index: 10;
+            border: 1px solid #f1f1f1;
+        }
 
-        /* Footer */
-        footer {
-            background-color: #fff;
-            padding: 50px 10%;
-            border-top: 1px solid #eee;
+        .dropdown-content a {
+            color: var(--text-main);
+            padding: 12px 20px;
+            text-decoration: none;
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f9f9f9;
+            color: var(--text-gold);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* GRID SYSTEM (4 სვეტი) */
+        .menu-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
         }
 
-        .footer-col h4 { font-size: 12px; margin-bottom: 15px; color: #2d5a27; }
-        .footer-col ul { list-style: none; padding: 0; }
-        .footer-col li { font-size: 11px; margin-bottom: 8px; color: #666; cursor: pointer; }
-        .footer-col li:hover { color: #000; }
+        /* RESPONSIVE GRID */
+        @media (max-width: 1024px) { .menu-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .menu-grid { grid-template-columns: 1fr; } }
+
+        /* CARD STYLE (Soft & Premium) */
+        .card {
+            position: relative;
+            height: 280px;
+            border-radius: 20px; /* მომრგვალებული სურათები */
+            overflow: hidden;
+            background-color: #000;
+            cursor: pointer;
+            box-shadow: 0 10px 30px var(--card-shadow);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .card:hover { 
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.85;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover img {
+            opacity: 1;
+        }
+
+        /* GLASSMORPHISM OVERLAY */
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            color: white;
+            box-sizing: border-box;
+            backdrop-filter: blur(2px);
+        }
+
+        .card-tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #1a1a1a;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(5px);
+        }
+
+        .item-name {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+
+        .item-info {
+            display: flex;
+            font-size: 12px;
+            gap: 15px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .item-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* PAGINATION */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 50px 0;
+            gap: 8px;
+        }
+
+        .page-link { 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            color: var(--text-main); 
+            text-decoration: none; 
+            font-size: 14px; 
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .page-link:hover {
+            border-color: var(--text-gold);
+            color: var(--text-gold);
+            background-color: #fdfaf5;
+        }
+
+        .page-link.active {
+            background-color: var(--text-gold);
+            border-color: var(--text-gold);
+            color: white;
+        }
+
+        /* FOOTER */
+        footer {
+            background-color: #fff;
+            padding: 70px 10%;
+            border-top: 1px solid #f1f1f1;
+            display: grid;
+            grid-template-columns: 1.5fr repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .footer-col h4 { 
+            font-size: 14px; 
+            font-weight: 700;
+            margin-bottom: 20px; 
+            color: #2d5a27; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-col ul { list-style: none; padding: 0; margin: 0; }
+        .footer-col li { font-size: 13px; margin-bottom: 12px; color: #666; cursor: pointer; transition: color 0.2s; }
+        .footer-col li:hover { color: var(--text-gold); }
 
         .bottom-bar {
-            padding: 20px 10%;
-            font-size: 10px;
+            padding: 25px 10%;
+            font-size: 12px;
             color: #999;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             border-top: 1px solid #f9f9f9;
+            background-color: #fafafa;
         }
+
     </style>
 </head>
 <body>
 
 <header>
     <div class="logo">fiber</div>
-    <nav style="font-size: 12px; color: #666;">კატეგორიები | ქვეყნები | ძებნა 🔍</nav>
+    <nav style="font-size: 13px; color: #555; font-weight: 500; display: flex; gap: 20px;">
+        <span>მთავარი</span>
+        <span>რესტორნები</span>
+        <span>მიტანა</span>
+        <span>ძებნა 🔍</span>
+    </nav>
 </header>
 
 <div class="container">
-    <div class="title-section">
-        <h1>კერძები</h1>
-        <p class="subtitle">ჩვენი მრავალფეროვანი მენიუ გთავაზობთ საუკეთესო გემოებს. დაათვალიერეთ თქვენი საყვარელი კერძები მარტივად.</p>
+    <div class="title-wrapper">
+        <h1 class="main-title">კერძები</h1>
+        
+        <div class="dropdown">
+            <button class="dropbtn">კატეგორიები ▾</button>
+            <div class="dropdown-content">
+                <a href="#">🍲 კერძები</a>
+                <a href="#">🥣 სოუსები</a>
+                <a href="#">🎂 ტორტები</a>
+                <a href="#">🍰 დესერტები</a>
+                <a href="#">🥤 სასმელები</a>
+            </div>
+        </div>
     </div>
 
     <div class="menu-grid">
         <script>
+            // რეალური სურათების ლინკები (საჭმლის)
+            const images = [
+                "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=300&h=280&auto=format&fit=crop", // მწვადი
+                "https://images.unsplash.com/photo-1587049633312-d628ae50a8ae?q=80&w=300&h=280&auto=format&fit=crop", // სალათი
+                "https://images.unsplash.com/photo-1628191139360-408a06f913fb?q=80&w=300&h=280&auto=format&fit=crop", // ქაბაბი
+                "https://images.unsplash.com/photo-1590947132387-155cc02f3212?q=80&w=300&h=280&auto=format&fit=crop", // პიცა
+                "https://images.unsplash.com/photo-1611143669185-af224c5e3252?q=80&w=300&h=280&auto=format&fit=crop", // სუში
+                "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=300&h=280&auto=format&fit=crop", // ბურგერი
+                "https://images.unsplash.com/photo-1599043513903-eeac91a170b3?q=80&w=300&h=280&auto=format&fit=crop", // ლობიანი
+                "https://images.unsplash.com/photo-1621996346565-e3bdd64f81cf?q=80&w=300&h=280&auto=format&fit=crop"  // პასტა
+            ];
+
             const items = [
-                {name: "ქაბაბი", time: "40 წთ", cal: "5"},
-                {name: "ხინკალი", time: "30 წთ", cal: "8"},
-                {name: "მწვადი", time: "45 წთ", cal: "4"},
-                {name: "პიცა", time: "20 წთ", cal: "6"},
-                {name: "სუში", time: "50 წთ", cal: "9"},
-                {name: "სალათი", time: "15 წთ", cal: "3"},
-                {name: "ბურგერი", time: "25 წთ", cal: "7"},
-                {name: "ლობიანი", time: "35 წთ", cal: "5"}
+                {name: "შემწვარი ნეკნები", time: "40 წთ", cal: "5"},
+                {name: "ცეზარის სალათი", time: "15 წთ", cal: "8"},
+                {name: "საქონლის ქაბაბი", time: "30 წთ", cal: "4"},
+                {name: "პეპერონი პიცა", time: "20 წთ", cal: "6"},
+                {name: "ორაგულის სუში", time: "50 წთ", cal: "9"},
+                {name: "კლასიკური ბურგერი", time: "25 წთ", cal: "7"},
+                {name: "თონის ლობიანი", time: "35 წთ", cal: "5"},
+                {name: "კარბონარა", time: "22 წთ", cal: "6"}
             ];
 
             // გენერაცია 24 ბარათის (როგორც სურათზეა)
             for (let i = 0; i < 24; i++) {
                 const item = items[i % items.length];
+                const img = images[i % images.length];
                 document.write(`
                     <div class="card">
                         <span class="card-tag">კერძები</span>
-                        <img src="https://via.placeholder.com/300x250/222/555?text=Food+Image" alt="Food">
+                        <img src="${img}" alt="${item.name}">
                         <div class="card-overlay">
                             <div class="item-name">${item.name}</div>
                             <div class="item-info">
@@ -193,44 +363,46 @@
     </div>
 
     <div class="pagination">
-        <a href="#" class="page-link" style="color: #000; font-weight: bold;">1</a>
+        <a href="#" class="page-link active">1</a>
         <a href="#" class="page-link">2</a>
+        <a href="#" class="page-link">3</a>
     </div>
 </div>
 
 <footer>
     <div class="footer-col">
-        <div class="logo" style="margin-bottom: 20px;">fiber</div>
+        <div class="logo" style="margin-bottom: 25px;">fiber</div>
+        <p style="font-size: 13px; color: #777; line-height: 1.6;">საუკეთესო გემოები თქვენს სუფრაზე.</p>
     </div>
     <div class="footer-col">
         <h4>კომპანია</h4>
         <ul>
             <li>ჩვენს შესახებ</li>
             <li>კონტაქტი</li>
-            <li>ვაკანსიები</li>
+            <li>პარტნიორები</li>
         </ul>
     </div>
     <div class="footer-col">
         <h4>დახმარება</h4>
         <ul>
-            <li>მიტანის სერვისი</li>
-            <li>წესები და პირობები</li>
-            <li>ხშირად დასმული კითხვები</li>
+            <li>მიტანის პირობები</li>
+            <li>ვაკანსიები</li>
+            <li>FAQ</li>
         </ul>
     </div>
     <div class="footer-col">
-        <h4>სოციალური</h4>
+        <h4>სამართლებრივი</h4>
         <ul>
-            <li>Facebook</li>
-            <li>Instagram</li>
-            <li>Twitter</li>
+            <li>წესები</li>
+            <li>კონფიდენციალურობა</li>
+            <li>ლიცენზია</li>
         </ul>
     </div>
 </footer>
 
 <div class="bottom-bar">
     <div>2026 — Fiber.ge</div>
-    <div>სოციალური ქსელები </div>
+    <div style="display: flex; gap: 15px; font-size: 14px;">Facebook • Instagram • Twitter</div>
 </div>
 
 </body>
