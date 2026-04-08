@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fiber.ge Style | Recipes</title>
+    <title>Fiber.ge Clone | Smart Filter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* Fiber-ის იდენტური შრიფტები და ფერები */
         :root {
             --fiber-green: #2d5a27;
-            --text-dark: #1a1a1a;
-            --text-gray: #717171;
-            --bg-light: #fdfdfd;
-            --border: #f1f1f1;
-            /* სისტემური შრიფტი, რომელიც მაქსიმალურად ჰგავს ფიბერის სტილს */
-            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --text-dark: #111827;
+            --text-gray: #6b7280;
+            --bg-light: #ffffff;
+            --border: #f3f4f6;
+            --font-main: 'Inter', sans-serif;
         }
 
         body {
@@ -25,12 +24,11 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* HEADER */
         header {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px 0;
+            padding: 30px 0 10px 0;
             background: white;
             border-bottom: 1px solid var(--border);
             position: sticky;
@@ -40,100 +38,101 @@
 
         .logo { 
             font-weight: 800; 
-            font-size: 28px; 
+            font-size: 32px; 
             color: var(--fiber-green); 
             cursor: pointer; 
-            margin-bottom: 20px;
-            letter-spacing: -1px;
+            margin-bottom: 25px;
+            letter-spacing: -1.5px;
         }
 
-        /* ახალი კატეგორიების მენიუ */
         .nav-links { 
             display: flex; 
-            gap: 20px; 
+            gap: 25px; 
             font-size: 13px; 
             font-weight: 600; 
             color: var(--text-gray);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             overflow-x: auto;
-            max-width: 90%;
-            padding-bottom: 5px;
+            max-width: 95%;
+            padding: 10px 0;
+            scrollbar-width: none;
         }
+
+        .nav-links::-webkit-scrollbar { display: none; }
         
         .nav-links span {
             white-space: nowrap;
-            transition: color 0.2s;
             cursor: pointer;
+            transition: all 0.2s;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
         }
 
-        .nav-links span:hover { 
+        .nav-links span:hover, .nav-links span.active { 
             color: var(--fiber-green); 
+            border-bottom: 2px solid var(--fiber-green);
         }
 
-        /* MAIN CONTENT */
         .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        .main-title { font-size: 32px; font-weight: 800; margin-bottom: 40px; }
+        .main-title { font-size: 36px; font-weight: 800; margin-bottom: 40px; letter-spacing: -1px; }
 
-        /* GRID */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            gap: 24px;
         }
 
-        /* CARD */
         .card {
             position: relative;
-            height: 320px;
-            border-radius: 15px;
+            height: 340px;
+            border-radius: 20px;
             overflow: hidden;
             background: #000;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        .card:hover { transform: translateY(-5px); }
-        .card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.4s; }
-        .card:hover img { opacity: 1; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: 0.5s; }
+        .card:hover img { opacity: 1; transform: scale(1.05); }
 
         .card-content {
             position: absolute;
             bottom: 0; left: 0; width: 100%;
-            padding: 20px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 25px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             color: white;
             box-sizing: border-box;
         }
 
-        .item-name { font-size: 15px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
-        .item-meta { font-size: 11px; opacity: 0.8; display: flex; gap: 10px; }
+        .item-category { font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; color: var(--fiber-green); background: rgba(255,255,255,0.9); display: inline-block; padding: 2px 8px; border-radius: 5px; }
+        .item-name { font-size: 17px; font-weight: 700; text-transform: uppercase; margin-top: 5px; }
 
         /* RECIPE PAGE */
-        #recipe-page { display: none; animation: fadeIn 0.4s ease; margin-top: 20px; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        #recipe-page { display: none; animation: slideIn 0.4s ease-out; }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .recipe-header { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; }
-        .recipe-img { width: 100%; height: 450px; border-radius: 15px; object-fit: cover; }
+        .recipe-header { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+        .recipe-img { width: 100%; height: 550px; border-radius: 24px; object-fit: cover; }
         
-        .recipe-details h2 { font-size: 36px; margin-top: 0; color: var(--text-dark); }
-        .info-bar { display: flex; gap: 20px; margin: 25px 0; border-y: 1px solid #eee; padding: 15px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee;}
-        .info-item b { display: block; font-size: 16px; color: var(--fiber-green); }
-        .info-item span { font-size: 12px; color: var(--text-gray); }
+        .recipe-details h2 { font-size: 48px; font-weight: 800; margin-top: 0; color: var(--text-dark); }
+        .info-bar { display: flex; gap: 40px; margin: 30px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 20px 0; }
+        .info-item b { display: block; font-size: 20px; color: var(--fiber-green); font-weight: 800; }
+        .info-item span { font-size: 13px; color: var(--text-gray); }
 
-        .ingredients-list { list-style: none; padding: 0; line-height: 2.2; color: #444; font-size: 15px; }
-        .ingredients-list li::before { content: "•"; color: var(--fiber-green); font-weight: bold; display: inline-block; width: 1em; }
+        .ingredients-list { list-style: none; padding: 0; line-height: 2.5; font-size: 16px; }
+        .ingredients-list li::before { content: "→"; color: var(--fiber-green); margin-right: 10px; font-weight: bold; }
 
         .back-btn { 
-            background: white; border: 1px solid #ddd; padding: 8px 18px; 
-            border-radius: 8px; cursor: pointer; font-weight: 600; margin-bottom: 25px; 
-            font-size: 13px;
+            background: #f3f4f6; border: none; padding: 12px 24px; 
+            border-radius: 12px; cursor: pointer; font-weight: 600; margin-bottom: 30px; 
+            font-size: 14px; transition: 0.2s;
         }
+        .back-btn:hover { background: #e5e7eb; }
 
-        /* FOOTER */
-        footer { border-top: 1px solid var(--border); padding: 60px 8%; margin-top: 80px; display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 30px; }
-        footer h4 { color: var(--fiber-green); font-size: 12px; text-transform: uppercase; margin-bottom: 20px; }
-        footer ul { list-style: none; padding: 0; font-size: 13px; color: var(--text-gray); line-height: 2; }
+        footer { border-top: 1px solid var(--border); padding: 80px 8%; margin-top: 100px; display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; }
+        footer h4 { color: var(--fiber-green); font-size: 12px; text-transform: uppercase; margin-bottom: 25px; }
+        footer ul { list-style: none; padding: 0; font-size: 14px; color: var(--text-gray); line-height: 2.5; }
 
         @media (max-width: 1000px) {
             .menu-grid { grid-template-columns: repeat(2, 1fr); }
@@ -145,94 +144,80 @@
 
 <header>
     <div class="logo" onclick="goHome()">fiber</div>
-    <div class="nav-links">
-        <span>კერძები</span>
-        <span>სალათები</span>
-        <span>ცომეული</span>
-        <span>წვნიანები</span>
-        <span>სენდვიჩები</span>
-        <span>ნამცხვრები</span>
-        <span>ტორტები</span>
-        <span>დესერტები</span>
-        <span>სოუსები</span>
+    <div class="nav-links" id="category-menu">
+        <span onclick="filterJokes('ყველა', this)" class="active">ყველა</span>
+        <span onclick="filterJokes('კერძები', this)">კერძები</span>
+        <span onclick="filterJokes('სალათები', this)">სალათები</span>
+        <span onclick="filterJokes('ცომეული', this)">ცომეული</span>
+        <span onclick="filterJokes('წვნიანები', this)">წვნიანები</span>
+        <span onclick="filterJokes('სენდვიჩები', this)">სენდვიჩები</span>
+        <span onclick="filterJokes('ნამცხვრები', this)">ნამცხვრები</span>
+        <span onclick="filterJokes('ტორტები', this)">ტორტები</span>
+        <span onclick="filterJokes('დესერტები', this)">დესერტები</span>
+        <span onclick="filterJokes('სოუსები', this)">სოუსები</span>
     </div>
 </header>
 
 <div class="container" id="main-content">
-    <h1 class="main-title">რეცეპტები</h1>
-    <div class="menu-grid" id="grid-container">
-        </div>
+    <h1 class="main-title" id="page-title">ყველა რეცეპტი</h1>
+    <div class="menu-grid" id="grid-container"></div>
 </div>
 
 <div class="container" id="recipe-page">
-    <button class="back-btn" onclick="goHome()">← უკან დაბრუნება</button>
+    <button class="back-btn" onclick="goHome()">← მთავარზე</button>
     <div id="recipe-content" class="recipe-header"></div>
 </div>
 
 <footer>
-    <div><div class="logo">fiber</div><p style="color:var(--text-gray); font-size:13px;">გემრიელი რეცეპტების ციფრული ბიბლიოთეკა.</p></div>
-    <div><h4>ნავიგაცია</h4><ul><li>მთავარი</li><li>რესტორნები</li></ul></div>
-    <div><h4>კომპანია</h4><ul><li>ჩვენს შესახებ</li><li>კონტაქტი</li></ul></div>
-    <div><h4>წესები</h4><ul><li>Privacy Policy</li><li>Terms</li></ul></div>
+    <div><div class="logo">fiber</div><p style="color:var(--text-gray); font-size:14px;">ხარისხიანი რეცეპტების პლატფორმა.</p></div>
+    <div><h4>ნავიგაცია</h4><ul><li>მთავარი</li><li>კერძები</li></ul></div>
+    <div><h4>კომპანია</h4><ul><li>ჩვენ შესახებ</li><li>კონტაქტი</li></ul></div>
+    <div><h4>სამართლებრივი</h4><ul><li>წესები</li><li>Privacy</li></ul></div>
 </footer>
 
 <script>
-    // მონაცემების ბაზა
     const data = [
-        {
-            id: 1,
-            name: "ქაბაბი კლასიკური",
-            time: "45 წთ",
-            cal: "520 კკალ",
-            img: "https://images.unsplash.com/photo-1628191139360-408a06f913fb?auto=format&fit=crop&w=800",
-            ing: ["საქონლის ხორცი - 1კგ", "ხახვი - 2 ცალი", "კოწახური", "მარილი", "წიწაკა"],
-            text: "ხორცი კარგად დაამუშავეთ, შეურიეთ წვრილად დაჭრილი ხახვი და სუნელები. შეწვით ნაკვერჩხალზე ან ტაფაზე ოქროსფერ შეფერილობამდე."
-        },
-        {
-            id: 2,
-            name: "კენკრის ნამცხვარი",
-            time: "60 წთ",
-            cal: "310 კკალ",
-            img: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800",
-            ing: ["ფქვილი - 500გრ", "კვერცხი - 3 ცალი", "ნაღები", "ახალი კენკრა", "შაქარი"],
-            text: "მოამზადეთ ჰაეროვანი ცომი, დაამატეთ კენკრის მიქსი და გამოაცხვეთ 180 გრადუსზე 45 წუთის განმავლობაში."
-        },
-        {
-            id: 3,
-            name: "მწვანე სალათი",
-            time: "10 წთ",
-            cal: "150 კკალ",
-            img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800",
-            ing: ["ავოკადო", "სალათის ფოთლები", "ზეითუნის ზეთი", "კიტრი", "თხილი"],
-            text: "ყველა ინგრედიენტი დაჭერით სასურველ ზომაზე, მოასხით ზეითუნის ზეთი და ლიმონის წვენი."
-        },
-        {
-            id: 4,
-            name: "შოკოლადის ტორტი",
-            time: "90 წთ",
-            cal: "650 კკალ",
-            img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800",
-            ing: ["შავი შოკოლადი", "კარაქი", "ფქვილი", "შაქრის პუდრა"],
-            text: "გაადნეთ შოკოლადი და კარაქი, შეურიეთ მშრალ ინგრედიენტებს და გამოაცხვეთ. მორთეთ შოკოლადის განაშით."
-        }
+        { id: 1, cat: "კერძები", name: "კლასიკური ქაბაბი", time: "45 წთ", cal: "520", img: "https://images.unsplash.com/photo-1628191139360-408a06f913fb?w=800", ing: ["ხორცი", "ხახვი", "კოწახური"], text: "შეწვით დაბალ ცეცხლზე..." },
+        { id: 2, cat: "ტორტები", name: "შოკოლადის ტორტი", time: "90 წთ", cal: "680", img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800", ing: ["შოკოლადი", "ფქვილი", "კაკაო"], text: "გამოაცხვეთ 180 გრადუსზე..." },
+        { id: 3, cat: "სალათები", name: "მწვანე სალათი", time: "15 წთ", cal: "120", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", ing: ["ავოკადო", "ისპანახი", "ზეთი"], text: "კარგად აურიეთ..." },
+        { id: 4, cat: "ნამცხვრები", name: "კენკრის ჩიზქეიქი", time: "120 წთ", cal: "450", img: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800", ing: ["ყველი", "კენკრა", "ცხიმოვანი ნაღები"], text: "გააცივეთ მაცივარში..." },
+        { id: 5, cat: "ცომეული", name: "იმერული ხაჭაპური", time: "30 წთ", cal: "550", img: "https://images.unsplash.com/photo-1608039829572-7852bf5c7c6a?w=800", ing: ["ყველი", "ფქვილი", "კვერცხი"], text: "გამოაცხვეთ კეცზე..." },
+        { id: 6, cat: "წვნიანები", name: "სოკოს კრემ-სუპი", time: "40 წთ", cal: "210", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800", ing: ["სოკო", "ნაღები", "ხახვი"], text: "დააბლენდერეთ მასა..." },
+        { id: 7, cat: "სენდვიჩები", name: "კლუბ სენდვიჩი", time: "10 წთ", cal: "380", img: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800", ing: ["პური", "ქათამი", "ბეკონი"], text: "მიირთვით ცივად..." },
+        { id: 8, cat: "სოუსები", name: "პესტოს სოუსი", time: "5 წთ", cal: "90", img: "https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=800", ing: ["რეჰანი", "ნიორი", "ზეთი"], text: "გაატარეთ ბლენდერში..." }
     ];
 
-    function loadHome() {
+    function renderCards(items) {
         const grid = document.getElementById('grid-container');
         grid.innerHTML = "";
-        data.forEach(item => {
+        items.forEach(item => {
             const card = document.createElement('div');
             card.className = 'card';
             card.onclick = () => openRecipe(item.id);
             card.innerHTML = `
                 <img src="${item.img}">
                 <div class="card-content">
+                    <span class="item-category">${item.cat}</span>
                     <div class="item-name">${item.name}</div>
-                    <div class="item-meta"><span>🕒 ${item.time}</span><span>🔥 ${item.cal}</span></div>
                 </div>
             `;
             grid.appendChild(card);
         });
+    }
+
+    function filterJokes(category, el) {
+        // Active class-ის შეცვლა
+        document.querySelectorAll('.nav-links span').forEach(s => s.classList.remove('active'));
+        el.classList.add('active');
+        
+        document.getElementById('page-title').innerText = category === 'ყველა' ? 'ყველა რეცეპტი' : category;
+
+        if (category === 'ყველა') {
+            renderCards(data);
+        } else {
+            const filtered = data.filter(item => item.cat === category);
+            renderCards(filtered);
+        }
     }
 
     function openRecipe(id) {
@@ -248,16 +233,14 @@
             <div>
                 <h2>${item.name}</h2>
                 <div class="info-bar">
-                    <div class="info-item"><b>${item.time}</b><span>დრო</span></div>
+                    <div class="info-item"><b>${item.time}</b><span>მომზადება</span></div>
                     <div class="info-item"><b>${item.cal}</b><span>კალორია</span></div>
-                    <div class="info-item"><b>მარტივი</b><span>სირთულე</span></div>
+                    <div class="info-item"><b>${item.cat}</b><span>კატეგორია</span></div>
                 </div>
                 <h3>ინგრედიენტები</h3>
-                <ul class="ingredients-list">
-                    ${item.ing.map(i => `<li>${i}</li>`).join('')}
-                </ul>
-                <h3 style="margin-top:30px">მომზადების წესი</h3>
-                <p style="line-height:1.8; color:#555">${item.text}</p>
+                <ul class="ingredients-list">${item.ing.map(i => `<li>${i}</li>`).join('')}</ul>
+                <h3 style="margin-top:40px">მომზადება</h3>
+                <p style="line-height:1.9; color:#4b5563; font-size:16px;">${item.text}</p>
             </div>
         `;
     }
@@ -267,7 +250,8 @@
         document.getElementById('main-content').style.display = 'block';
     }
 
-    loadHome();
+    // საწყისი ჩატვირთვა
+    renderCards(data);
 </script>
 
 </body>
