@@ -1,126 +1,253 @@
 <!DOCTYPE html>
 <html lang="ka">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fiber - კერძები</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    body { font-family: system-ui, -apple-system, sans-serif; }
-    .card { transition: all 0.2s; }
-    .card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiber.ge Clone | Premium Recipes</title>
+    <style>
+        :root {
+            --fiber-green: #2d5a27;
+            --text-dark: #1a1a1a;
+            --text-gray: #717171;
+            --bg-light: #fdfdfd;
+            --border: #f1f1f1;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            scroll-behavior: smooth;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 8%;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo { font-weight: 800; font-size: 24px; color: var(--fiber-green); cursor: pointer; }
+
+        .nav-links { display: flex; gap: 25px; font-size: 14px; font-weight: 500; color: var(--text-gray); }
+        .nav-links span:hover { color: var(--fiber-green); cursor: pointer; }
+
+        /* MAIN PAGE */
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+
+        .title-wrapper { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+        .main-title { font-size: 34px; font-weight: 800; margin: 0; }
+
+        /* GRID */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        /* CARD */
+        .card {
+            position: relative;
+            height: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+            cursor: pointer;
+            transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+
+        .card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.4s; }
+        .card:hover img { opacity: 1; transform: scale(1.05); }
+
+        .card-content {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .item-name { font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+        .item-meta { font-size: 12px; opacity: 0.8; display: flex; gap: 12px; }
+
+        /* RECIPE PAGE (HIDDEN BY DEFAULT) */
+        #recipe-page { display: none; padding-top: 50px; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .recipe-header { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; margin-bottom: 60px; }
+        .recipe-img { width: 100%; height: 500px; border-radius: 20px; object-fit: cover; }
+        
+        .recipe-details h2 { font-size: 42px; margin-top: 0; }
+        .recipe-info-bar { display: flex; gap: 30px; margin: 20px 0; padding: 15px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+        .info-item b { display: block; font-size: 18px; color: var(--fiber-green); }
+        .info-item span { font-size: 13px; color: var(--text-gray); }
+
+        .ingredients { margin-top: 30px; }
+        .ingredients ul { padding-left: 20px; line-height: 2; color: #444; }
+
+        .back-btn { 
+            background: none; border: 1px solid #ddd; padding: 10px 20px; 
+            border-radius: 8px; cursor: pointer; font-weight: 600; margin-bottom: 20px; 
+        }
+        .back-btn:hover { background: #f9f9f9; }
+
+        /* FOOTER */
+        footer { border-top: 1px solid var(--border); padding: 60px 8%; margin-top: 100px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+        footer h4 { color: var(--fiber-green); font-size: 13px; text-transform: uppercase; margin-bottom: 20px; }
+        footer ul { list-style: none; padding: 0; font-size: 14px; color: var(--text-gray); line-height: 2.2; }
+
+        @media (max-width: 900px) {
+            .menu-grid { grid-template-columns: repeat(2, 1fr); }
+            .recipe-header { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
-<body class="bg-gray-50">
+<body>
 
-  <!-- Header -->
-  <header class="bg-white border-b sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-8">
-        <div class="text-2xl font-bold text-orange-500">fiber</div>
-        <nav class="flex gap-6 text-sm font-medium">
-          <a href="#" class="text-orange-500">კერძები</a>
-          <a href="#" class="hover:text-orange-500">რეცეპტები</a>
-          <a href="#" class="hover:text-orange-500">სალათები</a>
-          <a href="#" class="hover:text-orange-500">ცომეული</a>
-        </nav>
-      </div>
-      <div class="flex-1 max-w-xl mx-8">
-        <div class="relative">
-          <input type="text" placeholder="მოძებნე კერძი ან ინგრედიენტი..." 
-                 class="w-full bg-gray-100 border border-gray-200 rounded-full py-3 px-5 pl-12 focus:outline-none focus:border-orange-400">
-          <i class="fas fa-search absolute left-5 top-3.5 text-gray-400"></i>
+<header>
+    <div class="logo" onclick="goHome()">fiber</div>
+    <div class="nav-links">
+        <span>კატეგორიები</span>
+        <span>ქვეყნები</span>
+        <span>ჩვენს შესახებ</span>
+    </div>
+</header>
+
+<div class="container" id="main-content">
+    <div class="title-wrapper">
+        <h1 class="main-title">კერძები</h1>
+    </div>
+
+    <div class="menu-grid" id="grid-container">
         </div>
-      </div>
-      <div class="flex items-center gap-6">
-        <button class="flex items-center gap-2 text-sm font-medium">
-          <i class="fas fa-map-marker-alt text-orange-500"></i>
-          <span>თბილისი</span>
-        </button>
-        <button class="relative">
-          <i class="fas fa-shopping-cart text-xl"></i>
-          <span class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
-        </button>
-        <div class="w-9 h-9 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-semibold">ჯ</div>
-      </div>
-    </div>
-  </header>
+</div>
 
-  <div class="max-w-7xl mx-auto px-4 py-8">
-    <!-- Title -->
-    <div class="flex justify-between items-center mb-8">
-      <h1 class="text-3xl font-bold">კერძები</h1>
-      <div class="flex gap-3">
-        <button onclick="alert('ფილტრები გაიხსნა (დემო)')" 
-                class="px-5 py-2 border border-gray-300 rounded-xl flex items-center gap-2 hover:bg-gray-50">
-          <i class="fas fa-sliders-h"></i> ფილტრები
-        </button>
-        <button class="px-5 py-2 bg-orange-500 text-white rounded-xl flex items-center gap-2 hover:bg-orange-600">
-          <i class="fas fa-sort"></i> პოპულარული
-        </button>
-      </div>
-    </div>
+<div class="container" id="recipe-page">
+    <button class="back-btn" onclick="goHome()">← უკან დაბრუნება</button>
+    <div class="recipe-header" id="recipe-details">
+        </div>
+</div>
 
-    <!-- Menu Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="menu-grid">
-      <!-- Cards will be inserted by JS -->
-    </div>
+<footer>
+    <div><div class="logo">fiber</div><p style="color:var(--text-gray); font-size:14px; margin-top:15px;">საუკეთესო გემოების გზამკვლევი.</p></div>
+    <div><h4>კომპანია</h4><ul><li>კონტაქტი</li><li>ვაკანსიები</li></ul></div>
+    <div><h4>სერვისი</h4><ul><li>მიტანა</li><li>FAQ</li></ul></div>
+    <div><h4>სოციალური</h4><ul><li>Facebook</li><li>Instagram</li></ul></div>
+</footer>
 
-    <!-- Pagination -->
-    <div class="flex justify-center gap-3 mt-12">
-      <button class="w-10 h-10 flex items-center justify-center border rounded-xl bg-orange-500 text-white">1</button>
-      <button class="w-10 h-10 flex items-center justify-center border rounded-xl hover:bg-gray-50">2</button>
-    </div>
-  </div>
-
-  <script>
-    const dishes = [
-      {name: "ხორცის როლადი", price: "25.00 ლ", time: "35 წთ", rating: "4.8", img: "https://picsum.photos/id/1015/400/300"},
-      {name: "დოლმა", price: "18.50 ლ", time: "40 წთ", rating: "4.9", img: "https://picsum.photos/id/292/400/300"},
-      {name: "ხაჭაპური აჭარული", price: "22.00 ლ", time: "25 წთ", rating: "5.0", img: "https://picsum.photos/id/431/400/300"},
-      {name: "შაშლიკი", price: "28.00 ლ", time: "50 წთ", rating: "4.7", img: "https://picsum.photos/id/201/400/300"},
-      {name: "სოკოს ხარჩო", price: "15.00 ლ", time: "30 წთ", rating: "4.6", img: "https://picsum.photos/id/292/400/300"},
-      {name: "ცეზარის სალათა", price: "16.50 ლ", time: "15 წთ", rating: "4.9", img: "https://picsum.photos/id/870/400/300"},
-      {name: "ჩაქაპული", price: "24.00 ლ", time: "45 წთ", rating: "4.8", img: "https://picsum.photos/id/431/400/300"},
-      {name: "ხინკალი (12 ცალი)", price: "20.00 ლ", time: "30 წთ", rating: "5.0", img: "https://picsum.photos/id/1015/400/300"},
-      // შეგიძლია დაამატო დანარჩენი კერძები იგივე ფორმატით
+<script>
+    const data = [
+        {
+            id: 1,
+            name: "ქაბაბი კლასიკური",
+            time: "40 წთ",
+            cal: "580 კკალ",
+            img: "https://images.unsplash.com/photo-1628191139360-408a06f913fb?auto=format&fit=crop&w=800",
+            ingredients: ["საქონლის რბილი ხორცი - 1კგ", "ხახვი - 2 ცალი", "კოწახური", "მარილი და პილპილი გემოვნებით", "ლავაში"],
+            instruction: "ხორცი გაატარეთ ხახვთან ერთად, დაამატეთ სუნელები და კარგად მოზილეთ..."
+        },
+        {
+            id: 2,
+            name: "ორაგული ბოსტნეულით",
+            time: "25 წთ",
+            cal: "320 კკალ",
+            img: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=800",
+            ingredients: ["ორაგულის ფილე", "ლიმონი", "ბროკოლი", "ზეითუნის ზეთი", "როზმარინი"],
+            instruction: "ორაგულს მოაყარეთ მარილი, მოასხით ლიმონი და გამოაცხვეთ 200 გრადუსზე..."
+        },
+        {
+            id: 3,
+            name: "იტალიური პასტა",
+            time: "20 წთ",
+            cal: "450 კკალ",
+            img: "https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&w=800",
+            ingredients: ["პასტა", "პომიდვრის სოუსი", "ბაზილიკი", "პარმეზანი"],
+            instruction: "მოხარშეთ პასტა ალ-დენტე მდგომარეობამდე და შეურიეთ სოუსს..."
+        },
+        {
+            id: 4,
+            name: "ცეზარის სალათი",
+            time: "15 წთ",
+            cal: "280 კკალ",
+            img: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?auto=format&fit=crop&w=800",
+            ingredients: ["ქათმის ფილე", "სალათის ფოთლები", "სოუსი ცეზარი", "ორცხობილა"],
+            instruction: "შეწვით ქათამი, დაჭერით და აურიეთ დანარჩენ ინგრედიენტებთან..."
+        }
     ];
 
-    const grid = document.getElementById('menu-grid');
-    
-    dishes.forEach(dish => {
-      const cardHTML = `
-        <div class="card bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
-          <div class="relative">
-            <img src="${dish.img}" class="w-full h-52 object-cover">
-            <div class="absolute top-3 right-3 bg-white/90 px-3 py-1 rounded-2xl text-sm font-medium flex items-center gap-1">
-              <i class="fas fa-clock text-orange-500"></i> ${dish.time}
-            </div>
-            <div class="absolute top-3 left-3 bg-white/90 px-2.5 py-1 rounded-2xl text-xs font-semibold flex items-center gap-1">
-              ★ ${dish.rating}
-            </div>
-          </div>
-          <div class="p-5">
-            <h3 class="font-semibold text-lg mb-1">${dish.name}</h3>
-            <div class="flex justify-between items-center">
-              <div>
-                <span class="text-2xl font-bold text-orange-600">${dish.price}</span>
-              </div>
-              <button onclick="addToCart('${dish.name}')" 
-                      class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-2xl text-sm font-medium transition">
-                დამატება
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-      grid.innerHTML += cardHTML;
-    });
+    const grid = document.getElementById('grid-container');
+    const mainContent = document.getElementById('main-content');
+    const recipePage = document.getElementById('recipe-page');
+    const recipeDetails = document.getElementById('recipe-details');
 
-    function addToCart(name) {
-      alert(name + " დაემატა კალათაში! (დემო)");
+    // მთავარი გვერდის შევსება
+    function loadHome() {
+        grid.innerHTML = "";
+        data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.onclick = () => openRecipe(item.id);
+            card.innerHTML = `
+                <img src="${item.img}" alt="${item.name}">
+                <div class="card-content">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-meta">
+                        <span>🕒 ${item.time}</span>
+                        <span>🔥 ${item.cal}</span>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
     }
-  </script>
+
+    // რეცეპტის გვერდის გახსნა
+    function openRecipe(id) {
+        const item = data.find(x => x.id === id);
+        mainContent.style.display = 'none';
+        recipePage.style.display = 'block';
+        window.scrollTo(0, 0);
+
+        recipeDetails.innerHTML = `
+            <img src="${item.img}" class="recipe-img">
+            <div class="recipe-details">
+                <h2>${item.name}</h2>
+                <div class="recipe-info-bar">
+                    <div class="info-item"><b>${item.time}</b><span>მომზადების დრო</span></div>
+                    <div class="info-item"><b>${item.cal}</b><span>კალორია</span></div>
+                    <div class="info-item"><b>მარტივი</b><span>სირთულე</span></div>
+                </div>
+                <div class="ingredients">
+                    <h3>ინგრედიენტები:</h3>
+                    <ul>
+                        ${item.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                    </ul>
+                    <h3 style="margin-top:40px;">მომზადების წესი:</h3>
+                    <p style="line-height:1.7; color:#555;">${item.instruction}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    function goHome() {
+        recipePage.style.display = 'none';
+        mainContent.style.display = 'block';
+    }
+
+    loadHome();
+</script>
+
 </body>
 </html>
