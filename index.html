@@ -3,106 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOL - მხიარული ანეგდოტები</title>
+    <title>JOKE-HUB | Premium Edition</title>
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #6c5ce7, #a29bfe);
-            --accent-gradient: linear-gradient(135deg, #ff7675, #fab1a0);
-            --bg-color: #f1f2f6;
-            --text-dark: #2d3436;
+            --bg: #f8f9fd;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --primary: #6c5ce7;
+            --text: #2d3436;
+            --shadow: rgba(31, 38, 135, 0.1);
+        }
+
+        /* ბნელი რეჟიმის ფერები */
+        body.dark-mode {
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.8);
+            --text: #f8fafc;
+            --primary: #a29bfe;
+            --shadow: rgba(0, 0, 0, 0.4);
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             margin: 0;
-            padding: 0;
-            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
-            background-color: var(--bg-color);
-            position: relative;
-        }
-
-        /* სმაილების ფონი */
-        body::before {
-            content: "😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.15;
-            font-size: 3rem;
-            word-spacing: 50px;
-            line-height: 100px;
-            pointer-events: none;
-            text-align: center;
+            min-height: 100vh;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
         }
 
-        .main-container {
-            width: 90%;
-            max-width: 550px;
-            background: rgba(255, 255, 255, 0.9);
+        /* დინამიური სმაილების ფონი */
+        .bg-emojis {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            opacity: 0.1;
+            font-size: 2rem;
+            user-select: none;
+        }
+
+        /* მთავარი კონტეინერი */
+        .app-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
             padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 25px 50px -12px var(--shadow);
             text-align: center;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.3);
+            position: relative;
         }
 
-        h1 { 
-            color: var(--text-dark); 
-            margin-bottom: 40px; 
-            font-size: 2.2rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #6c5ce7, #fd79a8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* თანამედროვე ღილაკები */
-        .category-grid {
+        /* კატეგორიების სტილი */
+        .grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
         }
 
-        .cat-btn {
+        .btn {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 25px 15px;
-            border: none;
-            border-radius: 20px;
-            background: white;
-            color: var(--text-dark);
-            font-size: 1.1rem;
+            border-radius: 24px;
+            color: var(--text);
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            box-shadow: 0 10px 15px -3px var(--shadow);
         }
 
-        .cat-btn:hover {
-            transform: scale(1.05);
-            background: var(--primary-gradient);
-            color: white;
-            box-shadow: 0 12px 25px rgba(108, 92, 231, 0.3);
-        }
-
-        .cat-btn.special {
-            grid-column: span 2;
-            background: var(--accent-gradient);
+        .btn:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 25px -5px var(--shadow);
+            background: var(--primary);
             color: white;
         }
 
-        .cat-btn.special:hover {
-            background: linear-gradient(135deg, #d63031, #ff7675);
+        .btn:active { transform: scale(0.95); }
+
+        /* გადამრთველი ღილაკი */
+        .mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
         /* მოდალური ფანჯარა */
@@ -110,212 +119,160 @@
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(45, 52, 54, 0.85);
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
+            z-index: 100;
         }
 
         .modal-content {
-            background: white;
+            background: var(--card-bg);
+            border-radius: 35px;
             width: 85%;
             max-width: 450px;
-            padding: 40px;
-            border-radius: 30px;
+            padding: 50px 30px;
             position: relative;
-            text-align: center;
-            box-shadow: 0 30px 70px rgba(0,0,0,0.5);
-            animation: slideUp 0.4s ease-out;
+            animation: modalShow 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        @keyframes modalShow {
+            from { transform: scale(0.7) translateY(100px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
         }
 
-        .joke-display {
-            font-size: 1.25rem;
-            line-height: 1.8;
-            color: #2d3436;
-            min-height: 180px;
+        .joke-box {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            min-height: 150px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 30px;
-            font-style: italic;
+            margin-bottom: 40px;
         }
 
-        .nav-buttons {
+        .nav-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid #eee;
-            padding-top: 20px;
         }
 
-        .nav-btn {
-            background: #f1f2f6;
+        .round-btn {
+            background: var(--primary);
+            color: white;
             border: none;
-            padding: 12px 25px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+
+        .round-btn:hover { transform: rotate(15deg); filter: brightness(1.2); }
+
+        .copy-btn {
+            background: none;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 15px;
             border-radius: 12px;
-            color: var(--text-dark);
             cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
+            font-weight: 600;
+            margin-top: 10px;
         }
 
-        .nav-btn:hover {
-            background: #dfe6e9;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: #b2bec3;
-            transition: color 0.2s;
-        }
-
-        .close-btn:hover { color: #d63031; }
-
-        .counter {
-            color: #636e72;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
     </style>
 </head>
-<body>
+<body id="body">
 
-<div class="main-container">
-    <h1>😆 აირჩიე კატეგორია</h1>
-    <div class="category-grid">
-        <button class="cat-btn" onclick="openJokes('kakhelebi')"><span>🍇</span> კახელები</button>
-        <button class="cat-btn" onclick="openJokes('svanebi')"><span>🏔️</span> სვანები</button>
-        <button class="cat-btn" onclick="openJokes('gurulebi')"><span>🌿</span> გურულები</button>
-        <button class="cat-btn" onclick="openJokes('megrelebi')"><span>🌽</span> მეგრელი/იმერელი</button>
-        <button class="cat-btn special" onclick="openJokes('others')"><span>🎭</span> სხვადასხვა მხიარული</button>
-    </div>
-</div>
+    <div class="bg-emojis" id="emojiBg"></div>
 
-<div id="jokeModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
-        <div id="jokeText" class="joke-display">...</div>
+    <div class="app-card">
+        <button class="mode-toggle" onclick="toggleMode()">🌓</button>
+        <h1>JOKE HUB</h1>
         
-        <div class="nav-buttons">
-            <button class="nav-btn" onclick="prevJoke()">⬅️ წინა</button>
-            <span id="jokeCounter" class="counter">1 / 10</span>
-            <button class="nav-btn" onclick="nextJoke()">შემდეგი ➡️</button>
+        <div class="grid">
+            <button class="btn" onclick="startJokes('kakhelebi')"><span>🍇</span> კახელები</button>
+            <button class="btn" onclick="startJokes('svanebi')"><span>🏔️</span> სვანები</button>
+            <button class="btn" onclick="startJokes('gurulebi')"><span>🌿</span> გურულები</button>
+            <button class="btn" onclick="startJokes('megrelebi')"><span>🌽</span> იმერლები</button>
+            <button class="btn" style="grid-column: span 2; border: 2px solid var(--primary);" onclick="startJokes('others')">✨ სხვადასხვა მხიარული ✨</button>
         </div>
     </div>
-</div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.5rem" onclick="closeM()">✕</span>
+            <div id="jokeArea" class="joke-box"></div>
+            
+            <div class="nav-bar">
+                <button class="round-btn" onclick="change(-1)">←</button>
+                <div style="font-weight: 800; opacity: 0.6" id="count">1 / 10</div>
+                <button class="round-btn" onclick="change(1)">→</button>
+            </div>
+            <button class="copy-btn" onclick="copyJoke()">📋 კოპირება</button>
+        </div>
+    </div>
 
 <script>
-    const allJokes = {
-        kakhelebi: [
-            "მიხო ექიმთანაა: 'ექიმო, მარჯვენა ყურით აღარაფერი მესმის'. ექიმი: 'ღვინოს ბევრს ხომ არ სვამ?' მიხო: 'ვსვამ, შენი ჭირიმე'. ექიმი: 'უნდა დაანებო'. მიხო: 'კაი ერთი, რაცხა უნდა მოვისმინო იმაზე კაი რა უნდა მითხრან?'",
-            "მიხო და მარო ლოგინში წვანან. მარო: 'მიხო, ერთი ტკბილი სიტყვა მითხარი რა'. მიხო: 'შაქარი, დედაკაცო, შაქარი!'",
-            "მიხომ შვილი ქალაქში გაგზავნა. ჩამოვიდა ბიჭი: 'მამა, ვეგეტარიანელი გავხდი'. მიხო: 'ეგ რაღაა?' - 'ხორცს აღარ ვჭამ'. მიხო: 'ვაჰ, მწვადი რომ არ გინდოდეს, ისედაც ვიცოდით, რო კახელი არ იყავი!'",
-            "მიხო ვირზე ზის. მეზობელი: 'საით მიქრიხარ?' მიხო: 'მე კი არა, ვირს ჰკითხე, მე ფეხები ზემოთ მიჭირავს!'",
-            "მარო: 'მიხო, ამ მანქანას ტორმუზი სადა აქვს?' მიხო: 'ეგეთები თუ გინდოდა, ველოსიპედი გეყიდაო!'",
-            "რა არის ბედნიერება? მიხო: 'როცა მეზობელს ძროხა მოუკვდება... უბედურება კი ისაა, როცა შენი ძროხა გადარჩება და იმას რძე ექნება!'",
-            "მიხო და შვილი სუფრაზე სხედან. შვილი: 'მამა, კიდევ დამისხი'. მიხო: 'ღვინო გონიერებისთვისაა და შენ მაგას რას ეპოტინები?'",
-            "მარო: 'მიხო, ჩვენს შვილს ცოლი მოჰყავს'. მიხო: 'მერე მე რა ვქნა, თავის თავს დააბრალოს!'",
-            "ტაქსის მძღოლი: '10 ლარი მომეცი'. მიხო: '5 მომართვი, შენც ხომ მოდიოდი აქეთ?'",
-            "მღვდელი: 'შესწირე რამე ტაძარს'. მიხო: 'ღმერთმა ხომ ყველაფერი იცის? ჰოდა, ისიც ეცოდინება, რო ჯიბეში არაფერი მიდევს'."
-        ],
-        svanebi: [
-            "სვანი კომპიუტერთან ტირის: 'ფაილი ჩემი დოკუმენტები წავშალე და ახლა უსაბუთო ვარო!'",
-            "სვანს ეკითხებიან: 'მეტრო როგორ მოგეწონა?' - 'კარგია, მარა ის ვერ გავიგე, ხალხი გვირაბში რატომ ცხოვრობს'.",
-            "სვანმა ტელევიზორი დაშალა – შიგნით დიქტორი ვერ იპოვა და ეწყინა.",
-            "სვანი ხეზე ზის და ტოტს ჭრის. გამვლელი: 'ჩამოვარდები!' ჩამოვარდა სვანი: 'შენ რა, წინასწარმეტყველი ხარ?'",
-            "შუქნიშანზე მწვანე აინთო, სვანი მაინც დგას. პოლიციელი: 'რა იყო, ფერი არ მოგეწონა?'",
-            "სვანმა კოკა-კოლა გახსნა, ყინულები არ დახვდა: 'სულ როგორ უნდა გატყუებდნენ ესენიო!'",
-            "რატომ გძინავს შარვლით? სვანი: 'სიზმარში უცხო ხალხი მხვდება და მერიდებაო'.",
-            "სვანმა თოფს ლულა მოუღუნა, მოსახვევში მინდა ვესროლოო.",
-            "ექიმო, თავი მტკივა. ექიმი: 'ალბათ ბევრს ფიქრობ'. სვანი: 'არა, კედელს მივარტყი'.",
-            "სვანმა სნიკერსი შეჭამა და მერე მარსი იყიდა, იქნებ კოსმოსში მაინც გავფრინდეო."
-        ],
-        gurulebi: [
-            "გურული: 'ისეთი კარგად ვარ, მეშინია, არ მეწყინოს რამეო'.",
-            "ბაზარში: 'ეს ქათამი რამდენი წლისაა?' - 'ორი'. - 'პასპორტი აჩვენე, თვარა მეზობლის ბავშვივით პატარა მეჩვენება!'",
-            "გურული შვილს: 'წადი წყალი მოიტარე, თვარა ისეთს გიზამ, წყალი მოგანატრო!'",
-            "ექიმო, ოპერაცია რამდენი ხანია? - 'საათი'. - 'კაი, მარა მე სად ვიქნები მაგ დროს?'",
-            "კახელი: 'ჩვენთან ჩიტი ვერ გადაფრინდება ვენახს'. გურული: 'ჩვენთან ისეთი ჩიტებია, შუაში გადიანო'.",
-            "ინგლისური იცი? - 'კი'. - 'How are you რას ნიშნავს?' - 'როგორ ხარ, შენი ჭირიმე'.",
-            "ცოლი მოიყვანა გურულმა. 'აბა როგორია?' - 'რა ვიცი, დედამისი უფრო მეტს ლაპარაკობდაო'.",
-            "მატარებელში: 'გამატარეთ, ფეხით უფრო მალე მივალო!'",
-            "ღვინო წყალს გავსო. - 'აბა წყალი დაასხი და ნახე თუ დაემსგავსებაო'.",
-            "რატომ არ მუშაობ? - 'მუშაობა რომ მინდოდეს, გურიაში კი არ ვიქნებიო'."
-        ],
-        megrelebi: [
-            "მეგრელი: 'ზუგდიდში ყველა მეგრელია და თბილისში ჩამოვედი, ვინმე ხო უნდა მოვატყუოო?'",
-            "ფოსფორის წამალი: 'ხედავ? 10 ლარი რომ გადაიხადე, უკვე დაიწყო ტვინმა მუშაობაო'.",
-            "დათვი მოდის, ხეზე ავიდეთ! სვანი: 'რატომ, მე ხომ არ დავუნახივარ?'",
-            "იმერელი სტუმარს: 'კიდევ მიირთვით'. - 'ყელში მაქვს'. - 'ცოტა ჩაჩოჩდით და ჩავაო!'",
-            "მეგრელი ლოტოს იგებს: 'ნეტა ვის მოვატყუო, რომ უფრო მეტი მოვიგეო?'",
-            "იმერლის ოცნება: 'მე ვიყო თამადა და ყველა ჩემს სადღეგრძელოს სვამდესო'.",
-            "სწავლა თუ გინდა - თბილისში, ფული თუ გინდა - ბაზარში, ორივე თუ გინდა - მეგრელი უნდა იყოო.",
-            "შენი ქათამი ჩემსას ეჩხუბა და მოუგო, ჰოდა ჩემიაო!",
-            "მეგრელი პოლიციელი: 'სურათზე რატომ არ გავხართ? ახლავე გადაგიღებთო!'",
-            "რა კარგია ცხოვრება! გურული: 'ვისთვის როგორ, ძამა!'"
-        ],
-        others: [
-            "ვირთხები ფეხბურთს თამაშობენ. - წამალი დალიე. - ხვალ შეიძლება? დღეს ფინალი აქვთო!",
-            "ვინც სულელია ადგეს. ერთი ბავშვი ადგა: 'მას, შემეცოდეთ მარტო რომ დგახართო'.",
-            "პატრული: 'სად მიდიხართ?' - 'ცოლის ლექციაზე, სად იყავი აქამდეო'.",
-            "მამა, 5 ლარი მომეცი, დედამ თქვა ჭკვიანი ხარო.",
-            "ცოლმა სტაფილოს დიეტა დაიწყო. - დაიკლო? - არა, მარა ყურები დაუგრძელდა!",
-            "ფუტკარმა მიკბინა. - რატომ არ გააგდე? - სანამ დედამისმა არ მოაკითხა, არ მშორდებოდაო.",
-            "შენი ძაღლი რატომ არ ყეფს? - პადოშაა და ხმა არ ამოეღებაო.",
-            "სარკეში ვიხედები და გული მერევა. ექიმი: 'მხედველობა კარგი გქონიათო'.",
-            "რატომ გაქვს საათი მარჯვენაზე? - მარცხენაზე სამაჯური მიკეთიაო.",
-            "წელს სად ისვენებდი? - არსად. - როგორი იყო? - კარგი, ხალხი არ იყოო!"
-        ]
+    // ანეგდოტების ბაზა (იგივე დავტოვე)
+    const db = {
+        kakhelebi: ["მიხო ექიმთანაა: 'ექიმო, მარჯვენა ყურით აღარაფერი მესმის'. ექიმი: 'ღვინოს ბევრს ხომ არ სვამ?' მიხო: 'ვსვამ, შენი ჭირიმე'. ექიმი: 'უნდა დაანებო'. მიხო: 'კაი ერთი, რაცხა უნდა მოვისმინო იმაზე კაი რა უნდა მითხრან?'", "მიხო და მარო ლოგინში წვანან. მარო: 'მიხო, ერთი ტკბილი სიტყვა მითხარი რა'. მიხო: 'შაქარი, დედაკაცო, შაქარი!'", "მიხომ შვილი ქალაქში გაგზავნა. ჩამოვიდა ბიჭი: 'მამა, ვეგეტარიანელი გავხდი'. მიხო: 'ეგ რაღაა?' - 'ხორცს აღარ ვჭამ'. მიხო: 'ვაჰ, მწვადი რომ არ გინდოდეს, ისედაც ვიცოდით, რო კახელი არ იყავი!'", "მიხო ვირზე ზის. მეზობელი: 'საით მიქრიხარ?' მიხო: 'მე კი არა, ვირს ჰკითხე, მე ფეხები ზემოთ მიჭირავს!'", "მარო: 'მიხო, ამ მანქანას ტორმუზი სადა აქვს?' მიხო: 'ეგეთები თუ გინდოდა, ველოსიპედი გეყიდაო!'", "რა არის ბედნიერება? მიხო: 'როცა მეზობელს ძროხა მოუკვდება... უბედურება კი ისაა, როცა შენი ძროხა გადარჩება და იმას რძე ექნება!'", "მიხო და შვილი სუფრაზე სხედან. შვილი: 'მამა, კიდევ დამისხი'. მიხო: 'ღვინო გონიერებისთვისაა და შენ მაგას რას ეპოტინები?'", "მარო: 'მიხო, ჩვენს შვილს ცოლი მოჰყავს'. მიხო: 'მერე მე რა ვქნა, თავის თავს დააბრალოს!'", "ტაქსის მძღოლი: '10 ლარი მომეცი'. მიხო: '5 მომართვი, შენც ხომ მოდიოდი აქეთ?'", "მღვდელი: 'შესწირე რამე ტაძარს'. მიხო: 'ღმერთმა ხომ ყველაფერი იცის? ჰოდა, ისიც ეცოდინება, რო ჯიბეში არაფერი მიდევს'."],
+        svanebi: ["სვანი კომპიუტერთან ტირის: 'ფაილი ჩემი დოკუმენტები წავშალე და ახლა უსაბუთო ვარო!'", "სვანს ეკითხებიან: 'მეტრო როგორ მოგეწონა?' - 'კარგია, მარა ის ვერ გავიგე, ხალხი გვირაბში რატომ ცხოვრობს'.", "სვანმა ტელევიზორი დაშალა – შიგნით დიქტორი ვერ იპოვა და ეწყინა.", "სვანი ხეზე ზის და ტოტს ჭრის. გამვლელი: 'ჩამოვარდები!' ჩამოვარდა სვანი: 'შენ რა, წინასწარმეტყველი ხარ?'", "შუქნიშანზე მწვანე აინთო, სვანი მაინც დგას. პოლიციელი: 'რა იყო, ფერი არ მოგეწონა?'", "სვანმა კოკა-კოლა გახსნა, ყინულები არ დახვდა: 'სულ როგორ უნდა გატყუებდნენ ესენიო!'", "რატომ გძინავს შარვლით? სვანი: 'სიზმარში უცხო ხალხი მხვდება და მერიდებაო'.", "სვანმა თოფს ლულა მოუღუნა, მოსახვევში მინდა ვესროლოო.", "ექიმო, თავი მტკივა. ექიმი: 'ალბათ ბევრს ფიქრობ'. სვანი: 'არა, კედელს მივარტყი'.", "სვანმა სნიკერსი შეჭამა და მერე მარსი იყიდა, იქნებ კოსმოსში მაინც გავფრინდეო."],
+        gurulebi: ["გურული: 'ისეთი კარგად ვარ, მეშინია, არ მეწყინოს რამეო'.", "ბაზარში: 'ეს ქათამი რამდენი წლისაა?' - 'ორი'. - 'პასპორტი აჩვენე, თვარა მეზობლის ბავშვივით პატარა მეჩვენება!'", "გურული შვილს: 'წადი წყალი მოიტარე, თვარა ისეთს გიზამ, წყალი მოგანატრო!'", "ექიმო, ოპერაცია რამდენი ხანია? - 'საათი'. - 'კაი, მარა მე სად ვიქნები მაგ დროს?'", "კახელი: 'ჩვენთან ჩიტი ვერ გადაფრინდება ვენახს'. გურული: 'ჩვენთან ისეთი ჩიტებია, შუაში გადიანო'.", "ინგლისური იცი? - 'კი'. - 'How are you რას ნიშნავს?' - 'როგორ ხარ, შენი ჭირიმე'.", "ცოლი მოიყვანა გურულმა. 'აბა როგორია?' - 'რა ვიცი, დედამისი უფრო მეტს ლაპარაკობდაო'.", "მატარებელში: 'გამატარეთ, ფეხით უფრო მალე მივალო!'", "ღვინო წყალს გავსო. - 'აბა წყალი დაასხი და ნახე თუ დაემსგავსებაო'.", "რატომ არ მუშაობ? - 'მუშაობა რომ მინდოდეს, გურიაში კი არ ვიქნებიო'."],
+        megrelebi: ["მეგრელი: 'ზუგდიდში ყველა მეგრელია და თბილისში ჩამოვედი, ვინმე ხო უნდა მოვატყუოო?'", "ფოსფორის წამალი: 'ხედავ? 10 ლარი რომ გადაიხადე, უკვე დაიწყო ტვინმა მუშაობაო'.", "დათვი მოდის, ხეზე ავიდეთ! სვანი: 'რატომ, მე ხომ არ დავუნახივარ?'", "იმერელი სტუმარს: 'კიდევ მიირთვით'. - 'ყელში მაქვს'. - 'ცოტა ჩაჩოჩდით და ჩავაო!'", "მეგრელი ლოტოს იგებს: 'ნეტა ვის მოვატყუო, რომ უფრო მეტი მოვიგეო?'", "იმერლის ოცნება: 'მე ვიყო თამადა და ყველა ჩემს სადღეგრძელოს სვამდესო'.", "სწავლა თუ გინდა - თბილისში, ფული თუ გინდა - ბაზარში, ორივე თუ გინდა - მეგრელი უნდა იყოო.", "შენი ქათამი ჩემსას ეჩხუბა და მოუგო, ჰოდა ჩემიაო!", "მეგრელი პოლიციელი: 'სურათზე რატომ არ გავხართ? ახლავე გადაგიღებთო!'", "რა კარგია ცხოვრება! გურული: 'ვისთვის როგორ, ძამა!'"],
+        others: ["ვირთხები ფეხბურთს თამაშობენ. - წამალი დალიე. - ხვალ შეიძლება? დღეს ფინალი აქვთო!", "ვინც სულელია ადგეს. ერთი ბავშვი ადგა: 'მას, შემეცოდეთ მარტო რომ დგახართო'.", "პატრული: 'სად მიდიხართ?' - 'ცოლის ლექციაზე, სად იყავი აქამდეო'.", "მამა, 5 ლარი მომეცი, დედამ თქვა ჭკვიანი ხარო.", "ცოლმა სტაფილოს დიეტა დაიწყო. - დაიკლო? - არა, მარა ყურები დაუგრძელდა!", "ფუტკარმა მიკბინა. - რატომ არ გააგდე? - სანამ დედამისმა არ მოაკითხა, არ მშორდებოდაო.", "შენი ძაღლი რატომ არ ყეფს? - პადოშაა და ხმა არ ამოეღებაო.", "სარკეში ვიხედები და გული მერევა. ექიმი: 'მხედველობა კარგი გქონიათო'.", "რატომ გაქვს საათი მარჯვენაზე? - მარცხენაზე სამაჯური მიკეთიაო.", "წელს სად ისვენებდი? - არსად. - როგორი იყო? - კარგი, ხალხი არ იყოო!"]
     };
 
-    let currentCategory = [];
-    let currentIndex = 0;
+    let currentSet = [];
+    let idx = 0;
 
-    function openJokes(cat) {
-        currentCategory = allJokes[cat];
-        currentIndex = 0;
-        updateJoke();
-        document.getElementById('jokeModal').style.display = 'flex';
+    // ფონის შევსება სმაილებით
+    const bg = document.getElementById('emojiBg');
+    const emojis = ['😂', '🤣', '😆', '😄', '😜'];
+    for(let i=0; i<40; i++) {
+        const span = document.createElement('span');
+        span.innerText = emojis[Math.floor(Math.random()*emojis.length)];
+        bg.appendChild(span);
     }
 
-    function closeModal() {
-        document.getElementById('jokeModal').style.display = 'none';
+    function toggleMode() {
+        document.body.classList.toggle('dark-mode');
     }
 
-    function updateJoke() {
-        const jokeText = document.getElementById('jokeText');
-        jokeText.style.opacity = 0;
+    function startJokes(cat) {
+        currentSet = db[cat];
+        idx = 0;
+        show();
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeM() { document.getElementById('modal').style.display = 'none'; }
+
+    function show() {
+        const area = document.getElementById('jokeArea');
+        area.style.opacity = 0;
         setTimeout(() => {
-            jokeText.innerText = currentCategory[currentIndex];
-            jokeText.style.opacity = 1;
-            document.getElementById('jokeCounter').innerText = (currentIndex + 1) + " / " + currentCategory.length;
+            area.innerText = currentSet[idx];
+            area.style.opacity = 1;
+            document.getElementById('count').innerText = `${idx + 1} / ${currentSet.length}`;
         }, 200);
     }
 
-    function nextJoke() {
-        currentIndex = (currentIndex < currentCategory.length - 1) ? currentIndex + 1 : 0;
-        updateJoke();
+    function change(n) {
+        idx += n;
+        if(idx >= currentSet.length) idx = 0;
+        if(idx < 0) idx = currentSet.length - 1;
+        show();
     }
 
-    function prevJoke() {
-        currentIndex = (currentIndex > 0) ? currentIndex - 1 : currentCategory.length - 1;
-        updateJoke();
-    }
-
-    window.onclick = function(e) {
-        if (e.target == document.getElementById('jokeModal')) closeModal();
+    function copyJoke() {
+        const text = currentSet[idx];
+        navigator.clipboard.writeText(text);
+        alert("დაკოპირდა! ✅");
     }
 </script>
-
 </body>
 </html>
