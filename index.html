@@ -3,276 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JOKE-HUB | Premium Edition</title>
+    <title>Fiber Style Menu</title>
     <style>
         :root {
-            --bg: #f8f9fd;
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --primary: #6c5ce7;
-            --text: #2d3436;
-            --shadow: rgba(31, 38, 135, 0.1);
-        }
-
-        /* ბნელი რეჟიმის ფერები */
-        body.dark-mode {
-            --bg: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.8);
-            --text: #f8fafc;
-            --primary: #a29bfe;
-            --shadow: rgba(0, 0, 0, 0.4);
+            --bg-color: #f4f4f4;
+            --text-gold: #d4af37;
+            --card-shadow: rgba(0, 0, 0, 0.4);
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
+            padding: 0;
+            background-color: white;
+            color: #333;
         }
 
-        /* დინამიური სმაილების ფონი */
-        .bg-emojis {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            align-content: space-around;
-            opacity: 0.1;
-            font-size: 2rem;
-            user-select: none;
-        }
-
-        /* მთავარი კონტეინერი */
-        .app-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 40px;
-            padding: 40px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 25px 50px -12px var(--shadow);
-            text-align: center;
-            position: relative;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            background: linear-gradient(to right, #6c5ce7, #fd79a8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* კატეგორიების სტილი */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-
-        .btn {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 25px 15px;
-            border-radius: 24px;
-            color: var(--text);
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 10px 15px -3px var(--shadow);
-        }
-
-        .btn:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 20px 25px -5px var(--shadow);
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn:active { transform: scale(0.95); }
-
-        /* გადამრთველი ღილაკი */
-        .mode-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* მოდალური ფანჯარა */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(10px);
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-
-        .modal-content {
-            background: var(--card-bg);
-            border-radius: 35px;
-            width: 85%;
-            max-width: 450px;
-            padding: 50px 30px;
-            position: relative;
-            animation: modalShow 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        @keyframes modalShow {
-            from { transform: scale(0.7) translateY(100px); opacity: 0; }
-            to { transform: scale(1) translateY(0); opacity: 1; }
-        }
-
-        .joke-box {
-            font-size: 1.4rem;
-            line-height: 1.6;
-            min-height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 40px;
-        }
-
-        .nav-bar {
+        /* Header */
+        header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 10px 10%;
+            border-bottom: 1px solid #eee;
         }
 
-        .round-btn {
-            background: var(--primary);
+        .logo { font-weight: bold; font-size: 24px; color: #2d5a27; }
+
+        /* Main Section */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .title-section {
+            margin-bottom: 30px;
+        }
+
+        h1 { font-size: 32px; color: #222; margin-bottom: 5px; }
+        .subtitle { font-size: 14px; color: #666; max-width: 600px; }
+
+        /* Grid System */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 1024px) { .menu-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .menu-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        /* Card Style */
+        .card {
+            position: relative;
+            height: 250px;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #000;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .card:hover { transform: scale(1.02); }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7; /* მუქი ეფექტისთვის */
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
             color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: 0.3s;
+            box-sizing: border-box;
         }
 
-        .round-btn:hover { transform: rotate(15deg); filter: brightness(1.2); }
-
-        .copy-btn {
-            background: none;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 8px 15px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-top: 10px;
+        .card-tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: white;
+            color: black;
+            padding: 2px 8px;
+            font-size: 10px;
+            border-radius: 3px;
+            text-transform: uppercase;
         }
 
+        .item-name {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .item-info {
+            display: flex;
+            font-size: 11px;
+            gap: 15px;
+            opacity: 0.8;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+            gap: 10px;
+        }
+
+        .page-link { color: #3498db; text-decoration: none; font-size: 14px; }
+
+        /* Footer */
+        footer {
+            background-color: #fff;
+            padding: 50px 10%;
+            border-top: 1px solid #eee;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .footer-col h4 { font-size: 12px; margin-bottom: 15px; color: #2d5a27; }
+        .footer-col ul { list-style: none; padding: 0; }
+        .footer-col li { font-size: 11px; margin-bottom: 8px; color: #666; cursor: pointer; }
+        .footer-col li:hover { color: #000; }
+
+        .bottom-bar {
+            padding: 20px 10%;
+            font-size: 10px;
+            color: #999;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #f9f9f9;
+        }
     </style>
 </head>
-<body id="body">
+<body>
 
-    <div class="bg-emojis" id="emojiBg"></div>
+<header>
+    <div class="logo">fiber</div>
+    <nav style="font-size: 12px; color: #666;">კატეგორიები | ქვეყნები | ძებნა 🔍</nav>
+</header>
 
-    <div class="app-card">
-        <button class="mode-toggle" onclick="toggleMode()">🌓</button>
-        <h1>JOKE HUB</h1>
-        
-        <div class="grid">
-            <button class="btn" onclick="startJokes('kakhelebi')"><span>🍇</span> კახელები</button>
-            <button class="btn" onclick="startJokes('svanebi')"><span>🏔️</span> სვანები</button>
-            <button class="btn" onclick="startJokes('gurulebi')"><span>🌿</span> გურულები</button>
-            <button class="btn" onclick="startJokes('megrelebi')"><span>🌽</span> იმერლები</button>
-            <button class="btn" style="grid-column: span 2; border: 2px solid var(--primary);" onclick="startJokes('others')">✨ სხვადასხვა მხიარული ✨</button>
-        </div>
+<div class="container">
+    <div class="title-section">
+        <h1>კერძები</h1>
+        <p class="subtitle">ჩვენი მრავალფეროვანი მენიუ გთავაზობთ საუკეთესო გემოებს. დაათვალიერეთ თქვენი საყვარელი კერძები მარტივად.</p>
     </div>
 
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span style="position:absolute; top:20px; right:25px; cursor:pointer; font-size:1.5rem" onclick="closeM()">✕</span>
-            <div id="jokeArea" class="joke-box"></div>
-            
-            <div class="nav-bar">
-                <button class="round-btn" onclick="change(-1)">←</button>
-                <div style="font-weight: 800; opacity: 0.6" id="count">1 / 10</div>
-                <button class="round-btn" onclick="change(1)">→</button>
-            </div>
-            <button class="copy-btn" onclick="copyJoke()">📋 კოპირება</button>
-        </div>
+    <div class="menu-grid">
+        <script>
+            const items = [
+                {name: "ქაბაბი", time: "40 წთ", cal: "5"},
+                {name: "ხინკალი", time: "30 წთ", cal: "8"},
+                {name: "მწვადი", time: "45 წთ", cal: "4"},
+                {name: "პიცა", time: "20 წთ", cal: "6"},
+                {name: "სუში", time: "50 წთ", cal: "9"},
+                {name: "სალათი", time: "15 წთ", cal: "3"},
+                {name: "ბურგერი", time: "25 წთ", cal: "7"},
+                {name: "ლობიანი", time: "35 წთ", cal: "5"}
+            ];
+
+            // გენერაცია 24 ბარათის (როგორც სურათზეა)
+            for (let i = 0; i < 24; i++) {
+                const item = items[i % items.length];
+                document.write(`
+                    <div class="card">
+                        <span class="card-tag">კერძები</span>
+                        <img src="https://via.placeholder.com/300x250/222/555?text=Food+Image" alt="Food">
+                        <div class="card-overlay">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-info">
+                                <span>🕒 ${item.time}</span>
+                                <span>🔥 ${item.cal}</span>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            }
+        </script>
     </div>
 
-<script>
-    // ანეგდოტების ბაზა (იგივე დავტოვე)
-    const db = {
-        kakhelebi: ["მიხო ექიმთანაა: 'ექიმო, მარჯვენა ყურით აღარაფერი მესმის'. ექიმი: 'ღვინოს ბევრს ხომ არ სვამ?' მიხო: 'ვსვამ, შენი ჭირიმე'. ექიმი: 'უნდა დაანებო'. მიხო: 'კაი ერთი, რაცხა უნდა მოვისმინო იმაზე კაი რა უნდა მითხრან?'", "მიხო და მარო ლოგინში წვანან. მარო: 'მიხო, ერთი ტკბილი სიტყვა მითხარი რა'. მიხო: 'შაქარი, დედაკაცო, შაქარი!'", "მიხომ შვილი ქალაქში გაგზავნა. ჩამოვიდა ბიჭი: 'მამა, ვეგეტარიანელი გავხდი'. მიხო: 'ეგ რაღაა?' - 'ხორცს აღარ ვჭამ'. მიხო: 'ვაჰ, მწვადი რომ არ გინდოდეს, ისედაც ვიცოდით, რო კახელი არ იყავი!'", "მიხო ვირზე ზის. მეზობელი: 'საით მიქრიხარ?' მიხო: 'მე კი არა, ვირს ჰკითხე, მე ფეხები ზემოთ მიჭირავს!'", "მარო: 'მიხო, ამ მანქანას ტორმუზი სადა აქვს?' მიხო: 'ეგეთები თუ გინდოდა, ველოსიპედი გეყიდაო!'", "რა არის ბედნიერება? მიხო: 'როცა მეზობელს ძროხა მოუკვდება... უბედურება კი ისაა, როცა შენი ძროხა გადარჩება და იმას რძე ექნება!'", "მიხო და შვილი სუფრაზე სხედან. შვილი: 'მამა, კიდევ დამისხი'. მიხო: 'ღვინო გონიერებისთვისაა და შენ მაგას რას ეპოტინები?'", "მარო: 'მიხო, ჩვენს შვილს ცოლი მოჰყავს'. მიხო: 'მერე მე რა ვქნა, თავის თავს დააბრალოს!'", "ტაქსის მძღოლი: '10 ლარი მომეცი'. მიხო: '5 მომართვი, შენც ხომ მოდიოდი აქეთ?'", "მღვდელი: 'შესწირე რამე ტაძარს'. მიხო: 'ღმერთმა ხომ ყველაფერი იცის? ჰოდა, ისიც ეცოდინება, რო ჯიბეში არაფერი მიდევს'."],
-        svanebi: ["სვანი კომპიუტერთან ტირის: 'ფაილი ჩემი დოკუმენტები წავშალე და ახლა უსაბუთო ვარო!'", "სვანს ეკითხებიან: 'მეტრო როგორ მოგეწონა?' - 'კარგია, მარა ის ვერ გავიგე, ხალხი გვირაბში რატომ ცხოვრობს'.", "სვანმა ტელევიზორი დაშალა – შიგნით დიქტორი ვერ იპოვა და ეწყინა.", "სვანი ხეზე ზის და ტოტს ჭრის. გამვლელი: 'ჩამოვარდები!' ჩამოვარდა სვანი: 'შენ რა, წინასწარმეტყველი ხარ?'", "შუქნიშანზე მწვანე აინთო, სვანი მაინც დგას. პოლიციელი: 'რა იყო, ფერი არ მოგეწონა?'", "სვანმა კოკა-კოლა გახსნა, ყინულები არ დახვდა: 'სულ როგორ უნდა გატყუებდნენ ესენიო!'", "რატომ გძინავს შარვლით? სვანი: 'სიზმარში უცხო ხალხი მხვდება და მერიდებაო'.", "სვანმა თოფს ლულა მოუღუნა, მოსახვევში მინდა ვესროლოო.", "ექიმო, თავი მტკივა. ექიმი: 'ალბათ ბევრს ფიქრობ'. სვანი: 'არა, კედელს მივარტყი'.", "სვანმა სნიკერსი შეჭამა და მერე მარსი იყიდა, იქნებ კოსმოსში მაინც გავფრინდეო."],
-        gurulebi: ["გურული: 'ისეთი კარგად ვარ, მეშინია, არ მეწყინოს რამეო'.", "ბაზარში: 'ეს ქათამი რამდენი წლისაა?' - 'ორი'. - 'პასპორტი აჩვენე, თვარა მეზობლის ბავშვივით პატარა მეჩვენება!'", "გურული შვილს: 'წადი წყალი მოიტარე, თვარა ისეთს გიზამ, წყალი მოგანატრო!'", "ექიმო, ოპერაცია რამდენი ხანია? - 'საათი'. - 'კაი, მარა მე სად ვიქნები მაგ დროს?'", "კახელი: 'ჩვენთან ჩიტი ვერ გადაფრინდება ვენახს'. გურული: 'ჩვენთან ისეთი ჩიტებია, შუაში გადიანო'.", "ინგლისური იცი? - 'კი'. - 'How are you რას ნიშნავს?' - 'როგორ ხარ, შენი ჭირიმე'.", "ცოლი მოიყვანა გურულმა. 'აბა როგორია?' - 'რა ვიცი, დედამისი უფრო მეტს ლაპარაკობდაო'.", "მატარებელში: 'გამატარეთ, ფეხით უფრო მალე მივალო!'", "ღვინო წყალს გავსო. - 'აბა წყალი დაასხი და ნახე თუ დაემსგავსებაო'.", "რატომ არ მუშაობ? - 'მუშაობა რომ მინდოდეს, გურიაში კი არ ვიქნებიო'."],
-        megrelebi: ["მეგრელი: 'ზუგდიდში ყველა მეგრელია და თბილისში ჩამოვედი, ვინმე ხო უნდა მოვატყუოო?'", "ფოსფორის წამალი: 'ხედავ? 10 ლარი რომ გადაიხადე, უკვე დაიწყო ტვინმა მუშაობაო'.", "დათვი მოდის, ხეზე ავიდეთ! სვანი: 'რატომ, მე ხომ არ დავუნახივარ?'", "იმერელი სტუმარს: 'კიდევ მიირთვით'. - 'ყელში მაქვს'. - 'ცოტა ჩაჩოჩდით და ჩავაო!'", "მეგრელი ლოტოს იგებს: 'ნეტა ვის მოვატყუო, რომ უფრო მეტი მოვიგეო?'", "იმერლის ოცნება: 'მე ვიყო თამადა და ყველა ჩემს სადღეგრძელოს სვამდესო'.", "სწავლა თუ გინდა - თბილისში, ფული თუ გინდა - ბაზარში, ორივე თუ გინდა - მეგრელი უნდა იყოო.", "შენი ქათამი ჩემსას ეჩხუბა და მოუგო, ჰოდა ჩემიაო!", "მეგრელი პოლიციელი: 'სურათზე რატომ არ გავხართ? ახლავე გადაგიღებთო!'", "რა კარგია ცხოვრება! გურული: 'ვისთვის როგორ, ძამა!'"],
-        others: ["ვირთხები ფეხბურთს თამაშობენ. - წამალი დალიე. - ხვალ შეიძლება? დღეს ფინალი აქვთო!", "ვინც სულელია ადგეს. ერთი ბავშვი ადგა: 'მას, შემეცოდეთ მარტო რომ დგახართო'.", "პატრული: 'სად მიდიხართ?' - 'ცოლის ლექციაზე, სად იყავი აქამდეო'.", "მამა, 5 ლარი მომეცი, დედამ თქვა ჭკვიანი ხარო.", "ცოლმა სტაფილოს დიეტა დაიწყო. - დაიკლო? - არა, მარა ყურები დაუგრძელდა!", "ფუტკარმა მიკბინა. - რატომ არ გააგდე? - სანამ დედამისმა არ მოაკითხა, არ მშორდებოდაო.", "შენი ძაღლი რატომ არ ყეფს? - პადოშაა და ხმა არ ამოეღებაო.", "სარკეში ვიხედები და გული მერევა. ექიმი: 'მხედველობა კარგი გქონიათო'.", "რატომ გაქვს საათი მარჯვენაზე? - მარცხენაზე სამაჯური მიკეთიაო.", "წელს სად ისვენებდი? - არსად. - როგორი იყო? - კარგი, ხალხი არ იყოო!"]
-    };
+    <div class="pagination">
+        <a href="#" class="page-link" style="color: #000; font-weight: bold;">1</a>
+        <a href="#" class="page-link">2</a>
+    </div>
+</div>
 
-    let currentSet = [];
-    let idx = 0;
+<footer>
+    <div class="footer-col">
+        <div class="logo" style="margin-bottom: 20px;">fiber</div>
+    </div>
+    <div class="footer-col">
+        <h4>კომპანია</h4>
+        <ul>
+            <li>ჩვენს შესახებ</li>
+            <li>კონტაქტი</li>
+            <li>ვაკანსიები</li>
+        </ul>
+    </div>
+    <div class="footer-col">
+        <h4>დახმარება</h4>
+        <ul>
+            <li>მიტანის სერვისი</li>
+            <li>წესები და პირობები</li>
+            <li>ხშირად დასმული კითხვები</li>
+        </ul>
+    </div>
+    <div class="footer-col">
+        <h4>სოციალური</h4>
+        <ul>
+            <li>Facebook</li>
+            <li>Instagram</li>
+            <li>Twitter</li>
+        </ul>
+    </div>
+</footer>
 
-    // ფონის შევსება სმაილებით
-    const bg = document.getElementById('emojiBg');
-    const emojis = ['😂', '🤣', '😆', '😄', '😜'];
-    for(let i=0; i<40; i++) {
-        const span = document.createElement('span');
-        span.innerText = emojis[Math.floor(Math.random()*emojis.length)];
-        bg.appendChild(span);
-    }
+<div class="bottom-bar">
+    <div>2026 — Fiber.ge</div>
+    <div>სოციალური ქსელები </div>
+</div>
 
-    function toggleMode() {
-        document.body.classList.toggle('dark-mode');
-    }
-
-    function startJokes(cat) {
-        currentSet = db[cat];
-        idx = 0;
-        show();
-        document.getElementById('modal').style.display = 'flex';
-    }
-
-    function closeM() { document.getElementById('modal').style.display = 'none'; }
-
-    function show() {
-        const area = document.getElementById('jokeArea');
-        area.style.opacity = 0;
-        setTimeout(() => {
-            area.innerText = currentSet[idx];
-            area.style.opacity = 1;
-            document.getElementById('count').innerText = `${idx + 1} / ${currentSet.length}`;
-        }, 200);
-    }
-
-    function change(n) {
-        idx += n;
-        if(idx >= currentSet.length) idx = 0;
-        if(idx < 0) idx = currentSet.length - 1;
-        show();
-    }
-
-    function copyJoke() {
-        const text = currentSet[idx];
-        navigator.clipboard.writeText(text);
-        alert("დაკოპირდა! ✅");
-    }
-</script>
 </body>
 </html>
