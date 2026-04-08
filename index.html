@@ -82,6 +82,32 @@
             gap: 24px;
         }
 
+        /* WATERMARK STYLES */
+        .img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            pointer-events: none;
+            z-index: 2;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+        }
+
         .card {
             position: relative;
             height: 340px;
@@ -103,6 +129,7 @@
             background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             color: white;
             box-sizing: border-box;
+            z-index: 3;
         }
 
         .item-name { font-size: 17px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
@@ -191,7 +218,16 @@
         @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         .recipe-header { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
-        .recipe-img { width: 100%; height: 550px; border-radius: 24px; object-fit: cover; }
+        
+        /* Recipe specific watermark wrapper */
+        .recipe-img-container { 
+            position: relative; 
+            width: 100%; 
+            height: 550px; 
+            border-radius: 24px; 
+            overflow: hidden; 
+        }
+        .recipe-img { width: 100%; height: 100%; object-fit: cover; }
         
         .recipe-details h2 { font-size: 48px; font-weight: 800; margin-top: 0; color: var(--text-dark); }
         .info-bar { display: flex; gap: 40px; margin: 30px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 20px 0; }
@@ -247,7 +283,7 @@
         @media (max-width: 1000px) {
             .menu-grid, .ads-container { grid-template-columns: repeat(2, 1fr); }
             .recipe-header { grid-template-columns: 1fr; }
-            .recipe-img { height: 350px; }
+            .recipe-img-container { height: 350px; }
             footer { grid-template-columns: 1fr; gap: 30px; }
         }
     </style>
@@ -286,6 +322,13 @@
 <div class="container" id="recipe-page">
     <button class="back-btn" onclick="goHome()">← მთავარზე</button>
     <div id="recipe-content" class="recipe-header"></div>
+    
+    <div class="ads-container">
+        <div class="ad-banner">სარეკლამო ადგილი 1</div>
+        <div class="ad-banner">სარეკლამო ადგილი 2</div>
+        <div class="ad-banner">სარეკლამო ადგილი 3</div>
+        <div class="ad-banner">სარეკლამო ადგილი 4</div>
+    </div>
 </div>
 
 <footer>
@@ -353,7 +396,10 @@
             card.className = 'card';
             card.onclick = () => openRecipe(item.id);
             card.innerHTML = `
-                <img src="${item.img}">
+                <div class="img-wrapper">
+                    <div class="watermark">UBISA.GE</div>
+                    <img src="${item.img}">
+                </div>
                 <div class="card-content">
                     <div class="item-name">${item.name}</div>
                     <div class="item-stats">
@@ -421,7 +467,10 @@
 
         content.innerHTML = `
             <div>
-                <img src="${item.img}" class="recipe-img">
+                <div class="recipe-img-container">
+                    <div class="watermark" style="font-size:14px; padding:8px 15px;">UBISA.GE</div>
+                    <img src="${item.img}" class="recipe-img">
+                </div>
                 <div class="similar-section">
                     <h4 style="font-size:12px; color:var(--text-gray); text-transform:uppercase; margin:0">მსგავსი რეცეპტები</h4>
                     <div class="similar-grid">
