@@ -167,18 +167,32 @@
             height: 180px;
             background: #f9fafb;
             border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
             border: 2px dashed #e5e7eb;
-            color: #9ca3af;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
             cursor: pointer;
             transition: 0.3s;
+            position: relative;
         }
-        .ad-banner:hover { border-color: var(--fiber-green); background: #f0fdf4; color: var(--fiber-green); }
+        
+        .ad-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .ad-banner:hover { border-color: var(--fiber-green); background: #f0fdf4; }
+        
+        .ad-tag {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            font-size: 8px;
+            padding: 2px 5px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
 
         .pagination {
             display: flex;
@@ -229,7 +243,6 @@
         .info-item b { display: block; font-size: 20px; color: var(--fiber-green); font-weight: 800; }
         .info-item span { font-size: 13px; color: var(--text-gray); }
 
-        /* კომპაქტური ინგრედიენტების სვეტები */
         .ingredients-list { 
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -270,7 +283,6 @@
             font-size: 11px; font-weight: 600; text-transform: uppercase;
         }
 
-        /* კომენტარების სექცია */
         .comments-section {
             margin-top: 40px;
             padding-top: 30px;
@@ -353,10 +365,22 @@
     <div class="pagination" id="pagination"></div>
 
     <div class="ads-container">
-        <div class="ad-banner">სარეკლამო ადგილი 1</div>
-        <div class="ad-banner">სარეკლამო ადგილი 2</div>
-        <div class="ad-banner">სარეკლამო ადგილი 3</div>
-        <div class="ad-banner">სარეკლამო ადგილი 4</div>
+        <div class="ad-banner" onclick="window.open('https://amazon.com', '_blank')">
+            <span class="ad-tag">AD</span>
+            <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400" alt="Kitchenware">
+        </div>
+        <div class="ad-banner" onclick="window.open('https://glovoapp.com', '_blank')">
+            <span class="ad-tag">AD</span>
+            <img src="https://images.unsplash.com/photo-1526367790999-0150786486a9?w=400" alt="Delivery">
+        </div>
+        <div class="ad-banner" onclick="window.open('https://ebay.com', '_blank')">
+            <span class="ad-tag">AD</span>
+            <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=400" alt="Groceries">
+        </div>
+        <div class="ad-banner" onclick="window.open('https://google.com', '_blank')">
+            <span class="ad-tag">AD</span>
+            <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400" alt="Organic Food">
+        </div>
     </div>
 </div>
 
@@ -365,10 +389,22 @@
     <div id="recipe-content" class="recipe-header"></div>
     
     <div class="ads-container">
-        <div class="ad-banner">სარეკლამო ადგილი 1</div>
-        <div class="ad-banner">სარეკლამო ადგილი 2</div>
-        <div class="ad-banner">სარეკლამო ადგილი 3</div>
-        <div class="ad-banner">სარეკლამო ადგილი 4</div>
+        <div class="ad-banner" onclick="window.open('https://amazon.com', '_blank')">
+            <span class="ad-tag">AD</span>
+            <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400" alt="Kitchenware">
+        </div>
+        <div class="ad-banner" onclick="window.open('https://glovoapp.com', '_blank')">
+            <span class="ad-tag">AD</span>
+            <img src="https://images.unsplash.com/photo-1526367790999-0150786486a9?w=400" alt="Delivery">
+        </div>
+        <div class="ad-banner" onclick="window.open('https://ebay.com', '_blank')">
+            <span class="ad-tag">AD</span>
+            <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=400" alt="Groceries">
+        </div>
+        <div class="ad-banner" onclick="window.open('https://google.com', '_blank')">
+            <span class="ad-tag">AD</span>
+            <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400" alt="Organic Food">
+        </div>
     </div>
 </div>
 
@@ -492,19 +528,14 @@
         const item = data.find(x => x.id === id);
         if(!item) return;
 
-        // მსგავსი რეცეპტების რენდომიზაცია
         let similarItems = data.filter(x => x.cat === item.cat && x.id !== item.id);
         
-        // თუ იმავე კატეგორიაში ცოტაა, დავამატოთ სხვა კატეგორიებიდანაც (გარდა მიმდინარესი)
         if(similarItems.length < 3) {
             let otherItems = data.filter(x => x.id !== item.id && x.cat !== item.cat);
             similarItems = [...similarItems, ...otherItems];
         }
 
-        // სიის არევა (Shuffle)
         similarItems.sort(() => Math.random() - 0.5);
-        
-        // მხოლოდ 3 ცალის აღება
         const randomThree = similarItems.slice(0, 3);
 
         document.getElementById('main-content').style.display = 'none';
