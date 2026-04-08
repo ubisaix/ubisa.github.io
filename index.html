@@ -2,74 +2,107 @@
 <html lang="ka">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ფასების შედარება - Google Sheets-დან</title>
+    <title>ქართული ანეგდოტების კრებული</title>
     <style>
-        body { font-family: 'Helvetica', sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
-        h2 { text-align: center; color: #2c3e50; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
-        th { background-color: #f8f9fa; color: #555; }
-        .price-tag { color: #e74c3c; font-weight: bold; font-size: 1.1em; }
-        .refresh-btn { display: block; width: 200px; margin: 20px auto; padding: 10px; background: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; text-align: center; }
-        .refresh-btn:hover { background: #219150; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .joke-card {
+            background: #fff;
+            border-left: 5px solid #3498db;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .joke-title {
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 8px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>მშენებლობის ფასების მონიტორინგი</h2>
-    <button class="refresh-btn" onclick="fetchSheetData()">მონაცემების განახლება</button>
-    
-    <table id="priceTable">
-        <thead>
-            <tr>
-                <th>პროდუქტი</th>
-                <th>მაღაზია</th>
-                <th>ფასი</th>
-            </tr>
-        </thead>
-        <tbody>
-            </tbody>
-    </table>
+    <h1>😄 ანეგდოტების კრებული</h1>
+
+    <div class="joke-card">
+        <div class="joke-title">სვანი და კომპიუტერი</div>
+        <p>სვანი კომპიუტერთან ზის. მეგობარი ეკითხება:<br>
+        – რას აკეთებ?<br>
+        – პაროლს ვცვლი.<br>
+        – ძველი რა იყო?<br>
+        – "მიკი მაუსი".<br>
+        – ახალი?<br>
+        – "დონალდ დაკი".<br>
+        – რატომ ცვლი მერე?<br>
+        – კომპიუტერმა მითხრა, პაროლი ძალიან მოკლეა (Mickey Mouse) და რამე "იხვი" (Duck) დაამატეო!</p>
+    </div>
+
+    <div class="joke-card">
+        <div class="joke-title">გურული და ექიმი</div>
+        <p>გურული მივიდა ექიმთან:<br>
+        – ექიმო, მარჯვენა ფეხი მტკივა, რა ვქნა?<br>
+        – ეგ სიბერის ბრალია, ბატონო.<br>
+        – რას ამბობ, ძამა, მარცხენა ფეხიც მაგხელაა, მარა სულ არ მტკივა!</p>
+    </div>
+
+    <div class="joke-card">
+        <div class="joke-title">ნადირობა</div>
+        <p>ორი მონადირე ტყეშია. უცებ ერთი დაეცემა, გული წაუვა. მეორე რეკავს სასწრაფოში:<br>
+        – მიშველეთ, მგონი ჩემი მეგობარი მოკვდა! რა ვქნა?<br>
+        – დამშვიდდით, – ეუბნება ოპერატორი, – ჯერ დარწმუნდით, რომ ნამდვილად მკვდარია.<br>
+        ცოტა ხანში გაისმის თოფის გასროლის ხმა. მონადირე ისევ იღებს ტელეფონს:<br>
+        – კი ბატონო, დავრწმუნდი, ახლა რა ვქნა?</p>
+    </div>
+
+    <div class="joke-card">
+        <div class="joke-title">მიხო და მარო</div>
+        <p>მარო ეუბნება მიხოს:<br>
+        – მიხო, ადექი, კაცი მოვიდა ჩვენს ვენახში და პარავს ყურძენს!<br>
+        – მერე მე რა ვქნა, დედაკაცო, თოფი ხომ არ მაქვს?<br>
+        – გაიქეცი და შეაშინე მაინც!<br>
+        მიხო გავარდება, ცოტა ხანში დაბრუნდება დასიებული თვალებით.<br>
+        – რა იყო, მიხო, შეაშინე?<br>
+        – კი, ისე შეშინდა, კინაღამ მომკლა ცემით!</p>
+    </div>
+
+    <div class="joke-card">
+        <div class="joke-title">პაემანი</div>
+        <p>ბიჭი გოგოს ეუბნება პაემანზე:<br>
+        – შენ ისეთი ლამაზი ხარ, სიტყვები არ მყოფნის!<br>
+        – არაუშავს, ფული ხომ გყოფნის? – პასუხობს გოგო.</p>
+    </div>
+
+    <footer>
+        <p>გაიღიმეთ ხშირად! ✨</p>
+    </footer>
 </div>
-
-<script>
-    // აქ ჩასვით თქვენი "Publish to web" CSV ლინკი
-    const sheetLink = "თქვენი_CSV_ლინკი_აქ"; 
-
-    async function fetchSheetData() {
-        try {
-            const response = await fetch(sheetLink);
-            const data = await response.text();
-            
-            // CSV მონაცემების დაყოფა ხაზებად
-            const rows = data.split('\n').slice(1); // პირველი ხაზის (Header) გამოტოვება
-            const tableBody = document.querySelector('#priceTable tbody');
-            tableBody.innerHTML = ''; 
-
-            rows.forEach(row => {
-                const cols = row.split(',');
-                if (cols.length >= 2) {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${cols[0] || 'პროდუქტი'}</td>
-                        <td>Gorgia</td>
-                        <td class="price-tag">${cols[1]} ₾</td>
-                    `;
-                    tableBody.appendChild(tr);
-                }
-            });
-        } catch (error) {
-            console.error("შეცდომა მონაცემების წაკითხვისას:", error);
-            alert("შეცდომა! დარწმუნდით, რომ ლინკი სწორია და ცხრილი გამოქვეყნებულია.");
-        }
-    }
-
-    // გვერდის ჩატვირთვისას ავტომატურად წამოიღოს მონაცემები
-    window.onload = fetchSheetData;
-</script>
 
 </body>
 </html>
