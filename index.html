@@ -181,13 +181,37 @@
         }
         .back-btn:hover { background: #e5e7eb; }
 
+        /* SIMILAR RECIPES STYLES */
+        .similar-section { margin-top: 25px; width: 100%; }
+        .similar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
+        .similar-card { 
+            cursor: pointer; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            position: relative; 
+            height: 120px;
+            transition: 0.3s;
+        }
+        .similar-card:hover { opacity: 0.8; transform: scale(1.02); }
+        .similar-card img { width: 100%; height: 100%; object-fit: cover; }
+        .similar-card span { 
+            position: absolute; bottom: 0; left: 0; right: 0; 
+            background: rgba(0,0,0,0.6); color: white; padding: 5px 10px; 
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+        }
+
+        /* FOOTER UPDATED */
         footer { border-top: 1px solid var(--border); padding: 80px 8%; margin-top: 100px; display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; }
-        footer h4 { color: var(--fiber-green); font-size: 12px; text-transform: uppercase; margin-bottom: 25px; }
+        footer h4 { color: var(--fiber-green); font-size: 12px; text-transform: uppercase; margin-bottom: 25px; letter-spacing: 1px; }
         footer ul { list-style: none; padding: 0; font-size: 14px; color: var(--text-gray); line-height: 2.5; }
+        footer ul li { cursor: pointer; transition: 0.2s; width: fit-content; }
+        footer ul li:hover { color: var(--fiber-green); transform: translateX(5px); }
 
         @media (max-width: 1000px) {
             .menu-grid { grid-template-columns: repeat(2, 1fr); }
             .recipe-header { grid-template-columns: 1fr; }
+            .recipe-img { height: 350px; }
+            footer { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -221,32 +245,52 @@
 </div>
 
 <footer>
-    <div><div class="logo">fiber</div><p style="color:var(--text-gray); font-size:14px;">ხარისხიანი რეცეპტების პლატფორმა.</p></div>
-    <div><h4>ნავიგაცია</h4><ul><li>მთავარი</li><li>კერძები</li></ul></div>
-    <div><h4>კომპანია</h4><ul><li>ჩვენ შესახებ</li><li>კონტაქტი</li></ul></div>
-    <div><h4>სამართლებრივი</h4><ul><li>წესები</li><li>Privacy</li></ul></div>
+    <div>
+        <div class="logo" onclick="goHome()">fiber</div>
+        <p style="color:var(--text-gray); font-size:14px;">ხარისხიანი რეცეპტების პლატფორმა.</p>
+    </div>
+    <div>
+        <h4>ნავიგაცია</h4>
+        <ul>
+            <li onclick="goHome()">მთავარი</li>
+            <li onclick="filterJokes('კერძები', document.querySelector('[onclick*=\'კერძები\']'))">კერძები</li>
+        </ul>
+    </div>
+    <div>
+        <h4>კომპანია</h4>
+        <ul>
+            <li><a href="#" style="text-decoration:none; color:inherit;">ჩვენ შესახებ</a></li>
+            <li><a href="#" style="text-decoration:none; color:inherit;">კონტაქტი</a></li>
+        </ul>
+    </div>
+    <div>
+        <h4>სამართლებრივი</h4>
+        <ul>
+            <li><a href="#" style="text-decoration:none; color:inherit;">წესები</a></li>
+            <li><a href="#" style="text-decoration:none; color:inherit;">Privacy</a></li>
+        </ul>
+    </div>
 </footer>
 
 <script>
     const data = [
-        { id: 1, cat: "კერძები", name: "ქაბაბი", time: "40 წთ", views: "1.2k", img: "https://fiber.ge/wp-content/uploads/kababis-recepti.webp", ing: ["1 კგ საქონლის ფარში", "3 ხახვი", "6 კბილი ნიორი", "2 ჩ/კ დაფქული ქინძი", "2 ჩ/კ დაფქული ძირა", "2 ჩ/კ პაპრიკა", "3 ჩ/კ ზღვის მარილი", "1/2 ჩ/კ კაიენის წიწაკა","1/2 ჭიქა დაჭრილი ქინძი","პილპილი"], text: "დიდ თასში მოათავსეთ ფარში..." },
-        { id: 2, cat: "კერძები", name: "წიწიბურას კატლეტი", time: "30 წთ", views: "1.7k", img: "https://fiber.ge/wp-content/uploads/tsitsiburas-katletis-recepti.webp", ing: ["1 ჭიქა წიწიბურა", "1/2 ჭიქა საფანელი", "1 სტაფილო", "1 კარტოფილი", "1 კონა ქინძი", "1 ბულგარული წიწაკა", "მარილი, პილპილი"], text: "ჯერ მოხარშეთ წიწიბურა..." },
-        { id: 3, cat: "კერძები", name: "მადამ ბოვარი", time: "1 სთ 45 წთ", views: "1.1k", img: "https://fiber.ge/wp-content/uploads/madam-bovaris-recepti.webp", ing: ["1 კგ კარტოფილი", "650 გრ შერეული ფარში", "200 გრ ყველი", "200 გრ მაიონეზი", "2 კვერცხი", "1 ხახვი", "1 კბილი ნიორი", "მარილი და პილპილი"], text: "გარეცხეთ და გათალეთ კარტოფილი..." },
-        { id: 4, cat: "კერძები", name: "ლაზანია", time: "1სთ 30წთ", views: "1.2k", img: "https://fiber.ge/wp-content/uploads/lazanias-recepti.webp", ing: ["ფირფიტა", "ფარში", "ყველი"], text: "საქონლის ფარში მოათავსეთ..." },
-        // ... დამატებითი რეცეპტები (ტესტისთვის დავაკოპირებ რომ 16-ს გასცდეს)
-        { id: 5, cat: "წვნიანები", name: "სოკოს კრემ-სუპი", time: "40 წთ", views: "1.1k", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800", ing: ["სოკო", "ნაღები"], text: "დააბლენდერეთ..." },
-        { id: 6, cat: "ტორტები", name: "შოკოლადის ტორტი", time: "90 წთ", views: "2.5k", img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800", ing: ["შოკოლადი"], text: "გამოაცხვეთ..." },
-        { id: 7, cat: "სალათები", name: "მწვანე სალათი", time: "15 წთ", views: "850", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", ing: ["ავოკადო"], text: "აურიეთ..." },
-        { id: 8, cat: "ნამცხვრები", name: "კენკრის ჩიზქეიქი", time: "120 წთ", views: "3.1k", img: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800", ing: ["ყველი"], text: "გააცივეთ..." },
-        { id: 9, cat: "ცომეული", name: "იმერული ხაჭაპური", time: "30 წთ", views: "4.8k", img: "https://images.unsplash.com/photo-1608039829572-7852bf5c7c6a?w=800", ing: ["ყველი"], text: "გამოაცხვეთ..." },
-        { id: 10, cat: "სენდვიჩები", name: "კლუბ სენდვიჩი", time: "10 წთ", views: "920", img: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800", ing: ["პური"], text: "მიირთვით..." },
-        { id: 11, cat: "სოუსები", name: "პესტოს სოუსი", time: "5 წთ", views: "640", img: "https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=800", ing: ["რეჰანი"], text: "დააბლენდერეთ..." },
-        { id: 12, cat: "კერძები", name: "კერძი 12", time: "20 წთ", views: "1k", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800", ing: ["ინგრედიენტი"], text: "ტექსტი..." },
-        { id: 13, cat: "კერძები", name: "კერძი 13", time: "20 წთ", views: "1k", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800", ing: ["ინგრედიენტი"], text: "ტექსტი..." },
-        { id: 14, cat: "კერძები", name: "კერძი 14", time: "20 წთ", views: "1k", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800", ing: ["ინგრედიენტი"], text: "ტექსტი..." },
-        { id: 15, cat: "კერძები", name: "კერძი 15", time: "20 წთ", views: "1k", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800", ing: ["ინგრედიენტი"], text: "ტექსტი..." },
-        { id: 16, cat: "კერძები", name: "კერძი 16", time: "20 წთ", views: "1k", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800", ing: ["ინგრედიენტი"], text: "ტექსტი..." },
-        { id: 17, cat: "კერძები", name: "კერძი 17 (მე-2 გვერდი)", time: "20 წთ", views: "1k", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800", ing: ["ინგრედიენტი"], text: "ეს უკვე მეორე გვერდზეა!" }
+        { id: 1, cat: "კერძები", name: "ქაბაბი", time: "40 წთ", views: "1.2k", img: "https://fiber.ge/wp-content/uploads/kababis-recepti.webp", ing: ["1 კგ საქონლის ფარში", "3 ხახვი", "6 კბილი ნიორი", "2 ჩ/კ დაფქული ქინძი", "2 ჩ/კ დაფქული ძირა", "2 ჩ/კ პაპრიკა", "3 ჩ/კ ზღვის მარილი", "1/2 ჩ/კ კაიენის წიწაკა","1/2 ჭიქა დაჭრილი ქინძი","პილპილი"], text: "დიდ თასში მოათავსეთ ფარში, 2 ცალი წვრილად დაჭრილი ხახვი, დაჭყლეტილი ნიორი, დაფქული ქინძი, ძირა, პაპრიკა, მარილი, პილპილი, კაიენის წიწაკა და კარგად აურიეთ. მიღებული ხორცის მასა გაყავით რვა, ან სასურველი რაოდენობის თანაბარ ნაწილად..." },
+        { id: 2, cat: "კერძები", name: "წიწიბურას კატლეტი", time: "30 წთ", views: "1.7k", img: "https://fiber.ge/wp-content/uploads/tsitsiburas-katletis-recepti.webp", ing: ["1 ჭიქა წიწიბურა", "1/2 ჭიქა საფანელი", "1 სტაფილო", "1 კარტოფილი", "1 კონა ქინძი", "1 ბულგარული წიწაკა", "მარილი, პილპილი"], text: "ჯერ მოხარშეთ წიწიბურა – დაასხით ადუღებული წყალი, დაუმატეთ მარილი გემოვნებით და თავდახურული მოხარშეთ, დაბალ ცეცხლზე. ამასობაში, გათალეთ კარტოფილი, სტაფილო..." },
+        { id: 3, cat: "კერძები", name: "მადამ ბოვარი", time: "1 სთ 45 წთ", views: "1.1k", img: "https://fiber.ge/wp-content/uploads/madam-bovaris-recepti.webp", ing: ["1 კგ კარტოფილი", "650 გრ შერეული ფარში", "200 გრ ყველი", "200 გრ მაიონეზი", "2 კვერცხი", "1 ხახვი", "1 კბილი ნიორი", "მარილი და პილპილი"], text: "გარეცხეთ და გათალეთ კარტოფილი, დაჭერით მრგვალ ნაჭრებად და შეწვით. ფარში კი წვრილად დაჭრილ ხახვთან, მარილთან და პილპილთან შეაზავეთ და მოშუშეთ..." },
+        { id: 4, cat: "კერძები", name: "ლაზანია", time: "1სთ 30წთ", views: "1.2k", img: "https://fiber.ge/wp-content/uploads/lazanias-recepti.webp", ing: ["ლაზანიას ფირფიტა", "საქონლის ფარში", "რიკოტას ყველი"], text: "საქონლის ფარში მოათავსეთ ტაფაში და მოთუშეთ დაახლოებით 5-7 წუთის განმავლობაში, სანამ ყავისფერ შეფერილობას არ მიიღებს..." },
+        { id: 5, cat: "წვნიანები", name: "სოკოს კრემ-სუპი", time: "40 წთ", views: "1.1k", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800", ing: ["სოკო", "ნაღები", "ხახვი"], text: "დააბლენდერეთ მასა..." },
+        { id: 6, cat: "ტორტები", name: "შოკოლადის ტორტი", time: "90 წთ", views: "2.5k", img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800", ing: ["შოკოლადი", "ფქვილი", "კაკაო"], text: "გამოაცხვეთ 180 გრადუსზე..." },
+        { id: 7, cat: "სალათები", name: "მწვანე სალათი", time: "15 წთ", views: "850", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", ing: ["ავოკადო", "ისპანახი", "ზეთი"], text: "კარგად აურიეთ..." },
+        { id: 8, cat: "ნამცხვრები", name: "კენკრის ჩიზქეიქი", time: "120 წთ", views: "3.1k", img: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800", ing: ["ყველი", "კენკრა", "ცხიმოვანი ნაღები"], text: "გააცივეთ მაცივარში..." },
+        { id: 9, cat: "ცომეული", name: "იმერული ხაჭაპური", time: "30 წთ", views: "4.8k", img: "https://images.unsplash.com/photo-1608039829572-7852bf5c7c6a?w=800", ing: ["ყველი", "ფქვილი", "კვერცხი"], text: "გამოაცხვეთ კეცზე..." },
+        { id: 10, cat: "სენდვიჩები", name: "კლუბ სენდვიჩი", time: "10 წთ", views: "920", img: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800", ing: ["პური", "ქათამი", "ბეკონი"], text: "მიირთვით ცივად..." },
+        { id: 11, cat: "სოუსები", name: "პესტოს სოუსი", time: "5 წთ", views: "640", img: "https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=800", ing: ["რეჰანი", "ნიორი", "ზეთი"], text: "გაატარეთ ბლენდერში..." },
+        { id: 12, cat: "კერძები", name: "ოსტრი", time: "60 წთ", views: "2.1k", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800", ing: ["საქონლის ხორცი", "პომიდორი"], text: "მოშუშეთ ხორცი..." },
+        { id: 13, cat: "კერძები", name: "ჩაქაფული", time: "50 წთ", views: "3.4k", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", ing: ["ტარხუნა", "ტყემალი"], text: "ხორცი მოათავსეთ..." },
+        { id: 14, cat: "სალათები", name: "ცეზარი", time: "20 წთ", views: "5.2k", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800", ing: ["ქათამი", "აისბერგი"], text: "აურიეთ სოუსი..." },
+        { id: 15, cat: "ცომეული", name: "ლობიანი", time: "45 წთ", views: "2.8k", img: "https://images.unsplash.com/photo-1608039829572-7852bf5c7c6a?w=800", ing: ["ლობიო", "ცომი"], text: "მოხარშეთ ლობიო..." },
+        { id: 16, cat: "დესერტები", name: "ტირამისუ", time: "30 წთ", views: "1.9k", img: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800", ing: ["მასკარპონე", "ყავა"], text: "დაალბეთ ბისკვიტი..." },
+        { id: 17, cat: "კერძები", name: "ბორში", time: "70 წთ", views: "1.5k", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800", ing: ["ჭარხალი", "კომბოსტო"], text: "მოხარშეთ ბოსტნეული..." }
     ];
 
     let currentPage = 1;
@@ -256,8 +300,6 @@
     function renderCards() {
         const grid = document.getElementById('grid-container');
         grid.innerHTML = "";
-        
-        // გამოთვლა რომელი ინდექსიდან რომელზე უნდა გამოჩნდეს
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
         const paginatedItems = filteredData.slice(start, end);
@@ -284,7 +326,6 @@
             `;
             grid.appendChild(card);
         });
-
         renderPagination();
     }
 
@@ -292,9 +333,7 @@
         const paginationContainer = document.getElementById('pagination');
         paginationContainer.innerHTML = "";
         const pageCount = Math.ceil(filteredData.length / itemsPerPage);
-
-        if (pageCount <= 1) return; // თუ ერთ გვერდზე ეტევა, არ გამოვაჩინოთ ნუმერაცია
-
+        if (pageCount <= 1) return;
         for (let i = 1; i <= pageCount; i++) {
             const pageBtn = document.createElement('div');
             pageBtn.className = `page-num ${i === currentPage ? 'active' : ''}`;
@@ -310,23 +349,27 @@
 
     function filterJokes(category, el) {
         goHome();
-        currentPage = 1; // ფილტრისას ყოველთვის პირველ გვერდზე დავბრუნდეთ
-        
+        currentPage = 1;
         document.querySelectorAll('.nav-links span').forEach(s => s.classList.remove('active'));
-        el.classList.add('active');
+        if(el) el.classList.add('active');
         document.getElementById('page-title').innerText = category === 'ყველა' ? 'ყველა რეცეპტი' : category;
-
-        if (category === 'ყველა') {
-            filteredData = [...data];
-        } else {
-            filteredData = data.filter(item => item.cat === category);
-        }
+        filteredData = category === 'ყველა' ? [...data] : data.filter(item => item.cat === category);
         renderCards();
     }
 
     function openRecipe(id) {
         const item = data.find(x => x.id === id);
         if(!item) return;
+
+        // მსგავსი რეცეპტების შერჩევა (იგივე კატეგორიიდან, მიმდინარე რეცეპტის გარდა)
+        const similarItems = data
+            .filter(x => x.cat === item.cat && x.id !== item.id)
+            .slice(0, 3);
+
+        // თუ კატეგორიაში სხვა რეცეპტი არაა, ავიღოთ ნებისმიერი სხვა 3
+        if(similarItems.length < 1) {
+            similarItems.push(...data.filter(x => x.id !== item.id).slice(0, 3));
+        }
 
         document.getElementById('main-content').style.display = 'none';
         const page = document.getElementById('recipe-page');
@@ -335,7 +378,20 @@
         window.scrollTo(0,0);
 
         content.innerHTML = `
-            <img src="${item.img}" class="recipe-img">
+            <div>
+                <img src="${item.img}" class="recipe-img">
+                <div class="similar-section">
+                    <h4 style="font-size:12px; color:var(--text-gray); text-transform:uppercase; margin:0">მსგავსი რეცეპტები</h4>
+                    <div class="similar-grid">
+                        ${similarItems.map(s => `
+                            <div class="similar-card" onclick="openRecipe(${s.id})">
+                                <img src="${s.img}">
+                                <span>${s.name}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
             <div>
                 <h2>${item.name}</h2>
                 <div class="info-bar">
@@ -356,7 +412,6 @@
         document.getElementById('main-content').style.display = 'block';
     }
 
-    // საწყისი ჩატვირთვა
     renderCards();
 </script>
 
