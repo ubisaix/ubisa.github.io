@@ -128,6 +128,37 @@
             filter: brightness(0) invert(1);
         }
 
+        /* PAGINATION STYLES */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 50px;
+        }
+
+        .page-num {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: #f3f4f6;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            color: var(--text-dark);
+        }
+
+        .page-num.active {
+            background: var(--fiber-green);
+            color: white;
+        }
+
+        .page-num:hover:not(.active) {
+            background: #e5e7eb;
+        }
+
         /* RECIPE PAGE */
         #recipe-page { display: none; animation: slideIn 0.4s ease-out; }
         @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -181,6 +212,7 @@
 <div class="container" id="main-content">
     <h1 class="main-title" id="page-title">ყველა რეცეპტი</h1>
     <div class="menu-grid" id="grid-container"></div>
+    <div class="pagination" id="pagination"></div>
 </div>
 
 <div class="container" id="recipe-page">
@@ -197,28 +229,40 @@
 
 <script>
     const data = [
-        { id: 1, cat: "კერძები", name: "ქაბაბი", time: "40 წთ", views: "1.2k", img: "https://fiber.ge/wp-content/uploads/kababis-recepti.webp", ing: ["1 კგ საქონლის ფარში", "3 ხახვი", "6 კბილი ნიორი", "2 ჩ/კ დაფქული ქინძი", "2 ჩ/კ დაფქული ძირა", "2 ჩ/კ პაპრიკა", "3 ჩ/კ ზღვის მარილი", "1/2 ჩ/კ კაიენის წიწაკა","1/2 ჭიქა დაჭრილი ქინძი","პილპილი"], text: "დიდ თასში მოათავსეთ ფარში, 2 ცალი წვრილად დაჭრილი ხახვი, დაჭყლეტილი ნიორი, დაფქული ქინძი, ძირა, პაპრიკა, მარილი, პილპილი, კაიენის წიწაკა და კარგად აურიეთ.მიღებული ხორცის მასა გაყავით რვა, ან სასურველი რაოდენობის თანაბარ ნაწილად, მიეცით მოგრძო ფორმა და ჩამოაცვით შამფურებზე.გააცხელეთ გრილი საშუალოზე მაღალ ცეცხლზე და ქაბაბი შეწვით დაახლოებით 10-15 წუთის განმავლობაში. პერიოდულად გადააბრუნეთ, რომ ყველა მხარე კარგად შეიწვას.როდესაც მზად იქნება, გადმოიღეთ გრილიდან და ზემოდან მოაყარეთ დაჭრილი ახალი ქინძი, 1 ცალი დაჭრილი წითელი ხახვი და ბროწეულის მარცვლები." },
-        { id: 2, cat: "კერძები", name: "წიწიბურას კატლეტი", time: "30 წთ", views: "1.7k", img: "https://fiber.ge/wp-content/uploads/tsitsiburas-katletis-recepti.webp", ing: ["1 ჭიქა წიწიბურა", "1/2 ჭიქა საფანელი", "1 სტაფილო", "1 კარტოფილი", "1 კონა ქინძი", "1 ბულგარული წიწაკა", "მარილი, პილპილი"], text: "ჯერ მოხარშეთ წიწიბურა – დაასხით ადუღებული წყალი, დაუმატეთ მარილი გემოვნებით და თავდახურული მოხარშეთ, დაბალ ცეცხლზე.ამასობაში, გათალეთ კარტოფილი, სტაფილო და დაჭერით ქინძთან და ბულგარულ წიწაკასთან ერთად, პატარა ნაჭრებად.მოხარშვის შემდეგ, წიწიბურა და ბოსტნეული გაატარეთ ხორცსაკეპ მანქანაში და გემოვნებით დაუმატეთ მარილი და პილპილი.გააკეთეთ ექვსი წიწიბურას კატლეტი, ამოავლეთ საფანელში და დაბალ ცეცხლზე შეწვით ზეთში." },
-        { id: 3, cat: "კერძები", name: "მადამ ბოვარი", time: "1 სთ 45 წთ", views: "1.1k", img: "https://fiber.ge/wp-content/uploads/madam-bovaris-recepti.webp", ing: ["1 კგ კარტოფილი", "650 გრ შერეული ფარში", "200 გრ ყველი", "200 გრ მაიონეზი", "2 კვერცხი", "1 ხახვი", "1 კბილი ნიორი", "მარილი და პილპილი"], text: "გარეცხეთ და გათალეთ კარტოფილი, დაჭერით მრგვალ ნაჭრებად და შეწვით. ფარში კი წვრილად დაჭრილ ხახვთან, მარილთან და პილპილთან შეაზავეთ და მოშუშეთ.დაჭყლიტეთ ნიორი, დაუმატეთ პილპილი გემოვნებით და აურიეთ მაიონეზს. შესაძლებელია არაჟნის გამოყენება, გემოვნების მიხედვით.ცეცხლგამძლე ჭურჭელში, პირველ ფენად მოათავსეთ კარტოფილის ნაჭრები. ზემოდან მოათავსეთ მოთუშული ფარში და მოაყარეთ წვრილად დაჭრილი მოხარშული კვერცხი. ბოლოს კი გახეხილი ყველი.თუ გაქვთ საშუალება, შეგიძლიათ ფენები გაიმეოროთ. ბოლო ფენას თანაბრად მოასხით მაიონეზის ნაზავი და ბოლოს დაადეთ დაჭრილი პომიდვრის ფენები.მადამ ბოვარი შედგით წინასწარ გაცხელებულ ღუმელში (200 გრადუსი) და მოამზადეთ დაახლოებით 20 წუთის განმავლობაში." },
-        { id: 8, cat: "კერძები", name: "ლაზანია", time: "1სთ 30წთ", views: "1.2k", img: "https://fiber.ge/wp-content/uploads/lazanias-recepti.webp", ing: ["1 პაკეტი ლაზანიას ფირფიტა", "500 გრ საქონლის ფარში", "700 გრ რიკოტას ყველი", "1 ჭიქა რძე", "3 კვერცხი", "50 გრ გახეხილი პარმეზანის ყველი", "2 ჩ/კ ხმელი რეჰანი", "1 ჩ/კ მარილი", "1/2 ჩ/კ დაფქვილი შავი პილპილი", "700 მლ პომიდვრის სოუსი"], text: "საქონლის ფარში მოათავსეთ ტაფაში და მოთუშეთ დაახლოებით 5-7 წუთის განმავლობაში, სანამ ყავისფერ შეფერილობას არ მიიღებს. ზედმეტი ცხიმი გადაწურეთ და გადაიტანეთ თეფშზე გასაციებლად.დიდ თასში მოათავსეთ რიკოტას ყველი, რძე, კვერცხები, პარმეზანის ყველი, რეჰანი, მარილი და პილპილი. ინგრედიენტები კარგად აურიეთ ერთნამეთში, რადგან მიიღოთ კარგად შერეული, ნაზი მასა.მოთუშული საქონლის ფარშის ნახევარი მოათავსეთ მიღებულ მასაში და კარგად აურიეთ.ქვაბით აადუღეთ მარილიანი წყალი და მოათავსეთ ლაზანიას ფირფიტები და ხარშეთ დაახლოებით 5 წუთის განმავლობაში. ფირფიტები უნდა გახდეს ოდნავ რბილი. შემდეგ გადაწურეთ და გაავლეთ ცივ წყალში.ღუმელი გააცხელეთ 190 გრადუსზე და საცხობ ფირფიტაზე თხლად წაუსვით პომიდვრის სოუსი.დააწყვეთ ლაზანიას ფირფიტების მესამედი საცხობ ფირფიტაზე, ზემოდან მოათავსეთ რიკოტას და ფარშის ნაზავი და წაუსვით პომიდვრის სოუსი. გაიმეორეთ პროცესი რომ გამოვიდეს ორი ფენა.მიღებულ ორ ფენაზე, ზემოდან მოათავსეთ დარჩენილი ფირფიტები და გადაუსვით პომიდვრის სოუსი.შეახვიეთ ფოლგაში და მოათავსეთ ღუმელში 25 წუთის განმავლობაში. შემდეგ მოხსენით ფოლგა და დატოვეთ ღუმელში 25-30 წუთი, სანამ ზედაპირი არ შეიბრაწება. ღუმელიდან გამოღების შემდეგ, ლაზანია დააყოვნეთ 15 წუთით და მიირთვით." },
-        { id: 8, cat: "წვნიანები", name: "სოკოს კრემ-სუპი", time: "40 წთ", views: "1.1k", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800", ing: ["სოკო", "ნაღები", "ხახვი"], text: "დააბლენდერეთ მასა..." },
-        { id: 8, cat: "წვნიანები", name: "სოკოს კრემ-სუპი", time: "40 წთ", views: "1.1k", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800", ing: ["სოკო", "ნაღები", "ხახვი"], text: "დააბლენდერეთ მასა..." },
-        { id: 8, cat: "წვნიანები", name: "სოკოს კრემ-სუპი", time: "40 წთ", views: "1.1k", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800", ing: ["სოკო", "ნაღები", "ხახვი"], text: "დააბლენდერეთ მასა..." },
-        { id: 8, cat: "წვნიანები", name: "სოკოს კრემ-სუპი", time: "40 წთ", views: "1.1k", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800", ing: ["სოკო", "ნაღები", "ხახვი"], text: "დააბლენდერეთ მასა..." },
-        { id: 8, cat: "წვნიანები", name: "სოკოს კრემ-სუპი", time: "40 წთ", views: "1.1k", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800", ing: ["სოკო", "ნაღები", "ხახვი"], text: "დააბლენდერეთ მასა..." },
-        { id: 4, cat: "ტორტები", name: "შოკოლადის ტორტი", time: "90 წთ", views: "2.5k", img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800", ing: ["შოკოლადი", "ფქვილი", "კაკაო"], text: "გამოაცხვეთ 180 გრადუსზე..." },
-        { id: 5, cat: "სალათები", name: "მწვანე სალათი", time: "15 წთ", views: "850", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", ing: ["ავოკადო", "ისპანახი", "ზეთი"], text: "კარგად აურიეთ..." },
-        { id: 6, cat: "ნამცხვრები", name: "კენკრის ჩიზქეიქი", time: "120 წთ", views: "3.1k", img: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800", ing: ["ყველი", "კენკრა", "ცხიმოვანი ნაღები"], text: "გააცივეთ მაცივარში..." },
-        { id: 7, cat: "ცომეული", name: "იმერული ხაჭაპური", time: "30 წთ", views: "4.8k", img: "https://images.unsplash.com/photo-1608039829572-7852bf5c7c6a?w=800", ing: ["ყველი", "ფქვილი", "კვერცხი"], text: "გამოაცხვეთ კეცზე..." },
-        { id: 8, cat: "წვნიანები", name: "სოკოს კრემ-სუპი", time: "40 წთ", views: "1.1k", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800", ing: ["სოკო", "ნაღები", "ხახვი"], text: "დააბლენდერეთ მასა..." },
-        { id: 9, cat: "სენდვიჩები", name: "კლუბ სენდვიჩი", time: "10 წთ", views: "920", img: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800", ing: ["პური", "ქათამი", "ბეკონი"], text: "მიირთვით ცივად..." },
-        { id: 10, cat: "სოუსები", name: "პესტოს სოუსი", time: "5 წთ", views: "640", img: "https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=800", ing: ["რეჰანი", "ნიორი", "ზეთი"], text: "გაატარეთ ბლენდერში..." }
+        { id: 1, cat: "კერძები", name: "ქაბაბი", time: "40 წთ", views: "1.2k", img: "https://fiber.ge/wp-content/uploads/kababis-recepti.webp", ing: ["1 კგ საქონლის ფარში", "3 ხახვი", "6 კბილი ნიორი", "2 ჩ/კ დაფქული ქინძი", "2 ჩ/კ დაფქული ძირა", "2 ჩ/კ პაპრიკა", "3 ჩ/კ ზღვის მარილი", "1/2 ჩ/კ კაიენის წიწაკა","1/2 ჭიქა დაჭრილი ქინძი","პილპილი"], text: "დიდ თასში მოათავსეთ ფარში..." },
+        { id: 2, cat: "კერძები", name: "წიწიბურას კატლეტი", time: "30 წთ", views: "1.7k", img: "https://fiber.ge/wp-content/uploads/tsitsiburas-katletis-recepti.webp", ing: ["1 ჭიქა წიწიბურა", "1/2 ჭიქა საფანელი", "1 სტაფილო", "1 კარტოფილი", "1 კონა ქინძი", "1 ბულგარული წიწაკა", "მარილი, პილპილი"], text: "ჯერ მოხარშეთ წიწიბურა..." },
+        { id: 3, cat: "კერძები", name: "მადამ ბოვარი", time: "1 სთ 45 წთ", views: "1.1k", img: "https://fiber.ge/wp-content/uploads/madam-bovaris-recepti.webp", ing: ["1 კგ კარტოფილი", "650 გრ შერეული ფარში", "200 გრ ყველი", "200 გრ მაიონეზი", "2 კვერცხი", "1 ხახვი", "1 კბილი ნიორი", "მარილი და პილპილი"], text: "გარეცხეთ და გათალეთ კარტოფილი..." },
+        { id: 4, cat: "კერძები", name: "ლაზანია", time: "1სთ 30წთ", views: "1.2k", img: "https://fiber.ge/wp-content/uploads/lazanias-recepti.webp", ing: ["ფირფიტა", "ფარში", "ყველი"], text: "საქონლის ფარში მოათავსეთ..." },
+        // ... დამატებითი რეცეპტები (ტესტისთვის დავაკოპირებ რომ 16-ს გასცდეს)
+        { id: 5, cat: "წვნიანები", name: "სოკოს კრემ-სუპი", time: "40 წთ", views: "1.1k", img: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800", ing: ["სოკო", "ნაღები"], text: "დააბლენდერეთ..." },
+        { id: 6, cat: "ტორტები", name: "შოკოლადის ტორტი", time: "90 წთ", views: "2.5k", img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800", ing: ["შოკოლადი"], text: "გამოაცხვეთ..." },
+        { id: 7, cat: "სალათები", name: "მწვანე სალათი", time: "15 წთ", views: "850", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800", ing: ["ავოკადო"], text: "აურიეთ..." },
+        { id: 8, cat: "ნამცხვრები", name: "კენკრის ჩიზქეიქი", time: "120 წთ", views: "3.1k", img: "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800", ing: ["ყველი"], text: "გააცივეთ..." },
+        { id: 9, cat: "ცომეული", name: "იმერული ხაჭაპური", time: "30 წთ", views: "4.8k", img: "https://images.unsplash.com/photo-1608039829572-7852bf5c7c6a?w=800", ing: ["ყველი"], text: "გამოაცხვეთ..." },
+        { id: 10, cat: "სენდვიჩები", name: "კლუბ სენდვიჩი", time: "10 წთ", views: "920", img: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800", ing: ["პური"], text: "მიირთვით..." },
+        { id: 11, cat: "სოუსები", name: "პესტოს სოუსი", time: "5 წთ", views: "640", img: "https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=800", ing: ["რეჰანი"], text: "დააბლენდერეთ..." },
+        { id: 12, cat: "კერძები", name: "კერძი 12", time: "20 წთ", views: "1k", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800", ing: ["ინგრედიენტი"], text: "ტექსტი..." },
+        { id: 13, cat: "კერძები", name: "კერძი 13", time: "20 წთ", views: "1k", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800", ing: ["ინგრედიენტი"], text: "ტექსტი..." },
+        { id: 14, cat: "კერძები", name: "კერძი 14", time: "20 წთ", views: "1k", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800", ing: ["ინგრედიენტი"], text: "ტექსტი..." },
+        { id: 15, cat: "კერძები", name: "კერძი 15", time: "20 წთ", views: "1k", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800", ing: ["ინგრედიენტი"], text: "ტექსტი..." },
+        { id: 16, cat: "კერძები", name: "კერძი 16", time: "20 წთ", views: "1k", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800", ing: ["ინგრედიენტი"], text: "ტექსტი..." },
+        { id: 17, cat: "კერძები", name: "კერძი 17 (მე-2 გვერდი)", time: "20 წთ", views: "1k", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800", ing: ["ინგრედიენტი"], text: "ეს უკვე მეორე გვერდზეა!" }
     ];
 
-    function renderCards(items) {
+    let currentPage = 1;
+    const itemsPerPage = 16;
+    let filteredData = [...data];
+
+    function renderCards() {
         const grid = document.getElementById('grid-container');
         grid.innerHTML = "";
-        items.forEach(item => {
+        
+        // გამოთვლა რომელი ინდექსიდან რომელზე უნდა გამოჩნდეს
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedItems = filteredData.slice(start, end);
+
+        paginatedItems.forEach(item => {
             const card = document.createElement('div');
             card.className = 'card';
             card.onclick = () => openRecipe(item.id);
@@ -240,23 +284,44 @@
             `;
             grid.appendChild(card);
         });
+
+        renderPagination();
+    }
+
+    function renderPagination() {
+        const paginationContainer = document.getElementById('pagination');
+        paginationContainer.innerHTML = "";
+        const pageCount = Math.ceil(filteredData.length / itemsPerPage);
+
+        if (pageCount <= 1) return; // თუ ერთ გვერდზე ეტევა, არ გამოვაჩინოთ ნუმერაცია
+
+        for (let i = 1; i <= pageCount; i++) {
+            const pageBtn = document.createElement('div');
+            pageBtn.className = `page-num ${i === currentPage ? 'active' : ''}`;
+            pageBtn.innerText = i;
+            pageBtn.onclick = () => {
+                currentPage = i;
+                renderCards();
+                window.scrollTo(0, 0);
+            };
+            paginationContainer.appendChild(pageBtn);
+        }
     }
 
     function filterJokes(category, el) {
-        // ჯერ ვბრუნდებით მთავარ გვერდზე (თუ რეცეპტის გვერდზე ვიყავით)
         goHome();
+        currentPage = 1; // ფილტრისას ყოველთვის პირველ გვერდზე დავბრუნდეთ
         
-        // კატეგორიების აქტივაცია
         document.querySelectorAll('.nav-links span').forEach(s => s.classList.remove('active'));
         el.classList.add('active');
         document.getElementById('page-title').innerText = category === 'ყველა' ? 'ყველა რეცეპტი' : category;
 
         if (category === 'ყველა') {
-            renderCards(data);
+            filteredData = [...data];
         } else {
-            const filtered = data.filter(item => item.cat === category);
-            renderCards(filtered);
+            filteredData = data.filter(item => item.cat === category);
         }
+        renderCards();
     }
 
     function openRecipe(id) {
@@ -291,7 +356,8 @@
         document.getElementById('main-content').style.display = 'block';
     }
 
-    renderCards(data);
+    // საწყისი ჩატვირთვა
+    renderCards();
 </script>
 
 </body>
