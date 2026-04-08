@@ -3,133 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inter-Active Jokes</title>
+    <title>LOL - მხიარული ანეგდოტები</title>
     <style>
         :root {
-            --primary: #6c5ce7;
-            --secondary: #a29bfe;
-            --accent: #fd79a8;
-            --dark: #2d3436;
+            --primary-gradient: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            --accent-gradient: linear-gradient(135deg, #ff7675, #fab1a0);
+            --bg-color: #f1f2f6;
+            --text-dark: #2d3436;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0;
             padding: 0;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            /* მხიარული სმაილების ფონი */
-            background-color: #f0f2f5;
-            background-image: url("https://www.transparenttextures.com/patterns/cubes.png"), 
-                              linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
-            background-attachment: fixed;
+            overflow-x: hidden;
+            background-color: var(--bg-color);
+            position: relative;
+        }
+
+        /* სმაილების ფონი */
+        body::before {
+            content: "😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁 😂 🤣 😁";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+            font-size: 3rem;
+            word-spacing: 50px;
+            line-height: 100px;
+            pointer-events: none;
+            text-align: center;
+            overflow: hidden;
         }
 
         .main-container {
             width: 90%;
-            max-width: 600px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            max-width: 550px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
             text-align: center;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
-        h1 { color: var(--dark); margin-bottom: 30px; font-size: 2rem; }
+        h1 { 
+            color: var(--text-dark); 
+            margin-bottom: 40px; 
+            font-size: 2.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
 
-        /* კატეგორიების ღილაკები */
+        /* თანამედროვე ღილაკები */
         .category-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 20px;
         }
 
         .cat-btn {
-            padding: 20px;
+            padding: 25px 15px;
             border: none;
-            border-radius: 15px;
-            background: var(--primary);
-            color: white;
+            border-radius: 20px;
+            background: white;
+            color: var(--text-dark);
             font-size: 1.1rem;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
-            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
         .cat-btn:hover {
-            transform: translateY(-3px);
-            background: #5849c4;
+            transform: scale(1.05);
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 12px 25px rgba(108, 92, 231, 0.3);
         }
 
-        /* მოდალური ფანჯარა (ჩამოსაშლელი) */
+        .cat-btn.special {
+            grid-column: span 2;
+            background: var(--accent-gradient);
+            color: white;
+        }
+
+        .cat-btn.special:hover {
+            background: linear-gradient(135deg, #d63031, #ff7675);
+        }
+
+        /* მოდალური ფანჯარა */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(45, 52, 54, 0.85);
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
             background: white;
             width: 85%;
-            max-width: 500px;
+            max-width: 450px;
             padding: 40px;
-            border-radius: 20px;
+            border-radius: 30px;
             position: relative;
             text-align: center;
-            animation: popIn 0.3s ease-out;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+            animation: slideUp 0.4s ease-out;
         }
 
-        @keyframes popIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .joke-display {
-            font-size: 1.3rem;
-            line-height: 1.6;
-            color: #333;
-            min-height: 150px;
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: #2d3436;
+            min-height: 180px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 30px;
+            font-style: italic;
         }
 
         .nav-buttons {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
         }
 
         .nav-btn {
-            background: var(--secondary);
+            background: #f1f2f6;
             border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            color: white;
+            padding: 12px 25px;
+            border-radius: 12px;
+            color: var(--text-dark);
             cursor: pointer;
             font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #dfe6e9;
         }
 
         .close-btn {
             position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 2rem;
+            top: 20px;
+            right: 25px;
+            font-size: 1.8rem;
             cursor: pointer;
-            color: #999;
+            color: #b2bec3;
+            transition: color 0.2s;
         }
 
+        .close-btn:hover { color: #d63031; }
+
         .counter {
-            color: #666;
+            color: #636e72;
+            font-weight: bold;
             font-size: 0.9rem;
         }
     </style>
@@ -137,25 +191,25 @@
 <body>
 
 <div class="main-container">
-    <h1>😂 აირჩიე კატეგორია</h1>
+    <h1>😆 აირჩიე კატეგორია</h1>
     <div class="category-grid">
-        <button class="cat-btn" onclick="openJokes('kakhelebi')">🍇 კახელები</button>
-        <button class="cat-btn" onclick="openJokes('svanebi')">🏔️ სვანები</button>
-        <button class="cat-btn" onclick="openJokes('gurulebi')">🌿 გურულები</button>
-        <button class="cat-btn" onclick="openJokes('megrelebi')">🌽 იმერელი/მეგრელი</button>
-        <button class="cat-btn" onclick="openJokes('others')" style="grid-column: span 2; background: var(--accent);">🎭 სხვადასხვა</button>
+        <button class="cat-btn" onclick="openJokes('kakhelebi')"><span>🍇</span> კახელები</button>
+        <button class="cat-btn" onclick="openJokes('svanebi')"><span>🏔️</span> სვანები</button>
+        <button class="cat-btn" onclick="openJokes('gurulebi')"><span>🌿</span> გურულები</button>
+        <button class="cat-btn" onclick="openJokes('megrelebi')"><span>🌽</span> მეგრელი/იმერელი</button>
+        <button class="cat-btn special" onclick="openJokes('others')"><span>🎭</span> სხვადასხვა მხიარული</button>
     </div>
 </div>
 
 <div id="jokeModal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">&times;</span>
-        <div id="jokeText" class="joke-display">აქ გამოჩნდება ანეგდოტი...</div>
+        <div id="jokeText" class="joke-display">...</div>
         
         <div class="nav-buttons">
-            <button class="nav-btn" onclick="prevJoke()">⬅️ უკან</button>
+            <button class="nav-btn" onclick="prevJoke()">⬅️ წინა</button>
             <span id="jokeCounter" class="counter">1 / 10</span>
-            <button class="nav-btn" onclick="nextJoke()">წინ ➡️</button>
+            <button class="nav-btn" onclick="nextJoke()">შემდეგი ➡️</button>
         </div>
     </div>
 </div>
@@ -239,35 +293,27 @@
     }
 
     function updateJoke() {
-        document.getElementById('jokeText').innerText = currentCategory[currentIndex];
-        document.getElementById('jokeCounter').innerText = (currentIndex + 1) + " / " + currentCategory.length;
+        const jokeText = document.getElementById('jokeText');
+        jokeText.style.opacity = 0;
+        setTimeout(() => {
+            jokeText.innerText = currentCategory[currentIndex];
+            jokeText.style.opacity = 1;
+            document.getElementById('jokeCounter').innerText = (currentIndex + 1) + " / " + currentCategory.length;
+        }, 200);
     }
 
     function nextJoke() {
-        if (currentIndex < currentCategory.length - 1) {
-            currentIndex++;
-            updateJoke();
-        } else {
-            currentIndex = 0; // წრეზე დატრიალება
-            updateJoke();
-        }
+        currentIndex = (currentIndex < currentCategory.length - 1) ? currentIndex + 1 : 0;
+        updateJoke();
     }
 
     function prevJoke() {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateJoke();
-        } else {
-            currentIndex = currentCategory.length - 1;
-            updateJoke();
-        }
+        currentIndex = (currentIndex > 0) ? currentIndex - 1 : currentCategory.length - 1;
+        updateJoke();
     }
 
-    // ფანჯრის გარეთ დაწკაპუნებით დახურვა
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('jokeModal')) {
-            closeModal();
-        }
+    window.onclick = function(e) {
+        if (e.target == document.getElementById('jokeModal')) closeModal();
     }
 </script>
 
