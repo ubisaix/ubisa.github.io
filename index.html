@@ -82,7 +82,6 @@
             gap: 24px;
         }
 
-        /* WATERMARK STYLES */
         .img-wrapper {
             position: relative;
             width: 100%;
@@ -155,7 +154,6 @@
             filter: brightness(0) invert(1);
         }
 
-        /* ADS SECTION */
         .ads-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -182,7 +180,6 @@
         }
         .ad-banner:hover { border-color: var(--fiber-green); background: #f0fdf4; color: var(--fiber-green); }
 
-        /* PAGINATION STYLES */
         .pagination {
             display: flex;
             justify-content: center;
@@ -213,13 +210,11 @@
             background: #e5e7eb;
         }
 
-        /* RECIPE PAGE */
         #recipe-page { display: none; animation: slideIn 0.4s ease-out; }
         @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         .recipe-header { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
         
-        /* Recipe specific watermark wrapper */
         .recipe-img-container { 
             position: relative; 
             width: 100%; 
@@ -234,8 +229,21 @@
         .info-item b { display: block; font-size: 20px; color: var(--fiber-green); font-weight: 800; }
         .info-item span { font-size: 13px; color: var(--text-gray); }
 
-        .ingredients-list { list-style: none; padding: 0; line-height: 2.5; font-size: 16px; }
-        .ingredients-list li::before { content: "→"; color: var(--fiber-green); margin-right: 10px; font-weight: bold; }
+        /* კომპაქტური ინგრედიენტების სვეტები */
+        .ingredients-list { 
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 30px;
+            list-style: none; 
+            padding: 0; 
+            font-size: 15px; 
+        }
+        .ingredients-list li {
+            border-bottom: 1px solid #f9fafb;
+            padding: 8px 0;
+            line-height: 1.4;
+        }
+        .ingredients-list li::before { content: "•"; color: var(--fiber-green); margin-right: 10px; font-weight: bold; }
 
         .back-btn { 
             background: #f3f4f6; border: none; padding: 12px 24px; 
@@ -244,7 +252,6 @@
         }
         .back-btn:hover { background: #e5e7eb; }
 
-        /* SIMILAR RECIPES STYLES */
         .similar-section { margin-top: 25px; width: 100%; }
         .similar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
         .similar-card { 
@@ -263,7 +270,40 @@
             font-size: 11px; font-weight: 600; text-transform: uppercase;
         }
 
-        /* FOOTER STYLES */
+        /* კომენტარების სექცია */
+        .comments-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+        }
+        .comment-form textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-family: inherit;
+            margin-bottom: 10px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        .comment-btn {
+            background: var(--fiber-green);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .comments-list { margin-top: 25px; }
+        .comment-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #f9fafb;
+        }
+        .comment-author { font-weight: 700; font-size: 14px; margin-bottom: 5px; }
+        .comment-text { font-size: 14px; color: var(--text-gray); }
+
         footer { border-top: 1px solid var(--border); padding: 60px 8%; display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; }
         footer h4 { color: var(--fiber-green); font-size: 12px; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px; }
         footer ul { list-style: none; padding: 0; }
@@ -284,6 +324,7 @@
             .menu-grid, .ads-container { grid-template-columns: repeat(2, 1fr); }
             .recipe-header { grid-template-columns: 1fr; }
             .recipe-img-container { height: 350px; }
+            .ingredients-list { grid-template-columns: 1fr; }
             footer { grid-template-columns: 1fr; gap: 30px; }
         }
     </style>
@@ -471,6 +512,7 @@
                     <div class="watermark" style="font-size:14px; padding:8px 15px;">UBISA.GE</div>
                     <img src="${item.img}" class="recipe-img">
                 </div>
+                
                 <div class="similar-section">
                     <h4 style="font-size:12px; color:var(--text-gray); text-transform:uppercase; margin:0">მსგავსი რეცეპტები</h4>
                     <div class="similar-grid">
@@ -482,7 +524,22 @@
                         `).join('')}
                     </div>
                 </div>
+
+                <div class="comments-section">
+                    <h4 style="font-size:12px; color:var(--text-gray); text-transform:uppercase; margin-bottom:15px">კომენტარები</h4>
+                    <div class="comment-form">
+                        <textarea placeholder="დატოვეთ თქვენი აზრი..."></textarea>
+                        <button class="comment-btn">გაგზავნა</button>
+                    </div>
+                    <div class="comments-list">
+                        <div class="comment-item">
+                            <div class="comment-author">მარიამი</div>
+                            <div class="comment-text">ძალიან გემრიელი გამოვიდა, მადლობა რეცეპტისთვის!</div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div>
                 <h2>${item.name}</h2>
                 <div class="info-bar">
