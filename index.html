@@ -595,9 +595,11 @@
                 <h2>${item.name}</h2>
                 <div class="info-bar">
                     <div class="info-item"><b>${item.time}</b><span>მომზადება</span></div>
+                    <div class="info-item"><b>${item.por}</b><span>პორცია</span></div>
+                    <div class="info-item"><b>${item.cal}</b><span>კალორია</span></div>
                     <div class="info-item"><b>${item.views}</b><span>ნახვები</span></div>
                     <div class="info-item"><b>${item.cat}</b><span>კატეგორია</span></div>
-                    <div class="info-item"><b>${item.cal}</b><span>კალორია</span></div>
+                
                 </div>
                 <h3>ინგრედიენტები</h3>
                 <ul class="ingredients-list">${item.ing.map(i => `<li>${i}</li>`).join('')}</ul>
