@@ -3,48 +3,56 @@
 <head>
     <title>რეცეპტის დამატება</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
-        input, textarea { width: 100%; padding: 8px; margin: 5px 0 15px; display: block; border: 1px solid #ccc; }
-        button { background: #28a745; color: white; padding: 10px 20px; border: none; cursor: pointer; }
-        #result { background: #f4f4f4; padding: 15px; border-left: 5px solid #28a745; white-space: pre-wrap; margin-top: 20px; }
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 800px; margin: auto; }
+        input, textarea { width: 100%; padding: 10px; margin: 5px 0 15px; display: block; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background: #28a745; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; margin-bottom: 10px; }
+        button:hover { background: #218838; }
+        #result { background: #f4f4f4; padding: 15px; border-left: 5px solid #28a745; word-break: break-all; margin-top: 20px; font-family: monospace; font-size: 13px; }
+        .copy-btn { background: #007bff; }
+        .copy-btn:hover { background: #0069d9; }
     </style>
 </head>
 <body>
 
-    <h3>დაამატე ახალი რეცეპტი</h3>
+    <h3>🚀 ახალი რეცეპტის გენერატორი</h3>
     
     ID: <input type="number" id="id" value="61">
     კატეგორია: <input type="text" id="cat" placeholder="მაგ: სალათები">
-    სახელი: <input type="text" id="name" placeholder="მაგ: ბორში">
-    დრო: <input type="text" id="time" placeholder="მაგ: 1 სთ">
-    კალორია: <input type="text" id="cal" placeholder="247">
-    პორცია: <input type="text" id="por" placeholder="7">
+    სახელი: <input type="text" id="name" placeholder="მაგ: ჭარხლის სალათი">
+    დრო: <input type="text" id="time" placeholder="მაგ: 1 სთ 30 წთ">
+    კალორია: <input type="text" id="cal" placeholder="830">
+    პორცია: <input type="text" id="por" placeholder="4">
     სურათის ლინკი: <input type="text" id="img" placeholder="https://...">
-    ინგრედიენტები (გამოყავი მძიმით): <textarea id="ing" rows="2"></textarea>
-    მომზადების ტექსტი: <textarea id="text" rows="3"></textarea>
+    ინგრედიენტები (გამოყავი მძიმით): <textarea id="ing" rows="2" placeholder="ნიორი, ხახვი, მარილი..."></textarea>
+    მომზადების ტექსტი: <textarea id="text" rows="3" placeholder="დაწერეთ მომზადების წესი..."></textarea>
 
-    <button onclick="generate()">კოდის გენერაცია</button>
+    <button onclick="generate()">⚡ კოდის გენერაცია (ერთ ხაზზე)</button>
+    <button onclick="copyToClipboard()" class="copy-btn">📋 კოდის კოპირება</button>
 
-    <div id="result">აქ გამოჩნდება მზა კოდი...</div>
+    <div id="result">აქ გამოჩნდება ერთხაზიანი კოდი...</div>
 
     <script>
         function generate() {
-            const ingArr = document.getElementById('ing').value.split(',').map(i => `"${i.trim()}"`);
+            // ინგრედიენტების დამუშავება
+            const rawIng = document.getElementById('ing').value;
+            const ingArr = rawIng ? rawIng.split(',').map(i => `"${i.trim()}"`) : [];
             
-            const obj = `{ 
-  id: ${document.getElementById('id').value}, 
-  cat: "${document.getElementById('cat').value}", 
-  name: "${document.getElementById('name').value}", 
-  time: "${document.getElementById('time').value}", 
-  views: "0", 
-  cal: "${document.getElementById('cal').value}", 
-  por: "${document.getElementById('por').value}", 
-  img: "${document.getElementById('img').value}", 
-  ing: [${ingArr.join(", ")}], 
-  text: "${document.getElementById('text').value.replace(/\n/g, " ")}" 
-},`;
+            // ტექსტის გასუფთავება (რომ ენტერებმა არ გაწყვიტოს ხაზი)
+            const cleanText = document.getElementById('text').value.replace(/\n/g, " ").replace(/"/g, '\\"');
+            
+            // ერთ ხაზზე აწყობა
+            const obj = `{ id: ${document.getElementById('id').value}, cat: "${document.getElementById('cat').value}", name: "${document.getElementById('name').value}", time: "${document.getElementById('time').value}", views: "0", cal: "${document.getElementById('cal').value}", por: "${document.getElementById('por').value}", img: "${document.getElementById('img').value}", ing: [${ingArr.join(", ")}], text: "${cleanText}" },`;
 
             document.getElementById('result').innerText = obj;
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('result').innerText;
+            if(text === "აქ გამოჩნდება ერთხაზიანი კოდი...") return;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert("კოდი დაკოპირდა ერთ ხაზად!");
+            });
         }
     </script>
 </body>
