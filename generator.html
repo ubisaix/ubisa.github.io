@@ -7,21 +7,31 @@
         input, textarea { width: 100%; padding: 10px; margin: 5px 0 15px; display: block; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
         button { background: #28a745; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; margin-bottom: 10px; }
         button:hover { background: #218838; }
-        #result { background: #f4f4f4; padding: 15px; border-left: 5px solid #28a745; word-break: break-all; margin-top: 20px; font-family: monospace; font-size: 13px; }
+        #result { background: #f4f4f4; padding: 15px; border-left: 5px solid #28a745; word-break: break-all; margin-top: 20px; font-family: monospace; font-size: 13px; min-height: 40px; }
         .copy-btn { background: #007bff; }
         .copy-btn:hover { background: #0069d9; }
+        .row { display: flex; gap: 10px; }
+        .row div { flex: 1; }
     </style>
 </head>
 <body>
 
     <h3>🚀 ახალი რეცეპტის გენერატორი</h3>
     
-    ID: <input type="number" id="id" value="61">
+    <div class="row">
+        <div>ID: <input type="number" id="id" value="61"></div>
+        <div>ნახვები: <input type="number" id="views" value="0"></div>
+    </div>
+
     კატეგორია: <input type="text" id="cat" placeholder="მაგ: სალათები">
     სახელი: <input type="text" id="name" placeholder="მაგ: ჭარხლის სალათი">
-    დრო: <input type="text" id="time" placeholder="მაგ: 1 სთ 30 წთ">
-    კალორია: <input type="text" id="cal" placeholder="830">
-    პორცია: <input type="text" id="por" placeholder="4">
+    
+    <div class="row">
+        <div>დრო: <input type="text" id="time" placeholder="მაგ: 1 სთ 30 წთ"></div>
+        <div>კალორია: <input type="text" id="cal" placeholder="830"></div>
+        <div>პორცია: <input type="text" id="por" placeholder="4"></div>
+    </div>
+
     სურათის ლინკი: <input type="text" id="img" placeholder="https://...">
     ინგრედიენტები (გამოყავი მძიმით): <textarea id="ing" rows="2" placeholder="ნიორი, ხახვი, მარილი..."></textarea>
     მომზადების ტექსტი: <textarea id="text" rows="3" placeholder="დაწერეთ მომზადების წესი..."></textarea>
@@ -40,20 +50,31 @@
             // ტექსტის გასუფთავება (რომ ენტერებმა არ გაწყვიტოს ხაზი)
             const cleanText = document.getElementById('text').value.replace(/\n/g, " ").replace(/"/g, '\\"');
             
-            // ერთ ხაზზე აწყობა
-            const obj = `{ id: ${document.getElementById('id').value}, cat: "${document.getElementById('cat').value}", name: "${document.getElementById('name').value}", time: "${document.getElementById('time').value}", views: "0", cal: "${document.getElementById('cal').value}", por: "${document.getElementById('por').value}", img: "${document.getElementById('img').value}", ing: [${ingArr.join(", ")}], text: "${cleanText}" },`;
+            // მნიშვნელობების წამოღება
+            const id = document.getElementById('id').value;
+            const views = document.getElementById('views').value;
+            const cat = document.getElementById('cat').value;
+            const name = document.getElementById('name').value;
+            const time = document.getElementById('time').value;
+            const cal = document.getElementById('cal').value;
+            const por = document.getElementById('por').value;
+            const img = document.getElementById('img').value;
+
+            // ერთ ხაზზე აწყობა (ავტომატური მძიმით ბოლოში)
+            const obj = `{ id: ${id}, cat: "${cat}", name: "${name}", time: "${time}", views: "${views}", cal: "${cal}", por: "${por}", img: "${img}", ing: [${ingArr.join(", ")}], text: "${cleanText}" },`;
 
             document.getElementById('result').innerText = obj;
         }
 
         function copyToClipboard() {
             const text = document.getElementById('result').innerText;
-            if(text === "აქ გამოჩნდება ერთხაზიანი კოდი...") return;
+            if(text === "" || text.startsWith("აქ გამოჩნდება")) return;
             
             navigator.clipboard.writeText(text).then(() => {
-                alert("კოდი დაკოპირდა ერთ ხაზად!");
+                alert("კოდი დაკოპირდა მძიმითურთ!");
             });
         }
     </script>
+
 </body>
 </html>
