@@ -7,7 +7,20 @@
         input, textarea { width: 100%; padding: 10px; margin: 5px 0 15px; display: block; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
         button { background: #28a745; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; margin-bottom: 10px; }
         button:hover { background: #218838; }
-        #result { background: #f4f4f4; padding: 15px; border-left: 5px solid #28a745; word-break: break-all; margin-top: 20px; font-family: monospace; font-size: 13px; min-height: 40px; }
+        
+        /* აქ ჩავამატე სტილი, რომ აუცილებლად ერთ ხაზზე გამოჩნდეს */
+        #result { 
+            background: #f4f4f4; 
+            padding: 15px; 
+            border-left: 5px solid #28a745; 
+            margin-top: 20px; 
+            font-family: monospace; 
+            font-size: 13px; 
+            min-height: 40px;
+            white-space: nowrap; /* არ გადაიტანოს სიტყვა ახალ ხაზზე */
+            overflow-x: auto;    /* თუ გრძელია, გაჩნდეს სქროლი */
+        }
+        
         .copy-btn { background: #007bff; }
         .copy-btn:hover { background: #0069d9; }
         .row { display: flex; gap: 10px; }
@@ -43,14 +56,12 @@
 
     <script>
         function generate() {
-            // ინგრედიენტების დამუშავება
             const rawIng = document.getElementById('ing').value;
             const ingArr = rawIng ? rawIng.split(',').map(i => `"${i.trim()}"`) : [];
             
-            // ტექსტის გასუფთავება (რომ ენტერებმა არ გაწყვიტოს ხაზი)
-            const cleanText = document.getElementById('text').value.replace(/\n/g, " ").replace(/"/g, '\\"');
+            // ტექსტის გასუფთავება (აშორებს ყველა ზედმეტ დაშორებას და ენთერს)
+            const cleanText = document.getElementById('text').value.replace(/\s+/g, " ").trim().replace(/"/g, '\\"');
             
-            // მნიშვნელობების წამოღება
             const id = document.getElementById('id').value;
             const views = document.getElementById('views').value;
             const cat = document.getElementById('cat').value;
@@ -60,8 +71,8 @@
             const por = document.getElementById('por').value;
             const img = document.getElementById('img').value;
 
-            // ერთ ხაზზე აწყობა (ავტომატური მძიმით ბოლოში)
-            const obj = `{ id: ${id}, cat: "${cat}", name: "${name}", time: "${time}", views: "${views}", cal: "${cal}", por: "${por}", img: "${img}", ing: [${ingArr.join(", ")}], text: "${cleanText}" },`;
+            // კონსტრუქცია აბსოლუტურად ყოველგვარი ზედმეტი სფეისის გარეშე ობიექტებს შორის
+            const obj = `{id:${id},cat:"${cat}",name:"${name}",time:"${time}",views:"${views}",cal:"${cal}",por:"${por}",img:"${img}",ing:[${ingArr.join(",")}],text:"${cleanText}"},`;
 
             document.getElementById('result').innerText = obj;
         }
@@ -71,7 +82,7 @@
             if(text === "" || text.startsWith("აქ გამოჩნდება")) return;
             
             navigator.clipboard.writeText(text).then(() => {
-                alert("კოდი დაკოპირდა მძიმითურთ!");
+                alert("კოდი დაკოპირდა ერთ ხაზად!");
             });
         }
     </script>
