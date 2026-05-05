@@ -8,7 +8,6 @@
         button { background: #28a745; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; margin-bottom: 10px; }
         button:hover { background: #218838; }
         
-        /* აქ ჩავამატე სტილი, რომ აუცილებლად ერთ ხაზზე გამოჩნდეს */
         #result { 
             background: #f4f4f4; 
             padding: 15px; 
@@ -17,8 +16,8 @@
             font-family: monospace; 
             font-size: 13px; 
             min-height: 40px;
-            white-space: nowrap; /* არ გადაიტანოს სიტყვა ახალ ხაზზე */
-            overflow-x: auto;    /* თუ გრძელია, გაჩნდეს სქროლი */
+            white-space: nowrap; /* ხელოვნურად უშლის ხაზის გადატანას */
+            overflow-x: auto;    /* აჩენს სქროლს სიგრძეზე */
         }
         
         .copy-btn { background: #007bff; }
@@ -33,7 +32,7 @@
     
     <div class="row">
         <div>ID: <input type="number" id="id" value="61"></div>
-        <div>ნახვები: <input type="number" id="views" value="0"></div>
+        <div>ნახვები: <input type="text" id="views" value="0"></div>
     </div>
 
     კატეგორია: <input type="text" id="cat" placeholder="მაგ: სალათები">
@@ -56,11 +55,12 @@
 
     <script>
         function generate() {
+            // ინგრედიენტების დამუშავება - სუფთა მასივი ერთ ხაზზე
             const rawIng = document.getElementById('ing').value;
             const ingArr = rawIng ? rawIng.split(',').map(i => `"${i.trim()}"`) : [];
             
-            // ტექსტის გასუფთავება (აშორებს ყველა ზედმეტ დაშორებას და ენთერს)
-            const cleanText = document.getElementById('text').value.replace(/\s+/g, " ").trim().replace(/"/g, '\\"');
+            // ტექსტის გასუფთავება - აშორებს ენთერებს და ზედმეტ სფეისებს
+            const cleanText = document.getElementById('text').value.replace(/\n/g, " ").replace(/\s+/g, " ").trim().replace(/"/g, '\\"');
             
             const id = document.getElementById('id').value;
             const views = document.getElementById('views').value;
@@ -71,7 +71,7 @@
             const por = document.getElementById('por').value;
             const img = document.getElementById('img').value;
 
-            // კონსტრუქცია აბსოლუტურად ყოველგვარი ზედმეტი სფეისის გარეშე ობიექტებს შორის
+            // შაბლონი ყოველგვარი დაშორების გარეშე
             const obj = `{id:${id},cat:"${cat}",name:"${name}",time:"${time}",views:"${views}",cal:"${cal}",por:"${por}",img:"${img}",ing:[${ingArr.join(",")}],text:"${cleanText}"},`;
 
             document.getElementById('result').innerText = obj;
