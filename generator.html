@@ -1,93 +1,115 @@
 <!DOCTYPE html>
-<html>
+<html lang="ka">
 <head>
-    <title>რეცეპტის დამატება</title>
+    <meta charset="UTF-8">
+    <title>რეცეპტების გენერატორი</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 800px; margin: auto; }
-        input, textarea { width: 100%; padding: 10px; margin: 5px 0 15px; display: block; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { background: #28a745; color: white; padding: 12px 20px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; margin-bottom: 10px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background: #f0f2f5; color: #333; }
+        .container { max-width: 700px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 25px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .field { margin-bottom: 15px; }
+        .full-width { grid-column: span 2; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; color: #555; }
+        input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        input:focus, textarea:focus { border-color: #007bff; outline: none; box-shadow: 0 0 5px rgba(0,123,255,0.2); }
+        textarea { height: 100px; resize: vertical; }
+        button { background: #28a745; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: 0.3s; margin-top: 10px; }
         button:hover { background: #218838; }
-        
-        #result { 
-            background: #f4f4f4; 
-            padding: 15px; 
-            border-left: 5px solid #28a745; 
-            margin-top: 20px; 
-            font-family: monospace; 
-            font-size: 13px; 
-            min-height: 40px;
-            /* ეს აკეთებს ერთ გრძელ ხაზს */
-            white-space: pre; 
-            overflow-x: auto;
-            display: block;
-        }
-        
-        .copy-btn { background: #007bff; }
+        #result { margin-top: 20px; width: 100%; height: 120px; background: #2d2d2d; color: #9cdcfe; padding: 15px; font-family: 'Courier New', Courier, monospace; border-radius: 6px; border: none; font-size: 13px; }
+        .copy-btn { background: #007bff; margin-top: 10px; }
         .copy-btn:hover { background: #0069d9; }
-        .row { display: flex; gap: 10px; }
-        .row div { flex: 1; }
     </style>
 </head>
 <body>
 
-    <h3>🚀 რეცეპტის ერთხაზიანი გენერატორი</h3>
+<div class="container">
+    <h2>🍳 რეცეპტის გენერატორი</h2>
     
-    <div class="row">
-        <div>ID: <input type="number" id="id" value="61"></div>
-        <div>ნახვები: <input type="text" id="views" placeholder="მაგ: 1.433k"></div>
+    <div class="grid">
+        <div class="field">
+            <label>ID:</label>
+            <input type="number" id="id" placeholder="მაგ: 62">
+        </div>
+        <div class="field">
+            <label>ნახვები (views):</label>
+            <input type="number" id="views" placeholder="0" value="0">
+        </div>
+        <div class="field">
+            <label>კატეგორია (cat):</label>
+            <input type="text" id="cat" placeholder="სალათები">
+        </div>
+        <div class="field">
+            <label>სახელი (name):</label>
+            <input type="text" id="name" placeholder="სოკოს სალათი">
+        </div>
+        <div class="field">
+            <label>დრო (time):</label>
+            <input type="text" id="time" placeholder="30წთ">
+        </div>
+        <div class="field">
+            <label>კალორია (cal):</label>
+            <input type="text" id="cal" placeholder="20">
+        </div>
+        <div class="field">
+            <label>პორცია (por):</label>
+            <input type="text" id="por" placeholder="6">
+        </div>
+        <div class="field">
+            <label>სურათის ლინკი (img):</label>
+            <input type="text" id="img" placeholder="URL მისამართი">
+        </div>
+        <div class="field full-width">
+            <label>ინგრედიენტები (თითოეული ახალ ხაზზე):</label>
+            <textarea id="ing" placeholder="250 გრ ქამა სოკო&#10;1/2 ჭიქა ბულგარული"></textarea>
+        </div>
+        <div class="field full-width">
+            <label>მომზადების წესი (text):</label>
+            <textarea id="text" placeholder="აღწერეთ მომზადების ნაბიჯები..."></textarea>
+        </div>
     </div>
 
-    კატეგორია: <input type="text" id="cat" placeholder="სალათები">
-    სახელი: <input type="text" id="name" placeholder="სახელი">
-    
-    <div class="row">
-        <div>დრო: <input type="text" id="time" placeholder="1 სთ"></div>
-        <div>კალორია: <input type="text" id="cal" placeholder="247"></div>
-        <div>პორცია: <input type="text" id="por" placeholder="7"></div>
-    </div>
+    <button onclick="generateJSON()">✨ კოდის გენერაცია</button>
 
-    სურათის ლინკი: <input type="text" id="img" placeholder="https://...">
-    ინგრედიენტები (გამოყავით მძიმით): <textarea id="ing" rows="2"></textarea>
-    მომზადების ტექსტი: <textarea id="text" rows="2"></textarea>
+    <textarea id="result" readonly></textarea>
+    <button class="copy-btn" onclick="copyCode()">📋 კოდის დაკოპირება</button>
+</div>
 
-    <button onclick="generate()">⚡ კოდის გენერაცია</button>
-    <button onclick="copyToClipboard()" class="copy-btn">📋 კოდის კოპირება</button>
+<script>
+    function generateJSON() {
+        const id = document.getElementById('id').value || "0";
+        const cat = document.getElementById('cat').value;
+        const name = document.getElementById('name').value;
+        const time = document.getElementById('time').value;
+        const views = document.getElementById('views').value || "0";
+        const cal = document.getElementById('cal').value;
+        const por = document.getElementById('por').value;
+        const img = document.getElementById('img').value;
+        const text = document.getElementById('text').value;
 
-    <div id="result">აქ გამოჩნდება ერთხაზიანი კოდი...</div>
+        // ინგრედიენტების დამუშავება
+        const ingRaw = document.getElementById('ing').value.split('\n');
+        const ingArr = ingRaw
+            .filter(item => item.trim() !== "")
+            .map(item => `"${item.trim().replace(/"/g, "'")}"`);
 
-    <script>
-        function clean(str) {
-            // აშორებს ხაზის გადატანებს და ზედმეტ დაშორებებს ობიექტის შიგნით
-            return str.replace(/\r?\n|\r/g, " ").replace(/\s+/g, " ").trim();
-        }
+        // ტექსტის გასუფთავება (რომ JSON არ გაფუჭდეს)
+        const cleanText = text.replace(/\n/g, " ").replace(/"/g, "'").trim();
 
-        function generate() {
-            const rawIng = document.getElementById('ing').value;
-            // ინგრედიენტების მასივი ზედმეტი სფეისების გარეშე
-            const ingArr = rawIng ? rawIng.split(',').map(i => `"${clean(i)}"`).join(",") : "";
-            
-            const id = document.getElementById('id').value;
-            const views = clean(document.getElementById('views').value);
-            const cat = clean(document.getElementById('cat').value);
-            const name = clean(document.getElementById('name').value);
-            const time = clean(document.getElementById('time').value);
-            const cal = clean(document.getElementById('cal').value);
-            const por = clean(document.getElementById('por').value);
-            const img = clean(document.getElementById('img').value);
-            const text = clean(document.getElementById('text').value);
+        // ერთი ხაზი ფორმატი
+        const result = `{ id: ${id}, cat: "${cat}", name: "${name}", time: "${time}", views: "${views}", cal: "${cal}", por: "${por}", img: "${img}", ing: [${ingArr.join(", ")}], text: "${cleanText}" },`;
 
-            // აწყობს ზუსტად ერთ ხაზზე, მძიმით ბოლოში
-            const obj = `{id:${id},cat:"${cat}",name:"${name}",time:"${time}",views:"${views}",cal:"${cal}",por:"${por}",img:"${img}",ing:[${ingArr}],text:"${text}"},`;
+        document.getElementById('result').value = result;
+    }
 
-            document.getElementById('result').innerText = obj;
-        }
-
-        function copyToClipboard() {
-            const text = document.getElementById('result').innerText;
-            if(!text || text.includes("აქ გამოჩნდება")) return;
-            navigator.clipboard.writeText(text).then(() => alert("კოპირებულია!"));
-        }
-    </script>
+    function copyCode() {
+        const copyText = document.getElementById("result");
+        if(!copyText.value) return;
+        copyText.select();
+        document.execCommand("copy");
+        alert("კოდი წარმატებით დაკოპირდა!");
+    }
+</script>
 
 </body>
 </html>
