@@ -16,8 +16,10 @@
             font-family: monospace; 
             font-size: 13px; 
             min-height: 40px;
-            white-space: nowrap; /* ხელოვნურად უშლის ხაზის გადატანას */
-            overflow-x: auto;    /* აჩენს სქროლს სიგრძეზე */
+            /* აიძულებს ტექსტს იყოს ერთ ხაზზე */
+            white-space: nowrap; 
+            overflow-x: scroll;
+            display: block;
         }
         
         .copy-btn { background: #007bff; }
@@ -28,7 +30,7 @@
 </head>
 <body>
 
-    <h3>🚀 ახალი რეცეპტის გენერატორი</h3>
+    <h3>🚀 რეცეპტის ერთხაზიანი გენერატორი</h3>
     
     <div class="row">
         <div>ID: <input type="number" id="id" value="61"></div>
@@ -45,34 +47,43 @@
     </div>
 
     სურათის ლინკი: <input type="text" id="img" placeholder="https://...">
-    ინგრედიენტები (გამოყავი მძიმით): <textarea id="ing" rows="2" placeholder="ნიორი, ხახვი, მარილი..."></textarea>
+    ინგრედიენტები (ჩაწერეთ სათითაოდ ან გადმოაკოპირეთ): <textarea id="ing" rows="3" placeholder="ხორცი, მარილი, წიწაკა..."></textarea>
     მომზადების ტექსტი: <textarea id="text" rows="3" placeholder="დაწერეთ მომზადების წესი..."></textarea>
 
-    <button onclick="generate()">⚡ კოდის გენერაცია (ერთ ხაზზე)</button>
+    <button onclick="generate()">⚡ კოდის გენერაცია (1 ხაზზე)</button>
     <button onclick="copyToClipboard()" class="copy-btn">📋 კოდის კოპირება</button>
 
     <div id="result">აქ გამოჩნდება ერთხაზიანი კოდი...</div>
 
     <script>
+        function cleanString(str) {
+            // აშორებს ხაზის გადატანებს, ტაბებს და ზედმეტ სფეისებს
+            return str.replace(/\r?\n|\r/g, " ").replace(/\s+/g, " ").trim().replace(/"/g, '\\"');
+        }
+
         function generate() {
-            // ინგრედიენტების დამუშავება - სუფთა მასივი ერთ ხაზზე
+            // ინგრედიენტების დამუშავება: ვყოფთ მძიმით ან ხაზის გადატანით
             const rawIng = document.getElementById('ing').value;
-            const ingArr = rawIng ? rawIng.split(',').map(i => `"${i.trim()}"`) : [];
+            let ingArr = [];
             
-            // ტექსტის გასუფთავება - აშორებს ენთერებს და ზედმეტ სფეისებს
-            const cleanText = document.getElementById('text').value.replace(/\n/g, " ").replace(/\s+/g, " ").trim().replace(/"/g, '\\"');
+            if (rawIng) {
+                // ვყოფთ ან მძიმით, ან ახალი ხაზით
+                ingArr = rawIng.split(/[,\n]/).map(i => i.trim()).filter(i => i !== "");
+                ingArr = ingArr.map(i => `"${i}"`);
+            }
             
             const id = document.getElementById('id').value;
-            const views = document.getElementById('views').value;
-            const cat = document.getElementById('cat').value;
-            const name = document.getElementById('name').value;
-            const time = document.getElementById('time').value;
-            const cal = document.getElementById('cal').value;
-            const por = document.getElementById('por').value;
-            const img = document.getElementById('img').value;
+            const views = cleanString(document.getElementById('views').value);
+            const cat = cleanString(document.getElementById('cat').value);
+            const name = cleanString(document.getElementById('name').value);
+            const time = cleanString(document.getElementById('time').value);
+            const cal = cleanString(document.getElementById('cal').value);
+            const por = cleanString(document.getElementById('por').value);
+            const img = cleanString(document.getElementById('img').value);
+            const text = cleanString(document.getElementById('text').value);
 
-            // შაბლონი ყოველგვარი დაშორების გარეშე
-            const obj = `{id:${id},cat:"${cat}",name:"${name}",time:"${time}",views:"${views}",cal:"${cal}",por:"${por}",img:"${img}",ing:[${ingArr.join(",")}],text:"${cleanText}"},`;
+            // საბოლოო ობიექტი აბსოლუტურად ყველანაირი დაშორების გარეშე
+            const obj = `{id:${id},cat:"${cat}",name:"${name}",time:"${time}",views:"${views}",cal:"${cal}",por:"${por}",img:"${img}",ing:[${ingArr.join(",")}],text:"${text}"},`;
 
             document.getElementById('result').innerText = obj;
         }
@@ -82,7 +93,7 @@
             if(text === "" || text.startsWith("აქ გამოჩნდება")) return;
             
             navigator.clipboard.writeText(text).then(() => {
-                alert("კოდი დაკოპირდა ერთ ხაზად!");
+                alert("წარმატებით დაკოპირდა ერთ ხაზად!");
             });
         }
     </script>
