@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>უბისის წმინდა გიორგის გალერია</title>
+    <style>
+        :root { --bg:#0f1320; --panel:#13182a; --text:#eef2ff; --muted:#a9b1c7; --accent:#d4af37; --accent-2:#274690; }
+        * { box-sizing:border-box; }
+        body {
+            margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto;
+            background: linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.7)), url('https://ubisa.ge/ukana.jpg') center/cover fixed no-repeat;
+            color:var(--text); min-height:100vh; display:grid; grid-template-rows:auto 1fr; user-select:none;
+        }
+        header { padding:14px 20px; background:rgba(19,24,42,.7); border-bottom:1px solid rgba(255,255,255,.08); display:flex; align-items:center; justify-content:space-between; gap:20px; }
+        .brand { display:flex; align-items:center; gap:10px; }
+        .cross { width:18px;height:18px; border:2px solid var(--accent); position:relative; }
+        .cross::before,.cross::after { content:"";position:absolute;background:var(--accent); }
+        .cross::before {width:2px;height:18px;left:50%;transform:translateX(-50%);}
+        .cross::after {height:2px;width:18px;top:50%;transform:translateY(-50%);}
+        .title { font-weight:600; }
+        .nav { display:flex; gap:14px; flex-wrap:wrap; }
+        .nav a { color:var(--text); text-decoration:none; font-size:14px; padding:6px 10px; border-radius:8px; border:1px solid transparent; }
+        .nav a:hover { color:var(--accent); border-color:var(--accent); }
+        .tools { display:flex; gap:10px; }
+        .btn { padding:8px 12px; font-size:14px; border:1px solid rgba(255,255,255,.12); background:transparent; color:var(--text); border-radius:8px; cursor:pointer; }
+        
+        .gallery { max-width:1100px; margin:0 auto; padding:16px; }
+        .slider { position:relative; width:100%; aspect-ratio:16/9; border-radius:14px; overflow:hidden; background:#000; }
+        .slide-bg { position:absolute; inset:0; background-size:cover; background-position:center; filter:blur(30px) brightness(.6); transform:scale(1.2); z-index:0; }
+        .slides { display:flex; height:100%; transition:transform .4s ease; position:relative; z-index:1; }
+        .slide { flex:0 0 100%; display:flex; align-items:center; justify-content:center; position:relative; }
+        .slide img { max-width:100%; max-height:100%; object-fit:contain; pointer-events:none; }
+        .caption { position:absolute; left:12px; bottom:12px; background:rgba(0,0,0,.45); padding:6px 10px; border-radius:8px; font-size:13px; z-index:4; }
+        .control { position:absolute; top:50%; transform:translateY(-50%); width:42px; height:42px; border-radius:50%; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.4); color:#fff; display:grid; place-items:center; cursor:pointer; z-index:5; }
+        .prev { left:12px; } .next { right:12px; }
+
+        .thumbs-container { margin-top:12px; background:rgba(19,24,42,.7); padding:10px; border-radius:12px; }
+        .thumbs { display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:8px; }
+        .thumb { aspect-ratio:4/3; overflow:hidden; border-radius:10px; border:1px solid rgba(255,255,255,.1); cursor:pointer; }
+        .thumb img { width:100%; height:100%; object-fit:cover; pointer-events:none; }
+        .thumb.active { outline:2px solid var(--accent); }
+
+        /* Pagination Styles */
+        .pager { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .page-info { font-size: 14px; color: var(--muted); }
+
+        @media(max-width:800px){ header { flex-wrap:wrap; } }
+    </style>
+</head>
+<body>
+<header>
+    <div class="brand"> <span class="cross"></span> <span class="title">მე მიყვარს უბისა</span> </div>
+    <nav class="nav">
+        <a href="index.html">მთავარი</a> <a href="/saitebi.html">საიტები</a> <a href="/horoskopi.html">ჰოროსკოპი</a>
+        <a href="/video.html">ვიდეო პორტალი</a> <a href="/ambebi.html">სიახლეები</a> <a href="/amindi.html">ამინდი</a>
+        <a href="/calculator.html">გამოთვლა</a> <a href="/tv.html">ტელევიზია</a> <a href="/time.html">მსოფლიო დრო</a>
+        <a href="/contact.html">კონტაქტი</a>
+    </nav>
+    <div class="tools">
+        <button class="btn" id="autoBtn">ავტო სლაიდი</button>
+        <button class="btn" id="shuffleBtn">შემთხვევითი</button>
+    </div>
+</header>
+
+<main class="gallery">
+    <section class="slider">
+        <div class="slide-bg" id="slideBg"></div>
+        <button class="control prev" id="prevBtn">‹</button>
+        <div class="slides" id="slides"></div>
+        <button class="control next" id="nextBtn">›</button>
+    </section>
+    
+    <section class="thumbs-container">
+        <div class="thumbs" id="thumbs"></div>
+        <div class="pager">
+            <button class="btn" id="prevPage">« წინა</button>
+            <span class="page-info" id="pageInfo">გვერდი 1 / 10</span>
+            <button class="btn" id="nextPage">შემდეგი »</button>
+        </div>
+    </section>
+</main>
+
+<script>
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+const images = [
+    {src:"https://ubisa.ge/gal/110.jpg", cap:"ჯონი სახვაძე"}, {src:"https://ubisa.ge/gal/108.jpg", cap:"ჯონი სახვაძე"},
+    {src:"https://ubisa.ge/gal/107.jpg", cap:"ჯონი სახვაძე"}, {src:"https://ubisa.ge/gal/106.jpg", cap:"ჯონი სახვაძე"},
+    {src:"https://ubisa.ge/gal/105.jpg", cap:"ჯონი სახვაძე"}, {src:"https://ubisa.ge/gal/104.jpg", cap:"ჯონი სახვაძე"},
+    {src:"https://ubisa.ge/gal/103.jpg", cap:"ჯონი სახვაძე"}, {src:"https://ubisa.ge/gal/102.jpg", cap:"ჯონი სახვაძე"},
+    {src:"https://ubisa.ge/gal/101.jpg", cap:"ჯონი სახვაძე"}, {src:"https://ubisa.ge/gal/100.jpg", cap:"ჯონი სახვაძე"},
+    {src:"https://ubisa.ge/gal/99.jpg", cap:"ჯონი სახვაძე"}, {src:"https://ubisa.ge/gal/98.jpg", cap:"ჯონი სახვაძე"},
+    {src:"https://ubisa.ge/gal/97.jpg", cap:"ჯონი სახვაძე"}, {src:"https://ubisa.ge/gal/96.jpg", cap:"ჯონი სახვაძე"},
+    {src:"https://ubisa.ge/gal/95.jpg", cap:"ჯონი სახვაძე"}, {src:"https://ubisa.ge/gal/94.jpg", cap:"ჯონი სახვაძე"},
+    {src:"https://ubisa.ge/gal/93.jpg", cap:"ჯონი სახვაძე"}, {src:"https://ubisa.ge/gal/92.jpg", cap:"ჯონი სახვაძე"},
+    {src:"https://ubisa.ge/gal/91.jpg", cap:"ჯონი სახვაძე"}, {src:"https://ubisa.ge/gal/90.jpg", cap:"ჯონი სახვაძე"},
+    {src:"https://ubisa.ge/gal/89.jpg", cap:"ჯონი სახვაძე"}, {src:"https://ubisa.ge/gal/88.jpg", cap:"ჯონი სახვაძე"},
+    {src:"https://ubisa.ge/gal/87.jpg", cap:"ჯონი სახვაძე"}, {src:"https://ubisa.ge/gal/86.jpg", cap:"ჯონი სახვაძე"},
+    {src:"https://ubisa.ge/gal/85.jpg", cap:"@nunuciko13"}, {src:"https://ubisa.ge/gal/84.jpg", cap:"@nunuciko13"},
+    {src:"https://ubisa.ge/gal/83.jpg", cap:"@nunuciko13"}, {src:"https://ubisa.ge/gal/82.jpg", cap:"@nunuciko13"},
+    {src:"https://ubisa.ge/gal/81.jpg", cap:"@nunuciko13"}, {src:"https://ubisa.ge/gal/80.jpg", cap:"@nunuciko13"},
+    {src:"https://ubisa.ge/gal/79.jpeg", cap:"ლუკა სახვაძე"}, {src:"https://ubisa.ge/gal/78.jpeg", cap:"ლუკა სახვაძე"},
+    {src:"https://ubisa.ge/gal/77.jpeg", cap:"ლუკა სახვაძე"}, {src:"https://ubisa.ge/gal/76.jpeg", cap:"ლუკა სახვაძე"},
+    {src:"https://ubisa.ge/gal/75.jpeg", cap:"გიორგი სახვაძე"}, {src:"https://ubisa.ge/gal/74.jpeg", cap:"ლუკა სახვაძე"},
+    {src:"https://ubisa.ge/gal/73.jpeg", cap:"გიორგი სახვაძე"}, {src:"https://ubisa.ge/gal/72.jpeg", cap:"გიორგი სახვაძე"},
+    {src:"https://ubisa.ge/gal/71.jpeg", cap:"ლუკა სახვაძე"}, {src:"https://ubisa.ge/gal/70.jpeg", cap:"ლუკა სახვაძე"},
+    {src:"https://ubisa.ge/gal/69.jpeg", cap:"ლუკა სახვაძე"}, {src:"https://ubisa.ge/gal/68.jpeg", cap:"გიორგი სახვაძე"},
+    {src:"https://ubisa.ge/gal/67.jpeg", cap:"ლუკა სახვაძე"}, {src:"https://ubisa.ge/gal/66.jpeg", cap:"გიორგი სახვაძე"},
+    {src:"https://ubisa.ge/gal/65.jpeg", cap:"გიორგი სახვაძე"}, {src:"https://ubisa.ge/gal/64.jpeg", cap:"ლუკა სახვაძე"},
+    {src:"https://ubisa.ge/gal/63.jpeg", cap:"ლუკა სახვაძე"}, {src:"https://ubisa.ge/gal/62.jpeg", cap:"გიორგი სახვაძე"},
+    {src:"https://ubisa.ge/gal/61.jpeg", cap:"გიორგი სახვაძე"}, {src:"https://ubisa.ge/gal/60.jpeg", cap:"ლუკა სახვაძე"},
+    {src:"https://ubisa.ge/gal/59.jpeg", cap:"ლუკა სახვაძე"}, {src:"https://ubisa.ge/gal/58.jpeg", cap:"ლუკა სახვაძე"},
+    {src:"https://ubisa.ge/gal/56.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/55.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/54.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/40.jpeg", cap:"ვახო მარაქველიძე"},
+    {src:"https://ubisa.ge/gal/53.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/52.jpeg", cap:"ვახო მარაქველიძე"},
+    {src:"https://ubisa.ge/gal/51.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/50.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/49.jpeg", cap:"ვახო მარაქველიძე"}, {src:"https://ubisa.ge/gal/48.jpeg", cap:"ვახო მარაქველიძე"},
+    {src:"https://ubisa.ge/gal/47.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/46.jpeg", cap:"ვახო მარაქველიძე"},
+    {src:"https://ubisa.ge/gal/45.jpeg", cap:"ვახო მარაქველიძე"}, {src:"https://ubisa.ge/gal/44.jpeg", cap:"ვახო მარაქველიძე"},
+    {src:"https://ubisa.ge/gal/43.jpeg", cap:"ვახო მარაქველიძე"}, {src:"https://ubisa.ge/gal/42.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/41.jpeg", cap:"ვახო მარაქველიძე"}, {src:"https://ubisa.ge/gal/39.jpeg", cap:"ვახო მარაქველიძე"},
+    {src:"https://ubisa.ge/gal/38.jpeg", cap:"ვახო მარაქველიძე"}, {src:"https://ubisa.ge/gal/37.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/36.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/35.jpeg", cap:"ვახო მარაქველიძე"},
+    {src:"https://ubisa.ge/gal/34.jpeg", cap:"ვახო მარაქველიძე"}, {src:"https://ubisa.ge/gal/33.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/32.jpeg", cap:"ვახო მარაქველიძე"}, {src:"https://ubisa.ge/gal/31.jpeg", cap:"ვახო მარაქველიძე"},
+    {src:"https://ubisa.ge/gal/30.jpeg", cap:"ვახო მარაქველიძე"}, {src:"https://ubisa.ge/gal/29.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/28.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/27.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/26.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/24.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/22.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/21.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/20.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/19.jpeg", cap:"მარი სახვაძე"},
+    {src:"https://ubisa.ge/gal/18.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/17.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/16.jpeg", cap:"მარი სახვაძე"}, {src:"https://ubisa.ge/gal/15.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/14.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/13.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/12.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/11.jpeg", cap:"მარი სახვაძე"},
+    {src:"https://ubisa.ge/gal/10.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/9.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/8.jpeg", cap:"მარი სახვაძე"}, {src:"https://ubisa.ge/gal/7.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/6.jpeg", cap:"მარი სახვაძე"}, {src:"https://ubisa.ge/gal/5.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/4.jpeg", cap:"მარი სახვაძე"}, {src:"https://ubisa.ge/gal/3.jpeg", cap:"მარი სახვაძე"},
+    {src:"https://ubisa.ge/gal/2.jpeg", cap:"ირაკლი სახვაძე"}, {src:"https://ubisa.ge/gal/1.jpeg", cap:"ირაკლი სახვაძე"},
+    {src:"https://ubisa.ge/gal/tovli6.png", cap:"ვახო მარაქველიძე"}, {src:"https://ubisa.ge/gal/tovli.jpeg", cap:"ვახო მარაქველიძე"},
+    {src:"https://ubisa.ge/gal/tovli1.jpeg", cap:"ვახო მარაქველიძე"}, {src:"https://ubisa.ge/gal/tovli2.jpeg", cap:"ვახო მარაქველიძე"},
+    {src:"https://ubisa.ge/gal/tovli3.jpeg", cap:"ვახო მარაქველიძე"}, {src:"https://ubisa.ge/gal/tovli4.jpeg", cap:"ვახო მარაქველიძე"},
+    {src:"https://ubisa.ge/gal/tadzari.png", cap:"ეკლესიის ხედი"}, {src:"https://ubisa.ge/gal/shesasvleli-kari.jpg", cap:"შესასვლელი"},
+    {src:"https://ubisa.ge/gal/winaxedi.png", cap:"მონასტრის შესასვლელი"}, {src:"https://ubisa.ge/gal/gverdxedi.png", cap:"მონასტრის ეზო"},
+    {src:"https://ubisa.ge/gal/shesasvleli.png", cap:"მონასტერში შესასვლელი"}, {src:"https://ubisa.ge/gal/koshki.png", cap:"კოშკი"},
+    {src:"https://ubisa.ge/gal/04.24.2016.jpg", cap:"04.24.2016"}, {src:"https://ubisa.ge/gal/mtazeasasvleli.jpg", cap:"ნიში მთაზე"},
+    {src:"https://ubisa.ge/gal/saidumlo-seroba.jpeg", cap:"საიდუმლო სერობა"}, {src:"https://ubisa.ge/gal/shuaguli.png", cap:"შუაგული"},
+    {src:"https://ubisa.ge/gal/ubisa-19.09.07.JPG", cap:"19.09.07"}, {src:"https://ubisa.ge/gal/koshkis-mxare.jfif", cap:"კოშკის მხარე"},
+    {src:"https://ubisa.ge/gal/freska1.jpg", cap:"ფრესკა"}, {src:"https://ubisa.ge/gal/reliefi1.jpg", cap:"რელიეფი"},
+    {src:"https://ubisa.ge/gal/reliefi2.jpg", cap:"რელიეფი 2"}, {src:"https://ubisa.ge/gal/08.18.2014.jpg", cap:"08.18.2014"},
+    {src:"https://ubisa.ge/gal/koshki-restavraciamde.jpg", cap:"კოშკი რესტავრაციამდე"}, {src:"https://ubisa.ge/gal/restavrirebuli.webp", cap:"რესტავრირებული"}
+];
+
+const slides = document.getElementById("slides");
+const thumbs = document.getElementById("thumbs");
+const bg = document.getElementById("slideBg");
+const pageInfo = document.getElementById("pageInfo");
+
+let index = 0, auto = false, timer;
+let currentPage = 0;
+const itemsPerPage = 12; // რამდენი სურათი გამოჩნდეს ქვემოთ ერთ გვერდზე
+
+// სლაიდების შექმნა (Lazy loading პრინციპით)
+images.forEach((img, i) => {
+    slides.innerHTML += `
+        <div class="slide">
+            <img src="${img.src}" draggable="false" loading="lazy">
+            <div class="caption">${img.cap}</div>
+        </div>`;
+});
+
+function renderThumbs() {
+    thumbs.innerHTML = "";
+    const start = currentPage * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageItems = images.slice(start, end);
+
+    pageItems.forEach((img, i) => {
+        const globalIndex = start + i;
+        thumbs.innerHTML += `
+            <div class="thumb ${globalIndex === index ? 'active' : ''}" onclick="goTo(${globalIndex})">
+                <img src="${img.src}" draggable="false">
+            </div>`;
+    });
+    
+    const totalPages = Math.ceil(images.length / itemsPerPage);
+    pageInfo.textContent = `გვერდი ${currentPage + 1} / ${totalPages}`;
+}
+
+function goTo(i) {
+    index = (i + images.length) % images.length;
+    slides.style.transform = `translateX(-${index * 100}%)`;
+    bg.style.backgroundImage = `url(${images[index].src})`;
+    
+    // ავტომატურად გადავიყვანოთ თამბების გვერდი, თუ არჩეული სურათი სხვა გვერდზეა
+    const targetPage = Math.floor(index / itemsPerPage);
+    if (currentPage !== targetPage) {
+        currentPage = targetPage;
+    }
+    renderThumbs();
+}
+
+// Pagination ღილაკები
+document.getElementById("nextPage").onclick = () => {
+    if ((currentPage + 1) * itemsPerPage < images.length) {
+        currentPage++;
+        renderThumbs();
+    }
+};
+
+document.getElementById("prevPage").onclick = () => {
+    if (currentPage > 0) {
+        currentPage--;
+        renderThumbs();
+    }
+};
+
+// კონტროლის ღილაკები
+prevBtn.onclick = () => goTo(index - 1);
+nextBtn.onclick = () => goTo(index + 1);
+
+autoBtn.onclick = () => {
+    auto = !auto;
+    autoBtn.textContent = auto ? "Stop" : "ავტო სლაიდი";
+    auto ? timer = setInterval(() => goTo(index + 1), 3000) : clearInterval(timer);
+};
+
+shuffleBtn.onclick = () => goTo(Math.floor(Math.random() * images.length));
+
+// საწყისი ჩატვირთვა
+goTo(0);
+renderThumbs();
+
+</script>
+</body>
+</html>
