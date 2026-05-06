@@ -12,9 +12,8 @@
     <style>
         body {
             font-family: 'Fira GO', sans-serif;
-            background-color: #0f172a; /* მუქი ფონი */
+            background-color: #0f172a; 
             color: #fff;
-            /* უკანა ფონის სურათი - ტელევიზიის/სტუდიის თემატიკა */
             background-image: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), 
                               url('https://images.unsplash.com/photo-1593784991095-a205039470b6?auto=format&fit=crop&q=80&w=2000');
             background-attachment: fixed;
@@ -24,7 +23,7 @@
 
         .navbar {
             background-color: rgba(0, 0, 0, 0.8) !important;
-            backdrop-filter: blur(10px); /* შუშის ეფექტი */
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
@@ -33,7 +32,6 @@
             text-align: center;
         }
 
-        /* პლეერის ჩარჩო "ნეონის" ეფექტით */
         .video-container {
             position: relative;
             padding-bottom: 56.25%;
@@ -49,7 +47,30 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
         }
 
-        /* არხების სექცია (ახალი) */
+        /* ახალი სტილი წარწერისთვის */
+        .overlay-image {
+            position: absolute;
+            top: 15px; /* დაშორება ზემოდან */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            pointer-events: none; /* რომ ხელი არ შეუშალოს ფლეიერზე დაჭერას */
+            background: rgba(0, 0, 0, 0.6);
+            padding: 5px 15px;
+            border-radius: 50px;
+            border: 1px solid rgba(0, 210, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .overlay-image span {
+            font-size: 14px;
+            font-weight: bold;
+            color: #00d2ff;
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+        }
+
         .channel-card {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -91,7 +112,6 @@
                 <li class="nav-item"><a class="nav-link text-white" href="https://ubisa.ge/cook.html">რეცეპტები</a></li>
                 <li class="nav-item"><a class="nav-link text-white" href="https://ubisa.ge/ambebi.html">სიახლეები</a></li>
                 <li class="nav-item"><a class="nav-link text-white" href="https://ubisa.ge/gallery.html">სურათები</a></li>
-                
             </ul>
         </div>
     </div>
@@ -108,19 +128,23 @@
     <div class="row justify-content-center mb-5">
         <div class="col-lg-10">
             <div class="video-container">
+                <!-- ზემოდან გადადებული ელემენტი -->
+                <div class="overlay-image">
+                    <img src="/img/Logo-300x300.png" alt="Logo" style="height: 25px; border-radius: 50%;">
+                    <span>მე მიყვარს უბისა</span>
+                </div>
+                
                 <iframe src="https://tv.mar.tv/" allowfullscreen="true" allow="autoplay; fullscreen"></iframe>
             </div>
         </div>
     </div>
 
-    <!-- ახალი სექცია: რას ვუყუროთ? -->
     <div class="row mt-5">
         <div class="col-12 mb-4">
             <h3 class="fw-bold">პოპულარული კატეგორიები</h3>
         </div>
         <div class="col-md-4 mb-3">
             <a href="#" class="channel-card text-center">
-                <i class="fa fa-film mb-2"></i>
                 <h5>ფილმები</h5>
             </a>
         </div>
