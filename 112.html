@@ -15,7 +15,7 @@
         }
 
         body {
-            background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), 
+            background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), 
                         url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920') no-repeat center center fixed;
             background-size: cover;
             color: #f1f5f9;
@@ -32,7 +32,7 @@
         /* ჰედერი და ძებნა */
         header {
             text-align: center;
-            padding: 50px 0 30px;
+            padding: 60px 0 40px;
         }
 
         header h1 {
@@ -49,19 +49,20 @@
         }
 
         .search-container {
-            max-width: 500px;
+            max-width: 600px;
             margin: 0 auto;
             position: relative;
         }
 
         .search-box {
             width: 100%;
-            padding: 15px 20px;
-            font-size: 1rem;
+            padding: 16px 25px;
+            font-size: 1.1rem;
             border-radius: 30px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             color: #fff;
             outline: none;
             transition: all 0.3s ease;
@@ -69,22 +70,23 @@
 
         .search-box:focus {
             border-color: #38bdf8;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
-            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+            background: rgba(255, 255, 255, 0.12);
         }
 
         .search-box::placeholder {
             color: #94a3b8;
         }
 
-        /* სწრაფი ნავიგაციის მენიუ */
+        /* სტილიზებული ნავიგაციის მენიუ */
         .nav-menu {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             padding: 15px 0;
             margin-bottom: 40px;
         }
@@ -92,7 +94,7 @@
         .nav-links {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
             list-style: none;
         }
@@ -100,30 +102,30 @@
         .nav-links a {
             color: #cbd5e1;
             text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.95rem;
-            background: rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.04);
+            transition: all 0.25s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .nav-links a:hover {
-            background: rgba(56, 189, 248, 0.2);
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(56, 189, 248, 0.15);
             color: #38bdf8;
-            border-color: rgba(56, 189, 248, 0.4);
+            border-color: rgba(56, 189, 248, 0.3);
         }
 
         /* სექციები */
         section {
             padding-top: 20px;
-            margin-bottom: 50px;
+            margin-bottom: 60px;
         }
 
         .section-title {
             font-size: 1.8rem;
             margin-bottom: 25px;
-            padding-bottom: 10px;
+            padding-bottom: 12px;
             border-bottom: 2px solid #38bdf8;
             color: #38bdf8;
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
@@ -132,16 +134,16 @@
         /* ბადე (Grid) */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 25px;
         }
 
         /* ბარათები */
         .card {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
             padding: 25px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -152,16 +154,16 @@
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.09);
-            border-color: rgba(56, 189, 248, 0.4);
-            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.15);
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(56, 189, 248, 0.35);
+            box-shadow: 0 12px 30px rgba(56, 189, 248, 0.12);
         }
 
         .card-content h3 {
             font-size: 1.25rem;
             color: #fff;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             line-height: 1.4;
         }
 
@@ -171,13 +173,13 @@
             font-size: 0.95rem;
             display: flex;
             align-items: flex-start;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         .info-label {
             font-weight: bold;
             color: #94a3b8;
-            min-width: 95px;
+            min-width: 105px;
             flex-shrink: 0;
         }
 
@@ -186,12 +188,12 @@
         }
 
         .hotline {
-            background: rgba(239, 68, 68, 0.2);
-            padding: 3px 8px;
+            background: rgba(239, 68, 68, 0.15);
+            padding: 4px 10px;
             border-radius: 6px;
             color: #fca5a5;
             font-weight: bold;
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            border: 1px solid rgba(239, 68, 68, 0.25);
             display: inline-block;
         }
 
@@ -206,12 +208,11 @@
             color: #7dd3fc;
         }
 
-        /* შეტყობინება თუ ძებნამ შედეგი ვერ გამოიღო */
         #no-results {
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: #94a3b8;
-            margin-top: 40px;
+            margin: 60px 0;
             display: none;
         }
     </style>
@@ -222,9 +223,9 @@
     <header>
         <div class="container">
             <h1>საქართველოს საინფორმაციო გზამკვლევი</h1>
-            <p>სახელმწიფო უწყებების, კერძო კომპანიებისა და სერვისების ერთიანი ბაზა</p>
+            <p>სახელმწიფო უწყებების, კლინიკების, ფინანსური, სავაჭრო და გასართობი ობიექტების ერთიანი მონაცემთა ბაზა</p>
             <div class="search-container">
-                <input type="text" id="searchInput" class="search-box" placeholder="ჩაწერეთ სახელი ან ცხელი ხაზი მოსაძებნად...">
+                <input type="text" id="searchInput" class="search-box" placeholder="ჩაწერეთ სახელი, ნომერი, კატეგორია ან მისამართი...">
             </div>
         </div>
     </header>
@@ -232,283 +233,505 @@
     <!-- ნავიგაციის მენიუ -->
     <nav class="nav-menu">
         <div class="container">
-            <ul class="nav-links">
-                <li><a href="#state">სახელმწიფო უწყებები</a></li>
-                <li><a href="#finance">ბანკები და ფინანსები</a></li>
-                <li><a href="#telecom">პროვაიდერები და კავშირგაბმულობა</a></li>
-                <li><a href="#malls">სავაჭრო ცენტრები (მოლები)</a></li>
-                <li><a href="#entertainment">კინოთეატრები და გართობა</a></li>
-                <li><a href="#markets">მსხვილი მარკეტები და ქსელები</a></li>
+            <ul class="nav-links" id="navLinks">
+                <!-- გენერირდება დინამიურად JS-ით -->
             </ul>
         </div>
     </nav>
 
+    <!-- ძირითადი კონტენტი -->
     <div class="container">
-        <div id="no-results">შედეგი ვერ მოიძებნა...</div>
-
-        <!-- 1. სახელმწიფო ორგანოები -->
-        <section id="state">
-            <h2 class="section-title">სახელმწიფო ორგანოები და უწყებები</h2>
-            <div class="grid-container">
-                <div class="card">
-                    <div class="card-content">
-                        <h3>საქართველოს მთავრობის ადმინისტრაცია</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">111</span></span></div>
-                        <div class="info-item"><span class="info-label">მისამართი:</span><span class="info-value">თბილისი, ინგოროყვას ქ. 7</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://gov.ge" target="_blank">gov.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>შინაგან საქმეთა სამინისტრო (სსიპ 112)</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">112</span></span></div>
-                        <div class="info-item"><span class="info-label">მისამართი:</span><span class="info-value">თბილისი, ნავთლუღის ქ. 10ა</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://112.gov.ge" target="_blank">112.gov.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>იუსტიციის სახლი</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">2 405 405</span></span></div>
-                        <div class="info-item"><span class="info-label">მისამართი:</span><span class="info-value">თბილისი, სანაპიროს ქ. 2 (ყველა ფილიალი რეგიონებში)</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://psh.gov.ge" target="_blank">psh.gov.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>ოკუპირებული ტერიტორიებიდან დევნილთა, შრომის, ჯანმრთელობისა და სოციალური დაცვის სამინისტრო</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">1505</span></span></div>
-                        <div class="info-item"><span class="info-label">მისამართი:</span><span class="info-value">თბილისი, აკაკი წერეთლის გამზ. 144</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://moh.gov.ge" target="_blank">moh.gov.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>შემოსავლების სამსახური (RS.GE)</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">2 299 299</span></span></div>
-                        <div class="info-item"><span class="info-label">მისამართი:</span><span class="info-value">თბილისი, ვახტანგ გორგასლის ქ. 16</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://rs.ge" target="_blank">rs.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>საქართველოს საგარეო საქმეთა სამინისტრო</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">2 945 050</span></span></div>
-                        <div class="info-item"><span class="info-label">მისამართი:</span><span class="info-value">თბილისი, შიო ჩიტაძის ქ. 4</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://mfa.gov.ge" target="_blank">mfa.gov.ge</a></span></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. ბანკები და ფინანსები -->
-        <section id="finance">
-            <h2 class="section-title">ბანკები და ფინანსური ინსტიტუტები</h2>
-            <div class="grid-container">
-                <div class="card">
-                    <div class="card-content">
-                        <h3>საქართველოს ბანკი (Bank of Georgia)</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">2 444 444</span></span></div>
-                        <div class="info-item"><span class="info-label">სათაო ოფისი:</span><span class="info-value">თბილისი, ყაზბეგის გამზ. 29ა</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://bog.ge" target="_blank">bog.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>თიბისი ბანკი (TBC Bank)</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">2 272 727</span></span></div>
-                        <div class="info-item"><span class="info-label">სათაო ოფისი:</span><span class="info-value">თბილისი, მარჯანიშვილის ქ. 7</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://tbcbank.ge" target="_blank">tbcbank.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>ლიბერთი ბანკი (Liberty Bank)</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">2 555 500</span></span></div>
-                        <div class="info-item"><span class="info-label">სათაო ოფისი:</span><span class="info-value">თბილისი, ი. ჭავჭავაძის გამზ. 74</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://libertybank.ge" target="_blank">libertybank.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>ბაზისბანკი (BasisBank)</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">2 922 922</span></span></div>
-                        <div class="info-item"><span class="info-label">სათაო ოფისი:</span><span class="info-value">თბილისი, ქეთევან წამებულის გამზ. 1</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://basisbank.ge" target="_blank">basisbank.ge</a></span></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. პროვაიდერები და კავშირგაბმულობა -->
-        <section id="telecom">
-            <h2 class="section-title">პროვაიდერები და კავშირგაბმულობა</h2>
-            <div class="grid-container">
-                <div class="card">
-                    <div class="card-content">
-                        <h3>მაგთიკომი (MagtiCom)</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">110011</span> ან 2170000</span></div>
-                        <div class="info-item"><span class="info-label">მთავარი ოფისი:</span><span class="info-value">თბილისი, ა. პოლიტკოვსკაიას ქ. 7</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://magticom.ge" target="_blank">magticom.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>სილქნეტი (Silknet)</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">2100100</span></span></div>
-                        <div class="info-item"><span class="info-label">მთავარი ოფისი:</span><span class="info-value">თბილისი, წინამძღვრიშვილის ქ. 95</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://silknet.com" target="_blank">silknet.com</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>სელფი მობაილი (Cellfie)</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">110101</span> ან 2200101</span></div>
-                        <div class="info-item"><span class="info-label">მისამართი:</span><span class="info-value">თბილისი, ელიზბარ მინდელის ქ. 11</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://cellfie.ge" target="_blank">cellfie.ge</a></span></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. სავაჭრო ცენტრები (მოლები) -->
-        <section id="malls">
-            <h2 class="section-title">სავაჭრო ცენტრები (მოლები)</h2>
-            <div class="grid-container">
-                <div class="card">
-                    <div class="card-content">
-                        <h3>თბილისი მოლი (Tbilisi Mall)</h3>
-                        <div class="info-item"><span class="info-label">საინფორმაციო:</span><span class="info-value"><span class="hotline">2 505 556</span></span></div>
-                        <div class="info-item"><span class="info-label">მისამართი:</span><span class="info-value">დავით აღმაშენებლის ხეივანი, მე-16 კმ.</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://tbilisimall.com" target="_blank">tbilisimall.com</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>ისთ ფოინთი (East Point)</h3>
-                        <div class="info-item"><span class="info-label">საინფორმაციო:</span><span class="info-value"><span class="hotline">2 930 007</span></span></div>
-                        <div class="info-item"><span class="info-label">მისამართი:</span><span class="info-value">თბილისი, ალექსანდრე თვალჭრელიძის ქ. 2</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://eastpoint.ge" target="_blank">eastpoint.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>გალერია თბილისი (Galleria Tbilisi)</h3>
-                        <div class="info-item"><span class="info-label">საინფორმაციო:</span><span class="info-value"><span class="hotline">2 000 707</span></span></div>
-                        <div class="info-item"><span class="info-label">მისამართი:</span><span class="info-value">თბილისი, შოთა რუსთაველის გამზ. 2/4</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://galleria.ge" target="_blank">galleria.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>სითი მოლი (City Mall Saburtalo / Gldani)</h3>
-                        <div class="info-item"><span class="info-label">საინფორმაციო:</span><span class="info-value"><span class="hotline">2 222 333</span></span></div>
-                        <div class="info-item"><span class="info-label">მისამართი:</span><span class="info-value">საბურთალო: ვაჟა-ფშაველას 70 / გლდანი: ხიზანიშვილის 1</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://thecitymall.ge" target="_blank">thecitymall.ge</a></span></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. კინოთეატრები და გართობა -->
-        <section id="entertainment">
-            <h2 class="section-title">კინოთეატრები და გართობა</h2>
-            <div class="grid-container">
-                <div class="card">
-                    <div class="card-content">
-                        <h3>კავეა კინოთეატრები (Cavea Cinemas)</h3>
-                        <div class="info-item"><span class="info-label">საინფორმაციო:</span><span class="info-value"><span class="hotline">2 000 000</span></span></div>
-                        <div class="info-item"><span class="info-label">ფილიალები:</span><span class="info-value">East Point, Tbilisi Mall, Galleria, City Mall</span></div>
-                        <div class="info-item"><span class="info-label">ბილეთები:</span><span class="info-value"><a href="https://cavea.ge" target="_blank">cavea.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>ამირანი კინოთეატრი (Amirani)</h3>
-                        <div class="info-item"><span class="info-label">საინფორმაციო:</span><span class="info-value"><span class="hotline">2 999 999</span></span></div>
-                        <div class="info-item"><span class="info-label">მისამართი:</span><span class="info-value">თბილისი, მერაბ კოსტავას ქ. 36</span></div>
-                        <div class="info-item"><span class="info-label">ბილეთები:</span><span class="info-value"><a href="https://kinoafisha.ge" target="_blank">kinoafisha.ge</a></span></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. მსხვილი მარკეტები და ქსელები -->
-        <section id="markets">
-            <h2 class="section-title">მსხვილი სუპერმარკეტები და ჰიპერმარკეტები</h2>
-            <div class="grid-container">
-                <div class="card">
-                    <div class="card-content">
-                        <h3>კარფური (Carrefour Georgia)</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">2 244 555</span></span></div>
-                        <div class="info-item"><span class="info-label">ფილიალები:</span><span class="info-value">თბილისი, რუსთავი, ბათუმი, ქუთაისი</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://carrefour.ge" target="_blank">carrefour.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>აგროჰაბი (Agrohub)</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">032 2 474 444</span></span></div>
-                        <div class="info-item"><span class="info-label">მისამართი:</span><span class="info-value">მარშალ გელოვანის გამზ. 22 / ი. ჭავჭავაძის 29</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://agrohub.ge" target="_blank">agrohub.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>ნიკორა სუპერმარკეტი (Nikora)</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">2 611 611</span></span></div>
-                        <div class="info-item"><span class="info-label">ფილიალები:</span><span class="info-value">ყველაზე ფართო ქსელი მთელ საქართველოში</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://nikora.ge" target="_blank">nikora.ge</a></span></div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <h3>ორი ნაბიჯი (2 Nabiji)</h3>
-                        <div class="info-item"><span class="info-label">ცხელი ხაზი:</span><span class="info-value"><span class="hotline">2 242 242</span></span></div>
-                        <div class="info-item"><span class="info-label">ფილიალები:</span><span class="info-value">უბნის მარკეტების ფართო ქსელი</span></div>
-                        <div class="info-item"><span class="info-label">ვებ-გვერდი:</span><span class="info-value"><a href="https://2nabiji.ge" target="_blank">2nabiji.ge</a></span></div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <div id="no-results">სამწუხაროდ, მსგავსი ობიექტი ვერ მოიძებნა...</div>
+        <div id="dynamic-content"></div>
     </div>
 
-    <!-- JavaScript რეალურ დროში საძიებო ფუნქციისთვის -->
+    <!-- მონაცემთა ბაზა და ლოგიკა -->
     <script>
-        document.getElementById('searchInput').addEventListener('keyup', function() {
-            let filter = this.value.toLowerCase();
-            let cards = document.querySelectorAll('.card');
-            let sections = document.querySelectorAll('section');
-            let hasResults = false;
+        // 1. ერთიანი მასშტაბური მონაცემთა ბაზა (აქ მარტივად ჩაამატებთ ნებისმიერ ახალ ობიექტს)
+        const database = [
+            // --- სახელმწიფო ორგანოები და უწყებები ---
+            {
+                id: "state",
+                categoryName: "სახელმწიფო ორგანოები და უწყებები",
+                title: "საქართველოს მთავრობის ადმინისტრაცია",
+                phone: "111",
+                address: "თბილისი, ინგოროყვას ქ. 7",
+                website: "https://gov.ge"
+            },
+            {
+                id: "state",
+                categoryName: "სახელმწიფო ორგანოები და უწყებები",
+                title: "შინაგან საქმეთა სამინისტრო (გადაუდებელი დახმარება)",
+                phone: "112",
+                address: "თბილისი, ნავთლუღის ქ. 10ა",
+                website: "https://112.gov.ge"
+            },
+            {
+                id: "state",
+                categoryName: "სახელმწიფო ორგანოები და უწყებები",
+                title: "იუსტიციის სახლი (ყველა ფილიალი)",
+                phone: "2 405 405",
+                address: "თბილისი, სანაპიროს ქ. 2 (და რეგიონული ცენტრები)",
+                website: "https://psh.gov.ge"
+            },
+            {
+                id: "state",
+                categoryName: "სახელმწიფო ორგანოები და უწყებები",
+                title: "შემოსავლების სამსახური (RS.GE)",
+                phone: "2 299 299",
+                address: "თბილისი, ვახტანგ გორგასლის ქ. 16",
+                website: "https://rs.ge"
+            },
+            {
+                id: "state",
+                categoryName: "სახელმწიფო ორგანოები და უწყებები",
+                title: "ოკუპირებული ტერიტორიებიდან დევნილთა, შრომის, ჯანმრთელობისა და სოციალური დაცვის სამინისტრო",
+                phone: "1505",
+                address: "თბილისი, აკაკი წერეთლის გამზ. 144",
+                website: "https://moh.gov.ge"
+            },
+            {
+                id: "state",
+                categoryName: "სახელმწიფო ორგანოები და უწყებები",
+                title: "განათლების, მეცნიერებისა და ახალგაზრდობის სამინისტრო",
+                phone: "2 200 220",
+                address: "თბილისი, დიმიტრი უზნაძის ქ. 52",
+                website: "https://mes.gov.ge"
+            },
+            {
+                id: "state",
+                categoryName: "სახელმწიფო ორგანოები და უწყებები",
+                title: "საქართველოს საგარეო საქმეთა სამინისტრო",
+                phone: "2 945 050",
+                address: "თბილისი, შიო ჩიტაძის ქ. 4",
+                website: "https://mfa.gov.ge"
+            },
+            {
+                id: "state",
+                categoryName: "სახელმწიფო ორგანოები და უწყებები",
+                title: "თბილისის მერია",
+                phone: "2 722 222",
+                address: "თბილისი, ჟიული შარტავას ქ. 7",
+                website: "https://tbilisi.gov.ge"
+            },
 
-            cards.forEach(function(card) {
-                let text = card.innerText.toLowerCase();
-                if (text.includes(filter)) {
-                    card.style.display = 'flex';
-                    hasResults = true;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            // --- კლინიკები და საავადმყოფოები ---
+            {
+                id: "hospitals",
+                categoryName: "კლინიკები და საავადმყოფოები",
+                title: "აკადემიკოს ნიკოლოზ ყიფშიძის სახელობის ცენტრალური საუნივერსიტეტო კლინიკა (რესპუბლიკური)",
+                phone: "2 369 369",
+                address: "თბილისი, ვაჟა-ფშაველას გამზ. 29",
+                website: "https://cau.ge"
+            },
+            {
+                id: "hospitals",
+                categoryName: "კლინიკები და საავადმყოფოები",
+                title: "ინგოროყვას მაღალი სამედიცინო ტექნოლოგიების საუნივერსიტეტო კლინიკა",
+                phone: "2 101 101",
+                address: "თბილისი, წინანდლის ქ. 9 (არამიანცის ტერიტორია)",
+                website: "https://ingorokva.ge"
+            },
+            {
+                id: "hospitals",
+                categoryName: "კლინიკები და საავადმყოფოები",
+                title: "ნიუ ჰოსპიტალს (New Hospitals)",
+                phone: "2 190 190",
+                address: "თბილისი, კრწანისის ქ. 12",
+                website: "https://newhospitals.ge"
+            },
+            {
+                id: "hospitals",
+                categoryName: "კლინიკები და საავადმყოფოები",
+                title: "ავერსის კლინიკა (ცენტრალური ფილიალი)",
+                phone: "2 500 700",
+                address: "თბილისი, აკაკი წერეთლის გამზ. 141ა",
+                website: "https://aversiclinic.ge"
+            },
+            {
+                id: "hospitals",
+                categoryName: "კლინიკები და საავადმყოფოები",
+                title: "ევექსის კლინიკები (Evex - საინფორმაციო ცენტრი)",
+                phone: "2 550 505",
+                address: "თბილისი, ქავთარაძის ქ. 16 (და მთელი ქვეყნის მასშტაბით)",
+                website: "https://evex.ge"
+            },
+            {
+                id: "hospitals",
+                categoryName: "კლინიკები და საავადმყოფოები",
+                title: "მ. იაშვილის სახელობის ბავშვთა ცენტრალური საავადმყოფო",
+                phone: "2 530 033",
+                address: "თბილისი, ლუბლიანას ქ. 2/6",
+                website: "https://evex.ge"
+            },
 
-            // ვმალავთ სექციის სათაურებსაც, თუ იმ სექციაში არცერთი ბარათი არ ემთხვევა ძებნას
-            sections.forEach(function(section) {
-                let visibleCards = section.querySelectorAll('.card[style="display: flex;"]');
-                if (visibleCards.length === 0 && filter !== '') {
-                    section.style.display = 'none';
-                } else {
-                    section.style.display = 'block';
-                }
-            });
+            // --- ბანკები და ფინანსები ---
+            {
+                id: "finance",
+                categoryName: "ბანკები და ფინანსები",
+                title: "საქართველოს ბანკი (Bank of Georgia)",
+                phone: "2 444 444",
+                address: "სათაო: თბილისი, ალექსანდრე ყაზბეგის გამზ. 29ა",
+                website: "https://bog.ge"
+            },
+            {
+                id: "finance",
+                categoryName: "ბანკები და ფინანსები",
+                title: "თიბისი ბანკი (TBC Bank)",
+                phone: "2 272 727",
+                address: "სათაო: თბილისი, კოტე მარჯანიშვილის ქ. 7",
+                website: "https://tbcbank.ge"
+            },
+            {
+                id: "finance",
+                categoryName: "ბანკები და ფინანსები",
+                title: "ლიბერთი ბანკი (Liberty Bank)",
+                phone: "2 555 500",
+                address: "სათაო: თბილისი, ილია ჭავჭავაძის გამზ. 74",
+                website: "https://libertybank.ge"
+            },
+            {
+                id: "finance",
+                categoryName: "ბანკები და ფინანსები",
+                title: "ბაზისბანკი (BasisBank)",
+                phone: "2 922 922",
+                address: "სათაო: თბილისი, ქეთევან წამებულის გამზ. 1",
+                website: "https://basisbank.ge"
+            },
+            {
+                id: "finance",
+                categoryName: "ბანკები და ფინანსები",
+                title: "კრედო ბანკი (Credo Bank)",
+                phone: "2 424 242",
+                address: "სათაო: თბილისი, რ. თაბუკაშვილის ქ. 27",
+                website: "https://credobank.ge"
+            },
+            {
+                id: "finance",
+                categoryName: "ბანკები და ფინანსები",
+                title: "თერა ბანკი (TeraBank)",
+                phone: "2 550 000",
+                address: "თბილისი, წმინდა ქეთევან წამებულის გამზ. 3",
+                website: "https://terabank.ge"
+            },
 
-            // "შედეგი ვერ მოიძებნა" ტექსტის კონტროლი
-            let noResultsMsg = document.getElementById('no-results');
-            if (!hasResults && filter !== '') {
-                noResultsMsg.style.display = 'block';
-            } else {
-                noResultsMsg.style.display = 'none';
+            // --- კავშირგაბმულობა და პროვაიდერები ---
+            {
+                id: "telecom",
+                categoryName: "პროვაიდერები და კავშირგაბმულობა",
+                title: "მაგთიკომი (MagtiCom)",
+                phone: "110011",
+                address: "ცენტრალური ოფისი: თბილისი, ანა პოლიტკოვსკაიას ქ. 7",
+                website: "https://magticom.ge"
+            },
+            {
+                id: "telecom",
+                categoryName: "პროვაიდერები და კავშირგაბმულობა",
+                title: "სილქნეტი (Silknet)",
+                phone: "2 100 100",
+                address: "ცენტრალური ოფისი: თბილისი, მოსე წინამძღვრიშვილის ქ. 95",
+                website: "https://silknet.com"
+            },
+            {
+                id: "telecom",
+                categoryName: "პროვაიდერები და კავშირგაბმულობა",
+                title: "სელფი მობაილი (Cellfie Mobile)",
+                phone: "110101",
+                address: "სათაო: თბილისი, ელიზბარ მინდელის ქ. 11",
+                website: "https://cellfie.ge"
+            },
+
+            // --- მიტანის სერვისები ---
+            {
+                id: "delivery",
+                categoryName: "მიტანის სერვისები",
+                title: "ვოლტი (Wolt Georgia)",
+                phone: "ონლაინ ჩატი",
+                address: "მომსახურება აპლიკაციით (თბილისი, ბათუმი, ქუთაისი, რუსთავი და სხვ.)",
+                website: "https://wolt.com"
+            },
+            {
+                id: "delivery",
+                categoryName: "მიტანის სერვისები",
+                title: "გლოვო (Glovo Georgia)",
+                phone: "ონლაინ ჩატი",
+                address: "მომსახურება აპლიკაციით მთელი საქართველოს მასშტაბით",
+                website: "https://glovoapp.com"
+            },
+            {
+                id: "delivery",
+                categoryName: "მიტანის სერვისები",
+                title: "ბოლტ ფუდი (Bolt Food)",
+                phone: "ონლაინ ჩატი",
+                address: "სწრაფი კვების და პროდუქტების მიტანა აპლიკაციით",
+                website: "https://bolt.eu/ka-ge/food/"
+            },
+
+            // --- სავაჭრო ცენტრები (მოლები) ---
+            {
+                id: "malls",
+                categoryName: "სავაჭრო ცენტრები (მოლები)",
+                title: "თბილისი მოლი (Tbilisi Mall)",
+                phone: "2 505 556",
+                address: "დავით აღმაშენებლის ხეივანი, მე-16 კმ.",
+                website: "https://tbilisimall.com"
+            },
+            {
+                id: "malls",
+                categoryName: "სავაჭრო ცენტრები (მოლები)",
+                title: "ისთ ფოინთი (East Point)",
+                phone: "2 930 007",
+                address: "თბილისი, ალექსანდრე თვალჭრელიძის ქ. 2",
+                website: "https://eastpoint.ge"
+            },
+            {
+                id: "malls",
+                categoryName: "სავაჭრო ცენტრები (მოლები)",
+                title: "გალერია თბილისი (Galleria Tbilisi)",
+                phone: "2 000 707",
+                address: "თბილისი, შოთა რუსთაველის გამზ. 2/4",
+                website: "https://galleria.ge"
+            },
+            {
+                id: "malls",
+                categoryName: "სავაჭრო ცენტრები (მოლები)",
+                title: "სითი მოლი საბურთალო (City Mall)",
+                phone: "2 222 333",
+                address: "თბილისი, ვაჟა-ფშაველას გამზ. 70",
+                website: "https://thecitymall.ge"
+            },
+            {
+                id: "malls",
+                categoryName: "სავაჭრო ცენტრები (მოლები)",
+                title: "სითი მოლი გლდანი (City Mall)",
+                phone: "2 222 333",
+                address: "თბილისი, ხიზანიშვილის ქ. 1",
+                website: "https://thecitymall.ge"
+            },
+            {
+                id: "malls",
+                categoryName: "სავაჭრო ცენტრები (მოლები)",
+                title: "თბილისი ცენტრალი (Tbilisi Central)",
+                phone: "2 433 433",
+                address: "თბილისი, ვაგზლის მოედანი 2",
+                website: "https://tbilisicentral.com"
+            },
+
+            // --- კინოთეატრები და გართობა ---
+            {
+                id: "entertainment",
+                categoryName: "კინოთეატრები და გართობა",
+                title: "კავეა კინოთეატრები (Cavea Cinemas)",
+                phone: "2 000 000",
+                address: "ფილიალები: East Point, Tbilisi Mall, Galleria, City Mall Saburtalo",
+                website: "https://cavea.ge"
+            },
+            {
+                id: "entertainment",
+                categoryName: "კინოთეატრები და გართობა",
+                title: "ამირანი კინოთეატრი (Amirani Cinema)",
+                phone: "2 999 999",
+                address: "თბილისი, მერაბ კოსტავას ქ. 36",
+                website: "https://kinoafisha.ge"
+            },
+            {
+                id: "entertainment",
+                categoryName: "კინოთეატრები და გართობა",
+                title: "მთაწმინდის პარკი (ბომბორა)",
+                phone: "2 480 003",
+                address: "თბილისი, მთაწმინდის პლატო",
+                website: "https://park.ge"
+            },
+            {
+                id: "entertainment",
+                categoryName: "კინოთეატრები და გართობა",
+                title: "თბილისის ზოოპარკი",
+                phone: "2 213 050",
+                address: "თბილისი, მერაბ კოსტავას ქ. 64",
+                website: "https://zoo.ge"
+            },
+
+            // --- მსხვილი მარკეტები და ქსელები ---
+            {
+                id: "markets",
+                categoryName: "მსხვილი სუპერმარკეტები",
+                title: "კარფური (Carrefour Georgia)",
+                phone: "2 244 555",
+                address: "ჰიპერმარკეტები და სუპერმარკეტები მთელ საქართველოში",
+                website: "https://carrefour.ge"
+            },
+            {
+                id: "markets",
+                categoryName: "მსხვილი სუპერმარკეტები",
+                title: "აგროჰაბი (Agrohub)",
+                phone: "032 2 474 444",
+                address: "თბილისი: მარშალ გელოვანის 22 / ჭავჭავაძის 29 / წერეთლის 116 / ბათუმი",
+                website: "https://agrohub.ge"
+            },
+            {
+                id: "markets",
+                categoryName: "მსხვილი სუპერმარკეტები",
+                title: "ნიკორა (Nikora Supermarket)",
+                phone: "2 611 611",
+                address: "ყველაზე ფართო ქსელი მთელი საქართველოს მასშტაბით",
+                website: "https://nikora.ge"
+            },
+            {
+                id: "markets",
+                categoryName: "მსხვილი სუპერმარკეტები",
+                title: "ორი ნაბიჯი (2 Nabiji)",
+                phone: "2 242 242",
+                address: "უბნის მარკეტების უმსხვილესი ქსელი საქართველოში",
+                website: "https://2nabiji.ge"
+            },
+            {
+                id: "markets",
+                categoryName: "მსხვილი სუპერმარკეტები",
+                title: "სპარი (Spar Georgia)",
+                phone: "2 431 114",
+                address: "24/7-ზე მომუშავე მარკეტების ფართო ქსელი",
+                website: "https://spar-georgia.com"
+            },
+            {
+                id: "markets",
+                categoryName: "მსხვილი სუპერმარკეტები",
+                title: "მაგნიტი (Magniti)",
+                phone: "032 2 309 888",
+                address: "რეგიონებისა და დედაქალაქის ფართო ქსელი",
+                website: "https://magniti.ge"
+            },
+            {
+                id: "markets",
+                categoryName: "მსხვილი სუპერმარკეტები",
+                title: "ფრესკო (Fresco Supermarket)",
+                phone: "2 907 907",
+                address: "24/7 ჰიპერმარკეტების ქსელი თბილისის მასშტაბით",
+                website: "https://fresco.ge"
             }
+        ];
+
+        // 2. ფუნქცია, რომელიც აჯგუფებს მონაცემებს უნიკალური კატეგორიების მიხედვით
+        function getCategories(data) {
+            const categories = {};
+            data.forEach(item => {
+                if (!categories[item.id]) {
+                    categories[item.id] = item.categoryName;
+                }
+            });
+            return categories;
+        }
+
+        // 3. ფუნქცია, რომელიც ქმნის ნავიგაციის მენიუს
+        function renderNavigation() {
+            const categories = getCategories(database);
+            const navLinksContainer = document.getElementById('navLinks');
+            
+            let navHTML = `<li><a href="#" class="active" onclick="filterByCategory('all', event)">ყველა ობიექტი</a></li>`;
+            
+            for (let id in categories) {
+                navHTML += `<li><a href="#${id}" onclick="filterByCategory('${id}', event)">${categories[id]}</a></li>`;
+            }
+            
+            navLinksContainer.innerHTML = navHTML;
+        }
+
+        // 4. ფუნქცია, რომელიც აშენებს HTML ბარათებს ეკრანზე
+        function renderCards(filterText = '', categoryId = 'all') {
+            const contentContainer = document.getElementById('dynamic-content');
+            const categories = getCategories(database);
+            let hasResults = false;
+            
+            let finalHTML = '';
+
+            // თითოეული კატეგორიისთვის ცალკე ვქმნით სექციას
+            for (let id in categories) {
+                // თუ კონკრეტული კატეგორია გვაქვს არჩეული ნავიგაციიდან და არ ემთხვევა, გამოვტოვოთ
+                if (categoryId !== 'all' && categoryId !== id) continue;
+
+                // ვფილტრავთ ამ კატეგორიის ობიექტებს საძიებო სიტყვის მიხედვით
+                const filteredItems = database.filter(item => {
+                    if (item.id !== id) return false;
+                    
+                    const query = filterText.toLowerCase();
+                    return (
+                        item.title.toLowerCase().includes(query) ||
+                        item.phone.toLowerCase().includes(query) ||
+                        item.address.toLowerCase().includes(query) ||
+                        item.categoryName.toLowerCase().includes(query)
+                    );
+                });
+
+                // თუ ამ სექციაში მოიძებნა რამე, ვბეჭდავთ სექციას და მის ბარათებს
+                if (filteredItems.length > 0) {
+                    hasResults = true;
+                    
+                    let sectionHTML = `
+                        <section id="${id}">
+                            <h2 class="section-title">${categories[id]}</h2>
+                            <div class="grid-container">
+                    `;
+
+                    filteredItems.forEach(item => {
+                        // თუ ტელეფონი ლინკი არ არის (მაგალითად: ონლაინ ჩატი), სხვანაირად გამოვაჩინოთ
+                        const isNumber = /^\d+[\s\d]*$/.test(item.phone.replace(/\s/g, ''));
+                        const phoneDisplay = isNumber 
+                            ? `<a href="tel:${item.phone.replace(/\s/g, '')}">${item.phone}</a>` 
+                            : item.phone;
+
+                        sectionHTML += `
+                            <div class="card">
+                                <div class="card-content">
+                                    <h3>${item.title}</h3>
+                                    <div class="info-item">
+                                        <span class="info-label">კონტაქტი:</span>
+                                        <span class="info-value"><span class="hotline">${phoneDisplay}</span></span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">მისამართი:</span>
+                                        <span class="info-value">${item.address}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">ვებ-გვერდი:</span>
+                                        <span class="info-value"><a href="${item.website}" target="_blank">${item.website.replace('https://', '')}</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    sectionHTML += `</div></section>`;
+                    finalHTML += sectionHTML;
+                }
+            }
+
+            contentContainer.innerHTML = finalHTML;
+            
+            // "შედეგი ვერ მოიძებნა" შეტყობინების მართვა
+            document.getElementById('no-results').style.display = hasResults ? 'none' : 'block';
+        }
+
+        // 5. კატეგორიის მიხედვით ფილტრაციის ლოგიკა (მენიუზე კლიკისას)
+        let currentCategory = 'all';
+        function filterByCategory(categoryId, event) {
+            event.preventDefault();
+            currentCategory = categoryId;
+            
+            // აქტიური კლასის შეცვლა მენიუს ლინკებზე
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const searchText = document.getElementById('searchInput').value;
+            renderCards(searchText, categoryId);
+        }
+
+        // 6. რეალურ დროში ძებნის ლოგიკა (Input-ში წერისას)
+        document.getElementById('searchInput').addEventListener('input', function() {
+            renderCards(this.value, currentCategory);
         });
+
+        // ინიციალიზაცია გვერდის ჩატვირთვისას
+        renderNavigation();
+        renderCards();
     </script>
 </body>
 </html>
