@@ -6,6 +6,32 @@
     <title>UBISA.GE | Recipes & Stats</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
+        .search-container {
+    max-width: 800px;
+    margin: 20px auto 10px auto;
+    padding: 0 20px;
+    text-align: center;
+}
+.search-bar {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+.search-bar:focus {
+    border-color: #ff6347; /* ჩაწერისას ჩარჩო გახდება პომიდვრისფერი, შენი საიტის აქცენტისთვის */
+}
+.no-results {
+    text-align: center;
+    color: #777;
+    font-size: 18px;
+    margin-top: 20px;
+    display: none; /* თავიდან დამალულია */
+}
         :root {
             --fiber-green: #2d5a27;
             --text-dark: #111827;
@@ -344,6 +370,10 @@
 <body>
 
 <header>
+    <div class="search-container">
+    <input type="text" id="recipeSearch" class="search-bar" placeholder="მოძებნე რეცეპტი...">
+    <div id="noResultsMessage" class="no-results">სამწუხაროდ, რეცეპტი ვერ მოიძებნა...</div>
+</div>
     <div class="logo" onclick="goHome()">ჩვენი გემრიელი რეცეპტები</div>
     <div class="nav-links" id="category-menu">
         <span onclick="filterJokes('ყველა', this)" class="active">ყველა</span>
@@ -740,6 +770,36 @@
     // Initial load
     renderCards();
 </script>
+<script>
+    // ველოდებით გვერდის სრულად ჩატვირთვას
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById('recipeSearch');
+        const recipes = document.querySelectorAll('.recipe');
+        const noResultsMessage = document.getElementById('noResultsMessage');
 
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchQuery = this.value.toLowerCase().trim();
+                let foundAny = false;
+
+                recipes.forEach(recipe => {
+                    const recipeTitle = recipe.querySelector('h2').textContent.toLowerCase();
+                    
+                    if (recipeTitle.includes(searchQuery)) {
+                        recipe.style.display = 'block';
+                        foundAny = true;
+                    } else {
+                        recipe.style.display = 'none';
+                    }
+                });
+
+                // თუ არაფერი მოიძებნა, გამოაჩენს შეტყობინებას
+                if (noResultsMessage) {
+                    noResultsMessage.style.display = foundAny ? 'none' : 'block';
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>
