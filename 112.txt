@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>სახელმწიფო და კერძო სერვისების ცნობარი</title>
+    <style>
+        /* ზოგადი სტილები და ფონი */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            /* უკანა ფონის სურათი (თანამედროვე, საინფორმაციო თემატიკის ბუნდოვანი ილუსტრაცია) */
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), 
+                        url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920') no-repeat center center fixed;
+            background-size: cover;
+            color: #f1f5f9;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* სათაურის სტილი */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #cbd5e1;
+            font-size: 1.1rem;
+        }
+
+        /* სექციების სტილი */
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #38bdf8;
+            color: #38bdf8;
+        }
+
+        /* ბარათების ბადე (Grid) */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        /* თანამედროვე "Glassmorphism" ბარათები */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.1);
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        /* საკონტაქტო ინფორმაციის სტილები */
+        .info-item {
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #94a3b8;
+            min-width: 95px;
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            color: #e2e8f0;
+        }
+
+        /* სპეციალური სტილი ცხელი ხაზისთვის */
+        .hotline {
+            background: rgba(239, 68, 68, 0.2);
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: #fca5a5;
+            font-weight: bold;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .info-value a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+
+        .info-value a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <header>
+            <h1>საინფორმაციო გზამკვლევი</h1>
+            <p>ყველა საჭირო ცხელი ხაზი და მისამართი ერთ სივრცეში</p>
+        </header>
+
+        <main>
+            <h2 class="section-title">სახელმწიფო ორგანოები და უწყებები</h2>
+            
+            <div class="grid-container">
+                
+                <div class="card">
+                    <h3>საქართველოს მთავრობის ადმინისტრაცია</h3>
+                    <div class="info-item">
+                        <span class="info-label">ცხელი ხაზი:</span>
+                        <span class="info-value"><span class="hotline">111</span></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">მისამართი:</span>
+                        <span class="info-value">თბილისი, ინგოროყვას ქ. 7</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">ვებ-გვერდი:</span>
+                        <span class="info-value"><a href="https://gov.ge" target="_blank">gov.ge</a></span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>შინაგან საქმეთა სამინისტრო (სსიპ 112)</h3>
+                    <div class="info-item">
+                        <span class="info-label">ცხელი ხაზი:</span>
+                        <span class="info-value"><span class="hotline">112</span></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">მისამართი:</span>
+                        <span class="info-value">თბილისი, ნავთლუღის ქ. 10ა</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">ვებ-გვერდი:</span>
+                        <span class="info-value"><a href="https://112.gov.ge" target="_blank">112.gov.ge</a></span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>იუსტიციის სახლი</h3>
+                    <div class="info-item">
+                        <span class="info-label">ცხელი ხაზი:</span>
+                        <span class="info-value"><span class="hotline">2 405 405</span></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">მისამართი:</span>
+                        <span class="info-value">თბილისი, სანაპიროს ქ. 2</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">ვებ-გვერდი:</span>
+                        <span class="info-value"><a href="https://psh.gov.ge" target="_blank">psh.gov.ge</a></span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>ოკუპირებული ტერიტორიებიდან დევნილთა, შრომის, ჯანმრთელობისა და სოციალური დაცვის სამინისტრო</h3>
+                    <div class="info-item">
+                        <span class="info-label">ცხელი ხაზი:</span>
+                        <span class="info-value"><span class="hotline">1505</span></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">მისამართი:</span>
+                        <span class="info-value">თბილისი, აკაკი წერეთლის გამზ. 144</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">ვებ-გვერდი:</span>
+                        <span class="info-value"><a href="https://moh.gov.ge" target="_blank">moh.gov.ge</a></span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>განათლებისა და მეცნიერების სამინისტრო</h3>
+                    <div class="info-item">
+                        <span class="info-label">ცხელი ხაზი:</span>
+                        <span class="info-value"><span class="hotline">2 200 220</span></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">მისამართი:</span>
+                        <span class="info-value">თბილისი, დიმიტრი უზნაძის ქ. 52</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">ვებ-გვერდი:</span>
+                        <span class="info-value"><a href="https://mes.gov.ge" target="_blank">mes.gov.ge</a></span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>შემოსავლების სამსახური (RS)</h3>
+                    <div class="info-item">
+                        <span class="info-label">ცხელი ხაზი:</span>
+                        <span class="info-value"><span class="hotline">2 299 299</span></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">მისამართი:</span>
+                        <span class="info-value">თბილისი, ვახტანგ გორგასლის ქ. 16</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">ვებ-გვერდი:</span>
+                        <span class="info-value"><a href="https://rs.ge" target="_blank">rs.ge</a></span>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+</body>
+</html>
