@@ -69,6 +69,45 @@
             line-height: 1.6;
         }
 
+        /* --- ნავიგაციის ახალი ღილაკების სტილი --- */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 35px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            text-decoration: none;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover {
+            color: #fff;
+            border-color: var(--primary);
+            background: rgba(56, 189, 248, 0.08);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            color: #fff;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 242, 0.2));
+            border-color: var(--primary);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
         /* --- ფუტურისტული საძიებო ველი --- */
         .search-container {
             max-width: 600px;
@@ -167,7 +206,6 @@
             background: rgba(9, 13, 22, 0.4);
         }
 
-        /* აქტიური აკორდეონის მდგომარეობა */
         .category-accordion.active {
             border-color: rgba(56, 189, 248, 0.3);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
@@ -178,7 +216,7 @@
         }
 
         .category-accordion.active .category-content {
-            max-height: 2500px; /* თავსებადია დიდი კონტენტისთვის */
+            max-height: 2500px;
             padding: 30px 28px 32px;
             border-top: 1px solid rgba(255, 255, 255, 0.04);
         }
@@ -250,7 +288,6 @@
             color: #e2e8f0;
         }
 
-        /* კონტაქტის (Hotline) ახალი სტილი */
         .hotline {
             background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(129, 140, 242, 0.1));
             padding: 4px 12px;
@@ -260,9 +297,9 @@
             border: 1px solid rgba(56, 189, 248, 0.15);
             display: inline-block;
             letter-spacing: 0.5px;
+            text-decoration: none;
         }
 
-        /* ლინკები */
         .info-value a {
             color: var(--primary);
             text-decoration: none;
@@ -291,35 +328,38 @@
 </head>
 <body>
 
-    <!-- ჰედერი საძიებო სისტემით -->
     <header>
         <div class="container">
             <h1>საქართველოს საინფორმაციო გზამკვლევი</h1>
             <p>სახელმწიფო უწყებების, კლინიკების, ფინანსური, სავაჭრო და გასართობი ობიექტების ერთიანი მონაცემთა ბაზა</p>
+            
+            <div class="nav-buttons">
+                <a href="#" class="nav-btn active">მთავარი</a>
+                <a href="შენი_უბის_ლინკი_აქ" class="nav-btn">უბისა</a>
+                <a href="შენი_სხვა_ლინკი_აქ" class="nav-btn">სხვა</a>
+            </div>
+
             <div class="search-container">
                 <input type="text" id="searchInput" class="search-box" placeholder="ჩაწერეთ სახელი, ნომერი ან მისამართი...">
             </div>
         </div>
     </header>
 
-    <!-- ძირითადი კონტენტი -->
     <div class="container">
         <div id="no-results">🔍 სამწუხაროდ, მსგავსი ობიექტი ვერ მოიძებნა...</div>
         <div id="accordion-container"></div>
     </div>
 
-    <!-- მონაცემთა ბაზა და ლოგიკა (ზუსტად უცვლელი შინაარსი) -->
     <script>
         const database = [
-            // --- სახელმწიფო ორგანოები და უწყებები (სრული სია) ---
-{
-    id: "state",
-    categoryName: "სახელმწიფო ორგანოები და უწყებები",
-    title: "საქართველოს პარლამენტი",
-    phone: "2 281 742",
-    address: "თბილისი, შოთა რუსთაველის გამზ. 8",
-    website: "https://parliament.ge"
-},
+            {
+                id: "state",
+                categoryName: "სახელმწიფო ორგანოები და უწყებები",
+                title: "საქართველოს პარლამენტი",
+                phone: "2 281 742",
+                address: "თბილისი, შოთა რუსთაველის გამზ. 8",
+                website: "https://parliament.ge"
+            }
 {
     id: "state",
     categoryName: "სახელმწიფო ორგანოები და უწყებები",
