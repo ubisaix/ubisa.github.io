@@ -1615,6 +1615,108 @@
     website: "https://hash.ge"
 }
         ];
+        // 1. დავაჯგუფოთ მონაცემები კატეგორიების მიხედვით
+const categories = {};
+database.forEach(item => {
+    if (!categories[item.categoryName]) {
+        categories[item.categoryName] = [];
+    }
+    categories[item.categoryName].push(item);
+});
+
+// 2. ფუნქცია, რომელიც ააშენებს აკორდეონებს და ბარათებს ტელეფონის ბმულებით
+function renderCatalog(filterText = '') {
+    const container = document.getElementById('accordion-container');
+    const noResults = document.getElementById('no-results');
+    container.innerHTML = '';
+    
+    let totalFound = 0;
+    const search = filterText.toLowerCase().trim();
+
+    Object.keys(categories).forEach(catName => {
+        const filteredItems = categories[catName].filter(item => 
+            item.title.toLowerCase().includes(search) ||
+            item.phone.toLowerCase().includes(search) ||
+            item.address.toLowerCase().includes(search)
+        );
+
+        if (filteredItems.length === 0) return;
+        totalFound += filteredItems.length;
+
+        // ვქმნით აკორდეონს
+        const accordion = document.createElement('div');
+        accordion.className = 'category-accordion active'; // ავტომატურად ღიაა
+
+        const header = document.createElement('div');
+        header.className = 'category-header';
+        header.innerHTML = `
+            <div class="category-title"><span class="icon">📁</span> ${catName}</div>
+            <div class="toggle-icon">▼</div>
+        `;
+
+        const content = document.createElement('div');
+        content.className = 'category-content';
+
+        const grid = document.createElement('div');
+        grid.className = 'grid-container';
+
+        // ვამატებთ ბარათებს
+        filteredItems.forEach(item => {
+            // ვასუფთავებთ ნომერს Space-ებისგან, რომ დარეკვისას პრობლემა არ შეიქმნას
+            const cleanPhone = item.phone.replace(/\s+/g, '');
+            
+            // ვამოწმებთ, არის თუ არა ნომერი, რომ ტექსტურ მესიჯებზე ბმული არ გააკეთოს
+            const isSelectableNumber = !isNaN(cleanPhone.replace('*', ''));
+            
+            const phoneHTML = isSelectableNumber 
+                ? `<a href="tel:${cleanPhone}" class="hotline">📞 ${item.phone}</a>`
+                : `<span class="hotline">${item.phone}</span>`;
+
+            grid.innerHTML += `
+                <div class="card">
+                    <div class="card-content">
+                        <h3>${item.title}</h3>
+                        <div class="info-item">
+                            <span class="info-label">მისამართი:</span>
+                            <span class="info-value">${item.address}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">ტელეფონი:</span>
+                            <span class="info-value">${phoneHTML}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">ვებ-გვერდი:</span>
+                            <span class="info-value"><a href="${item.website}" target="_blank">გადასვლა 🌐</a></span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        content.appendChild(grid);
+        accordion.appendChild(header);
+        accordion.appendChild(content);
+        container.appendChild(accordion);
+
+        // აკორდეონის გაღება/დახურვის ფუნქცია კლიკზე
+        header.addEventListener('click', () => {
+            accordion.classList.toggle('active');
+        });
+    });
+
+    // თუ არაფერი მოიძებნა, გამოვაჩინოთ "ვერ მოიძებნა" შეტყობინება
+    noResults.style.display = totalFound === 0 ? 'block' : 'none';
+}
+
+// 3. საძიებო ველის ამუშავება
+document.getElementById('searchInput').addEventListener('input', (e) => {
+    renderCatalog(e.target.value);
+});
+
+// 4. საიტის ჩატვირთვისას კატალოგის პირველადი ჩვენება
+document.addEventListener('DOMContentLoaded', () => {
+    renderCatalog();
+});
      
         // უნიკალური კატეგორიების ამოღება
         function getUniqueCategories(data) {
