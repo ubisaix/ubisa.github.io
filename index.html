@@ -3,803 +3,544 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UBISA.GE | Recipes & Stats</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>საქართველოს საინფორმაციო გზამკვლევი</title>
     <style>
-        .search-container {
-    max-width: 800px;
-    margin: 20px auto 10px auto;
-    padding: 0 20px;
-    text-align: center;
-}
-.search-bar {
-    width: 100%;
-    max-width: 400px;
-    padding: 10px 15px;
-    font-size: 16px;
-    border: 2px solid #ddd;
-    border-radius: 20px;
-    outline: none;
-    transition: border-color 0.3s;
-}
-.search-bar:focus {
-    border-color: #ff6347; /* ჩაწერისას ჩარჩო გახდება პომიდვრისფერი, შენი საიტის აქცენტისთვის */
-}
-.no-results {
-    text-align: center;
-    color: #777;
-    font-size: 18px;
-    margin-top: 20px;
-    display: none; /* თავიდან დამალულია */
-}
+        /* --- თანამედროვე CSS ცვლადები და გლობალური სტილები --- */
         :root {
-            --fiber-green: #2d5a27;
-            --text-dark: #111827;
-            --text-gray: #6b7280;
-            --bg-light: #ffffff;
-            --border: #f3f4f6;
-            --font-main: 'Inter', sans-serif;
+            --bg-dark: #090d16;
+            --panel-bg: rgba(30, 41, 59, 0.4);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --primary: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.15);
+            --accent: #818cf8;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            scroll-behavior: smooth;
         }
 
         body {
-            font-family: var(--font-main);
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            -webkit-font-smoothing: antialiased;
+            background: radial-gradient(circle at 50% 0%, #1e2640 0%, var(--bg-dark) 70%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 80px;
+            overflow-x: hidden;
         }
 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- დახვეწილი ჰედერი --- */
         header {
+            text-align: center;
+            padding: 70px 0 40px;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 40%, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin: 0 auto 35px;
+            line-height: 1.6;
+        }
+
+        /* --- ფუტურისტული საძიებო ველი --- */
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 18px 28px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #fff;
+            outline: none;
+            transition: var(--transition);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-box:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .search-box::placeholder {
+            color: #64748b;
+        }
+
+        /* --- პრემიუმ აკორდეონები (Glassmorphism) --- */
+        .category-accordion {
+            margin-bottom: 20px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .category-header {
+            padding: 22px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            transition: var(--transition);
+        }
+
+        .category-header:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .category-title {
+            font-size: 1.35rem;
+            color: #fff;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: var(--transition);
+        }
+
+        .category-title span.icon {
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .toggle-icon {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.05);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+        }
+
+        /* --- ანიმაციური კონტენტის ჩამოშლა --- */
+        .category-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
+            padding: 0 28px;
+            background: rgba(9, 13, 22, 0.4);
+        }
+
+        /* აქტიური აკორდეონის მდგომარეობა */
+        .category-accordion.active {
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .category-accordion.active .category-title {
+            color: var(--primary);
+        }
+
+        .category-accordion.active .category-content {
+            max-height: 2500px; /* თავსებადია დიდი კონტენტისთვის */
+            padding: 30px 28px 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .category-accordion.active .toggle-icon {
+            transform: rotate(180deg);
+            color: var(--primary);
+            background: rgba(56, 189, 248, 0.1);
+            border-color: rgba(56, 189, 248, 0.2);
+        }
+
+        /* --- ბარათების ბადე (Grid) --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        /* --- სუპერ თანამედროვე ბარათები --- */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            transition: var(--transition);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 30px 0 10px 0;
-            background: white;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo { 
-            font-weight: 800; 
-            font-size: 32px; 
-            color: var(--fiber-green); 
-            cursor: pointer; 
-            margin-bottom: 25px;
-            letter-spacing: -1.5px;
-        }
-
-        .nav-links { 
-            display: flex; 
-            gap: 25px; 
-            font-size: 13px; 
-            font-weight: 600; 
-            color: var(--text-gray);
-            text-transform: uppercase;
-            overflow-x: auto;
-            max-width: 95%;
-            padding: 10px 0;
-            scrollbar-width: none;
-        }
-
-        .nav-links::-webkit-scrollbar { display: none; }
-        
-        .nav-links span {
-            white-space: nowrap;
-            cursor: pointer;
-            transition: all 0.2s;
-            padding-bottom: 5px;
-            border-bottom: 2px solid transparent;
-        }
-
-        .nav-links span:hover, .nav-links span.active { 
-            color: var(--fiber-green); 
-            border-bottom: 2px solid var(--fiber-green);
-        }
-
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        .main-title { font-size: 36px; font-weight: 800; margin-bottom: 40px; letter-spacing: -1px; }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-        }
-
-        .img-wrapper {
+            justify-content: space-between;
             position: relative;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
         }
 
-        .watermark {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(5px);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            pointer-events: none;
-            z-index: 2;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            text-transform: uppercase;
+        .card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(56, 189, 248, 0.25);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
         }
 
-        .card {
-            position: relative;
-            height: 340px;
-            border-radius: 20px;
-            overflow: hidden;
-            background: #000;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        .card-content h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
 
-        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: 0.5s; }
-        .card:hover img { opacity: 1; transform: scale(1.05); }
-
-        .card-content {
-            position: absolute;
-            bottom: 0; left: 0; width: 100%;
-            padding: 25px;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            color: white;
-            box-sizing: border-box;
-            z-index: 3;
-        }
-
-        .item-name { font-size: 17px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
-
-        .item-stats {
+        /* --- ინფო ველები --- */
+        .info-item {
+            margin-bottom: 14px;
+            font-size: 0.95rem;
             display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 12px;
+            align-items: flex-start;
+            line-height: 1.5;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
             font-weight: 500;
-            opacity: 0.9;
+            color: var(--text-muted);
+            min-width: 100px;
+            flex-shrink: 0;
+            font-size: 0.9rem;
         }
 
-        .stat-group {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .info-value {
+            color: #e2e8f0;
         }
 
-        .stat-icon {
-            width: 14px;
-            height: 14px;
-            filter: brightness(0) invert(1);
-        }
-
-        .ads-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
-            margin-top: 80px;
-            border-top: 1px solid var(--border);
-            padding-top: 40px;
-        }
-
-        .ad-banner {
-            height: 180px;
-            background: #f9fafb;
-            border-radius: 15px;
-            overflow: hidden;
-            border: 2px dashed #e5e7eb;
-            cursor: pointer;
-            transition: 0.3s;
-            position: relative;
-        }
-        
-        .ad-banner img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .ad-banner:hover { border-color: var(--fiber-green); background: #f0fdf4; }
-        
-        .ad-tag {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            font-size: 8px;
-            padding: 2px 5px;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 50px;
-        }
-
-        .page-num {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-            background: #f3f4f6;
-            cursor: pointer;
+        /* კონტაქტის (Hotline) ახალი სტილი */
+        .hotline {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(129, 140, 242, 0.1));
+            padding: 4px 12px;
+            border-radius: 6px;
+            color: var(--primary);
             font-weight: 600;
-            transition: 0.3s;
-            color: var(--text-dark);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            display: inline-block;
+            letter-spacing: 0.5px;
         }
 
-        .page-num.active {
-            background: var(--fiber-green);
-            color: white;
-        }
-
-        .page-num:hover:not(.active) {
-            background: #e5e7eb;
-        }
-
-        #recipe-page { display: none; animation: slideIn 0.4s ease-out; }
-        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .recipe-header { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
-        
-        .recipe-img-container { 
-            position: relative; 
-            width: 100%; 
-            height: 550px; 
-            border-radius: 24px; 
-            overflow: hidden; 
-        }
-        .recipe-img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .recipe-details h2 { font-size: 48px; font-weight: 800; margin-top: 0; color: var(--text-dark); }
-        .info-bar { display: flex; gap: 40px; margin: 30px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 20px 0; }
-        .info-item b { display: block; font-size: 20px; color: var(--fiber-green); font-weight: 800; }
-        .info-item span { font-size: 13px; color: var(--text-gray); }
-
-        .ingredients-list { 
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px 30px;
-            list-style: none; 
-            padding: 0; 
-            font-size: 15px; 
-        }
-        .ingredients-list li {
-            border-bottom: 1px solid #f9fafb;
-            padding: 8px 0;
-            line-height: 1.4;
-        }
-        .ingredients-list li::before { content: "•"; color: var(--fiber-green); margin-right: 10px; font-weight: bold; }
-
-        .back-btn { 
-            background: #f3f4f6; border: none; padding: 12px 24px; 
-            border-radius: 12px; cursor: pointer; font-weight: 600; margin-bottom: 30px; 
-            font-size: 14px; transition: 0.2s;
-        }
-        .back-btn:hover { background: #e5e7eb; }
-
-        .similar-section { margin-top: 25px; width: 100%; }
-        .similar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
-        .similar-card { 
-            cursor: pointer; 
-            border-radius: 12px; 
-            overflow: hidden; 
-            position: relative; 
-            height: 120px;
-            transition: 0.3s;
-        }
-        .similar-card:hover { opacity: 0.8; transform: scale(1.02); }
-        .similar-card img { width: 100%; height: 100%; object-fit: cover; }
-        .similar-card span { 
-            position: absolute; bottom: 0; left: 0; right: 0; 
-            background: rgba(0,0,0,0.6); color: white; padding: 5px 10px; 
-            font-size: 11px; font-weight: 600; text-transform: uppercase;
-        }
-
-        .comments-section {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid var(--border);
-        }
-        .comment-form textarea {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            font-family: inherit;
-            margin-bottom: 10px;
-            resize: vertical;
-            box-sizing: border-box;
-        }
-        .comment-btn {
-            background: var(--fiber-green);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 13px;
-        }
-        .comments-list { margin-top: 25px; }
-        .comment-item {
-            padding: 15px 0;
-            border-bottom: 1px solid #f9fafb;
-        }
-        .comment-author { font-weight: 700; font-size: 14px; margin-bottom: 5px; }
-        .comment-text { font-size: 14px; color: var(--text-gray); }
-
-        footer { border-top: 1px solid var(--border); padding: 60px 8%; display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px; }
-        footer h4 { color: var(--fiber-green); font-size: 12px; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px; }
-        footer ul { list-style: none; padding: 0; }
-        footer ul li { margin-bottom: 12px; }
-        
-        .footer-link {
-            color: var(--text-gray);
+        /* ლინკები */
+        .info-value a {
+            color: var(--primary);
             text-decoration: none;
-            font-size: 14px;
-            transition: 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
         }
-        .footer-link:hover { color: var(--fiber-green); transform: translateX(5px); }
 
-        @media (max-width: 1000px) {
-            .menu-grid, .ads-container { grid-template-columns: repeat(2, 1fr); }
-            .recipe-header { grid-template-columns: 1fr; }
-            .recipe-img-container { height: 350px; }
-            .ingredients-list { grid-template-columns: 1fr; }
-            footer { grid-template-columns: 1fr; gap: 30px; }
+        .info-value a:hover {
+            color: #7dd3fc;
+            text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+        }
+
+        /* --- "შედეგი ვერ მოიძებნა" შეტყობინება --- */
+        #no-results {
+            text-align: center;
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin: 80px 0;
+            padding: 30px;
+            background: var(--panel-bg);
+            border-radius: var(--radius-lg);
+            border: 1px dashed var(--border-color);
+            display: none;
         }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="search-container">
-    <input type="text" id="recipeSearch" class="search-bar" placeholder="მოძებნე რეცეპტი...">
-    <div id="noResultsMessage" class="no-results">სამწუხაროდ, რეცეპტი ვერ მოიძებნა...</div>
-</div>
-    <div class="logo" onclick="goHome()">ჩვენი გემრიელი რეცეპტები</div>
-    <div class="nav-links" id="category-menu">
-        <span onclick="filterJokes('ყველა', this)" class="active">ყველა</span>
-        <span onclick="filterJokes('კერძები', this)">კერძები</span>
-        <span onclick="filterJokes('სალათები', this)">სალათები</span>
-        <span onclick="filterJokes('ცომეული', this)">ცომეული</span>
-        <span onclick="filterJokes('წვნიანები', this)">წვნიანები</span>
-        <span onclick="filterJokes('სენდვიჩები', this)">სენდვიჩები</span>
-        <span onclick="filterJokes('ნამცხვრები', this)">ნამცხვრები</span>
-        <span onclick="filterJokes('ტორტები', this)">ტორტები</span>
-        <span onclick="filterJokes('დესერტები', this)">დესერტები</span>
-        <span onclick="filterJokes('სოუსები', this)">სოუსები</span>
-    </div>
-</header>
-
-<div class="container" id="main-content">
-    <h1 class="main-title" id="page-title">ყველა რეცეპტი</h1>
-    <div class="menu-grid" id="grid-container"></div>
-    <div class="pagination" id="pagination"></div>
-
-    <div class="ads-container">
-        <div class="ad-banner" onclick="window.open('https://ubisa.ge', '_blank')">
-            <span class="ad-tag">UBISA.GE</span>
-            <img src="https://i.postimg.cc/Dw5yLc6H/ubisa-reklama.png" alt="Kitchenware">
-        </div>
-        <div class="ad-banner" onclick="window.open('https://gelink.ge', '_blank')">
-            <span class="ad-tag">Gelink.GE</span>
-            <img src="https://i.postimg.cc/sXM73rZD/genilk'i.png" alt="Delivery">
-        </div>
-        <div class="ad-banner" onclick="window.open('https://ubisa.ge/amindi.html', '_blank')">
-            <span class="ad-tag">AMINDI</span>
-            <img src="https://i.postimg.cc/tRPrTvC3/amindi.png" alt="Groceries">
-        </div>
-        <div class="ad-banner" onclick="window.open('https://ubisa.ge/contact.html', '_blank')">
-            <span class="ad-tag">AD</span>
-            <img src="https://i.postimg.cc/7Zrm03br/rek'k'k'.png" alt="Organic Food">
-        </div>
-    </div>
-</div>
-
-<div class="container" id="recipe-page">
-    <button class="back-btn" onclick="goHome()">← მთავარზე</button>
-    <div id="recipe-content" class="recipe-header"></div>
-    
-    <div class="ads-container">
-        <div class="ad-banner" onclick="window.open('https://ubisa.ge/saitebi.html', '_blank')">
-            <span class="ad-tag">საიტები</span>
-            <img src="https://i.postimg.cc/HkpJjGhM/sait'ebi.png" alt="Kitchenware">
-        </div>
-        <div class="ad-banner" onclick="window.open('https://ubisa.ge/horoskopi.html', '_blank')">
-            <span class="ad-tag">ჰოროსკოპი</span>
-            <img src="https://i.postimg.cc/jqcYKGPN/horosk'op'i.png" alt="Delivery">
-        </div>
-        <div class="ad-banner" onclick="window.open('https://ubisa.ge/contact.html', '_blank')">
-            <span class="ad-tag">AD</span>
-            <img src="https://i.postimg.cc/7Zrm03br/rek'k'k'.png" alt="Groceries">
-        </div>
-        <div class="ad-banner" onclick="window.open('https://ubisa.ge/tv.html', '_blank')">
-            <span class="ad-tag">ტელევიზია</span>
-            <img src="https://i.postimg.cc/QNHqy9gV/t'v.png" alt="Organic Food">
-        </div>
-    </div>
-</div>
-
-<footer>
-    <div>
-        <div class="logo" onclick="goHome()">UBISA.GE</div>
-        <p style="color:var(--text-gray); font-size:14px; margin-top: 10px;">ხარისხიანი რეცეპტების პლატფორმა.</p>
-    </div>
-    <div>
-        <h4>ჩვენ გირჩევთ</h4>
-        <ul>
-            <li><a href="https://ubisa.ge/amindi.html" class="footer-link">ამინდი</a></li>
-            <li><a href="https://ubisa.ge/video.html" class="footer-link">ვიდეო</a></li>
-            <li><a href="https://ubisa.ge/ambebi.html" class="footer-link">ამბები</a></li>
-            <li><a href="https://ubisa.ge/gallery.html" class="footer-link">სურათები</a></li>
-        </ul>
-    </div>
-    <div>
-        <h4>მეგობარი საიტები</h4>
-        <ul>
-            <li><a href="https://ubisa.ge/calculator.html" class="footer-link">გამთვლა</a></li>
-            <li><a href="https://ubisa.ge/saitebi.html" class="footer-link">საიტები</a></li>
-            <li><a href="https://ubisa.ge/horoskopi.html" class="footer-link">ჰოროსკოპი</a></li>
-            <li><a href="https://ubisa.ge/tv.html" class="footer-link">ტელევიზია</a></li>
-        </ul>
-    </div>
-    <div>
-        <h4>ჩვენს შესახებ</h4>
-        <ul>
-            <li><a href="#" class="footer-link">წესები</a></li>
-            <li><a href="ubisa.ge/contact.html" class="footer-link">კონტაქტი</a></li>
-        </ul>
-    </div>
-</footer>
-
-<script>
-    const data = [
-        
-        { id: 143, cat: "სოუსები", name: "ბარბექიუს სოუსი", time: "15 წთ", views: "21.124", cal: "40", por: "4", img: "https://i.postimg.cc/X7Pmssq9/barb.webp", ing: ["1 ½ ჭიქა ყავისფერი შაქარი", "1 ½ ჭიქა კეტჩუპი", "½ ჭიქა წითელი ღვინის ძმარი", "1 ს/კ Worcestershire სოუსი", "2 ½ ს/კ მშრალი მდოგვი", "2 ჩ/კ პაპრიკა", "2 ჩ/კ მარილი", "1 ½ ჩ/კ შავი პილპილი", "2 ცხარე წიწაკის სოუსი"], text: "1 მოიმარაგეთ ყველა ინგრედიენტი და ნახევარი ჭიქა წყალი.  2 შეურიეთ ყავისფერი შაქარი, კეტჩუპი, ძმარი, წყალი და Worcestershire სოუსი და აურიეთ ბლენდერით.  3 შემდეგ დაამატეთ მდოგვი, პაპრიკა, მარილი, პილპილი და ცხარე წიწაკის სოუსი და დააბლენდერეთ გლუვი მასის მიღებამდე.  4 მიირთვით ბარბექიუს სოუსი შემწვარ ძეხვეულთან, ხორცთან და ბურგერთან ერთად." },
-        { id: 142, cat: "სოუსები", name: "სოიოს სოუსი", time: "3 სთ", views: "16.512", cal: "300", por: "5", img: "https://i.postimg.cc/XJc6hdhR/soi.webp", ing: ["450 გრ სოია", "350 გრ ფქვილი", "220 გრ მარილი", "3.7 ლ წყალი"], text: "1 ქვაბში ჩაყარეთ სოია, დაამატეთ 3 ჭიქა წყალი და აადუღეთ. შემდეგ, დაბალ ცეცხლზე ხარშეთ 1.5 საათის განმავლობაში. გადაიტანეთ საკვების პროცესორში და დააბლენდერეთ.  2 სოიას პიურე გადაიტანეთ ჯამში, დაამატეთ ფქვილი და მოზილეთ. მიღებული ცომი დაჭერით 5-6 სმ ნაჭრებად.  3 დაალაგეთ სამზარეულოს სველ ხელსახოცზე, დააფარეთ მეორე სველი ხელსახოცი, შეფუთეთ ცელოფანში და შეინახეთ 7 დღით.  4 ამის შემდეგ, ნაჭრები დაალაგეთ საცხობ ფირფიტებზე ისე, რომ ერთმანეთს არ ეხებოდეს და გამოაშრეთ მზეზე, ყავისფერ შეფერილობამდე. ამით მიიღებთ კოჯის.  5 ფერმენტაციისთვის ჯამში ჩაასხით წყალი, დაამატეთ მარილი და მოურიეთ. დაამატეთ გამომშრალი სოია და დააფარეთ. სოია უნდა დაიშალოს წყალში, რასაც შეიძლება 6 თვე დასჭირდეს.  6 როდესაც მთლიანად დაიშლება, გადაასხით ბოთლებში. სოიოს სოუსი მზად არის და ასევე, შეგიძლიათ შეინახოთ." },
-        { id: 141, cat: "სოუსები", name: "ყველის სოუსი", time: "15 წთ", views: "15.214", cal: "200", por: "6", img: "https://i.postimg.cc/50cfDxtj/q'velis.webp", ing: ["500 მლ რძე", "4 ს/კ ფქვილი", "50 გრ კარაქი", "100 გრ ჩედარი"], text: "1 დიდ ქვაბში ჩაასხით რძე, დაუმატეთ ფქვილი, კარაქი და დადგით საშუალო ცეცხლზე.  2 დაიწყეთ ნელა მორევა და კარაქის გადნობის შემდეგ, მოუმატეთ მორევის ტემპს. ნელ-ნელა მიიღებთ შესქელებულ მასას.  3 შემდეგ განაგრძეთ მორევა 2 წუთით და დაამატეთ გახეხილი ყველი ჩედარი და მოურიეთ ყველის გადნობამდე.  4 ყველის სოუსი გააციეთ და მიირთვით სასურველ საკვებთან ერთად." },
-        { id: 140, cat: "სოუსები", name: "ოხრახუშის სოუსი", time: "10 წთ", views: "11.215", cal: "170", por: "6", img: "https://i.postimg.cc/zfyf9tS9/okhra.webp", ing: ["50 გრ კარაქი", "40 გრ ფქვილი", "500 მლ რძე", "1 კონა ოხრახუში", "1 ლიმონი", "1 ჩ/კ მდოგვი", "მარილი, შავი პილპილი"], text: "1 კარაქი გაადნეთ ტაფაზე, საშუალო ცეცხლზე, დაამატეთ ფქვილი და მოურიეთ 1-2 წუთის განმავლობაში, სანამ არ გასქელდება.  2 შემდეგ დაამატეთ რძე და განუწყვეტლივ ურიეთ, სანამ რძე კარგად არ შეიწოვება. ადუღების შემდეგ კიდევ ურიეთ 1 წუთის განმავლობაში.  3 გადმოდგით ცეცხლიდან და ჩაყარეთ წვრილად დაჭრილი ოხრახუში, ლიმონის წვენი და მდოგვი. გემოვნებით მოაყარეთ მარილი და შავი პილპილი.  4 ოხრახუშის სოუსი უმჯობესია მიირთვათ თბილი. შეგიძლიათ მაცივარში შეინახოთ 3 დღის განმავლობაში." },
-        { id: 139, cat: "სოუსები", name: "სოკოს სოუსი", time: "20 წთ", views: "8.124", cal: "200", por: "4", img: "https://i.postimg.cc/GhnsvCJF/sok'so.webp", ing: ["2 ს/კ გამხმარი ძირბუკა", "1 ჩ/კ კარაქი", "2 ხახვი", "200 გრ სოკო", "200 გრ ცხიმიანი არაჟანი"], text: "1 გამხმარ სოკოს დაასხით 100 მლ მდუღარე წყალი და გააჩერეთ 5 წუთი.  2 ქვაბში გაადნეთ კარაქი და დაუმატეთ წვრილად დაჭრილი ხახვი და მოშუშეთ 2-3 წუთი.  3 დაუმატეთ დაჭრილი სოკო და მოხარშეთ კიდევ 5 წუთი. შემდეგ დაასხით 1 ს/კ გამხმარი ძირბუკას ნაყენი.  4 ძირბუკა სოკო დაჭერით და დაამატეთ ტაფაში. ბოლოს დაუმატეთ არაჟანი და მიიყვანეთ ადუღებამდე. სოკოს სოუსი მზად არის." },
-        { id: 138, cat: "სოუსები", name: "პიცის სოუსი", time: "50 წთ", views: "16.215", cal: "120", por: "5", img: "https://i.postimg.cc/BbKH4Z5S/p'itsso.webp", ing: ["2 ს/კ ზეითუნის ზეთი", "1 პატარა ხახვი", "1 ნივრის კბილი", "2 ქილა პომიდორი", "3 ს/კ ტომატის პასტა", "1 დაფნის ფოთოლი", "2 ს/კ ხმელი ორეგანო", "2 ს/კ ყავისფერი შაქარი", "1 კონა ბაზილიკი"], text: "1 ქვაბში გააცხელეთ ზეთი დაბალ ცეცხლზე, შემდეგ დაუმატეთ დაჭრილი ხახვი და მარილი. მოხრაკეთ 12-15 წუთის განმავლობაში.  2 დაამატეთ დაჭყლეტილი ნიორი და შეწვით კიდევ ერთი წუთის განმავლობაში. დაამატეთ პომიდორი, ტომატის პასტა, დაფნა, ორეგანო და შაქარი. მიიყვანეთ ადუღებამდე და შეამცირეთ ცეცხლი.  3 ხარშეთ თავდახურული 30-35 წუთის განმავლობაში ან სანამ არ შესქელდება. თუ კიდევ უფრო გლუვი სოუსი გსურთ პიცისთვის, გამოიყენეთ ბლენდერი.  4 ბოლოს დაამატეთ წვრილად დაჭრილი ბაზილიკი. ეს პიცის სოუსი ეყოფა 4-5 პიცის ცომს და მისი შენახვა 1 კვირით შეიძლება მაცივარში." },
-        { id: 137, cat: "სოუსები", name: "პესტო", time: "15 წთ", views: "17.512", cal: "190", por: "16", img: "https://i.postimg.cc/sX8SvS1M/p'est'.webp", ing: ["3 ჭიქა მწვანე რეჰანი", "1 ½ ჭიქა ნიგოზი", "4 კბილი ნიორი", "¼ ჭიქა ყველი პარმეზანი", "1 ჭიქა ზეითუნის ზეთი", "მარილი და პილპილი"], text: "1 დასაწყისისთვის, დაჭერით რეჰანის ფოთლები, ნიგოზი და დაჭყლიტეთ ნიორი. პარმეზანი დაჭერით წვრილად ან უმჯობესია გამოიყენოთ გახეხილი.  2 შემდეგ, ეს ინგრედიენტები მოათავსეთ საკვებ პროცესორში და ამუშავეთ სანამ კარგად არ დაიჭრება ყველა ინგრედიენტი.  3 სანამ საკვები პროცესორი ჩართულია, ნელ-ნელა ჩაამატეთ ზეითუნის ზეთი, მარილი და პილპილი.  4 გემოვნების მიხედვით, დაამატეთ მარილი ან პილპილი. პესტოს სოუსი გადაიტანეთ თასში და მიირთვით სასურველ კერძთან ერთად." },
-        { id: 136, cat: "სოუსები", name: "შტოშის სოუსი", time: "20 წთ", views: "18.451", cal: "60", por: "8", img: "https://i.postimg.cc/zfF0bd1J/sht'osh.webp", ing: ["250 გრ შტოში", "100 გრ შაქარი", "100 მლ ფორთოხლის წვენი"], text: "1 ტაფაში მოათავსეთ 100 გრ შაქარი და 100 მლ ფორთოხლის წვენი და მიიყვანეთ ადუღებამდე.  2 დაამატეთ 250 გრ ახალი ან გაყინული შტოში და ადუღეთ სანამ არ დარბილდება. გაყინულს სჭირდება დაახლოებით 5 წუთი, ახალს კი 8-10 წუთი.  3 შტოშის სოუსი მომზადების შემდეგ გააციეთ. ის ოდნავ შესქელდება. შეგიძლიათ შეინახოთ მაცივარში 1 კვირის განმავლობაში." },
-        { id: 135, cat: "დესერტები", name: "ბელგიური ვაფლი", time: "35წთ", views: "11.512", cal: "319", por: "8", img: "https://i.postimg.cc/4xZc7X4r/belg.webp", ing: ["2 1/4 ჭიქა უნივერსალური ფქვილი", "1 ს/კ გამაფხვიერებელი", "3 ს/კ შაქარი", "1/2 ჩ/კ მარილი", "1 ჩ/კ დარიჩინი", "2 კვერცხი", "1/2 ჭიქა მცენარეული ზეთი", "2 ჭიქა რძე", "1 ჩ/კ ვანილის ექსტრაქტი"], text: "1 წინასწარ გააცხელეთ ვაფლის საცხობი. დიდ თასში ათქვიფეთ ფქვილი, გამაფხვიერებელი, შაქარი, მარილი და დარიჩინი.  2 საშუალო თასში კარგად ათქვიფეთ კვერცხის ცილა ხელის მიქსერით, ხოლო სხვა თასში შეურიეთ კვერცხის გული, მცენარეული ზეთი, რძე და ვანილის ექსტრაქტი.  3 კვერცხის გულის მიქსს დაუმატეთ ინგრედიენტები და კარგად აურიეთ. შემდეგ, კი შეურიეთ კვერცხის ცილის მიქსს. ბოლოს, მიღებული მასა დაასხით გაცხელებულ ვაფლის საცხობზე და დაელოდეთ გამოცხობას.  4 გამოცხობის შემდეგ, ბელგიური ვაფლი შეგიძლიათ მიირთვათ კარაქთან, სიროფთან, მარწყვთან ან ნებისმიერ სხვა ტოპინგთან ერთად." },
-        { id: 134, cat: "დესერტები", name: "ეკლერი", time: "1სთ 45წთ", views: "12.518", cal: "155", por: "24", img: "https://i.postimg.cc/j2w59FxD/ek'le.webp", ing: ["200 გრ ფქვილი", "425 მლ რძე", "125 გრ კარაქი", "4 კვერცხი", "50 გრამი შაქარი", "2 კვერცხის გული", "1 ჩ/კ ვანილის ექსტრაქტი", "4 ს/კ სიმინდის ფქვილი", "375 მლ ორმაგი კრემი", "100 გრ შოკოლადი", "1 ს/კ შაქრის პუდრი"], text: "1 თასში აურიეთ შაქარი, კვერცხის გული და ვანილი, თანდათან ამატეთ ფქვილი, რომ მიიღოთ გლუვი მასა. დაამატეთ ცხელი რძე და კარგად მოურიეთ. მიღებული მასა დადგით მაღალ ცეცხლზე 5 წუთის განმავლობაში, სანამ არ გასქელდება.  2 ღუმელი გააცხელეთ 200-220 გრადუსზე. აადუღეთ რძის, კარაქის და წყლის ნაზავი, დაამატეთ ფქვილი, შაქარი და მარილი და ათქვიფეთ გლუვი ცომის მისაღებად. გააგრილეთ, დაამატეთ კვერცხი და კიდევ მოურიეთ.  3 ჩაასხით მიქსტურა საკონდიტრო ტომარაში და ეკლერის ფორმები დაასხით გაცხელებულ საცხობ ფირფიტაზე, ერთმანეთის დაშორებით. ფირფიტები მოათავსეთ ღუმელის ზედა უჯრაზე და გამოაცხვეთ 25 წუთის განმავლობაში, 180-200 გრადუსზე.  4 ამის შემდეგ, თითოეულ ფუნთუშას ბოლოში გაუკეთეთ ხვრელი, ამოაბრუნეთ და შეაბრუნეთ ღუმელში 5 წუთის განმავლობაში. გააგრილეთ, კრემი კიდევ ერთხელ აურიეთ რომ გახდეს სქელი, და საკონდიტრო ტომრის დახმარებით ამოავსეთ ფუნთუშები კრემით.  5 გაადნეთ 100 გრ შოკოლადი და 25 გრ კარაქი ცეცხლგამძლე თასში, გადმოდგით ცეცხლიდან და შეურიეთ 75 მლ ორმაგი ნაღები და 1 ს/კ შაქარი. ოდნავ გაგრილების შემდეგ მოასხით ეკლერის ფუნთუშებს. გააციეთ და მიირთვით." },
-        { id: 133, cat: "დესერტები", name: "კრეპი", time: "30წთ", views: "19.512", cal: "216", por: "8", img: "https://i.postimg.cc/Kz5rj4BN/k'rep'.webp", ing: ["2 დიდი კვერცხი", "1/2 ჭიქა რძე", "1/2 ჭიქა წყალი", "1/4 ჩ/კ მარილი", "1 ჭიქა უნივერსალური ფქვილი", "2 ს/კ კარაქი, გამდნარი"], text: "1 დიდ თასში ათქვიფეთ კვერცხი, რძე, წყალი და მარილი. დაუმატეთ ფქვილი და კარაქი და ათქვიფეთ ერთგვაროვანი მასის მისაღებად.  2 გააცხელეთ ოდნავ ზეთიანი ტაფა საშუალო ცეცხლზე. დაასხით ათქვეფილი მასა ტაფაზე, დაახლოებით 1/4 ჭიქა თითოეული კრეპისთვის. ეცადეთ, რომ ცომი მთლიან ზედაპირზე გადანაწილდეს.  3 როდესაც ცომის ზედა მხარე გაშრება და ქვედა მიიღებს მოყავისფრო ფერს, გადააბრუნეთ სანამ მეორე მხარეც არ დაიბრაწება. თითო გვერდს სჭირდება 1-2 წუთი.  4 კრეპი სასურველია მირთვათ ტოპინგთან ერთად – ტკბილი სიროფი, კრემი, გამდნარი შოკოლადი, თაფლი, მარწყვი, მაყვალი და სხვა." },
-        { id: 132, cat: "დესერტები", name: "მოჩი", time: "1სთ 35წთ", views: "21.219", cal: "183", por: "8", img: "https://i.postimg.cc/nLD3FH3j/goch.webp", ing: ["1 ჭიქა ტკბილი წითელი ლობიოს პასტა", "1 ჭიქა წებოვანი ბრინჯის ფქვილი", "1 ჩ/კ მწვანე ჩაის ფხვნილი", "1 ჭიქა წყალი", "1/4 ჭიქა თეთრი შაქარი", "1/2 ჭიქა სიმინდის სახამებელი"], text: "1 წითელი ლობიოს პასტა შეფუთეთ ალუმინის ფოლგაში და გასამყარებლად შედგით საყინულეში, მინიმუმ 1 საათი.  2 შეურიეთ წებოვანი ბრინჯის ფქვილი და მწვანე ჩაის ფხვნილი (მატჩა) მიკროტალღური ღუმელისთვის უსაფრთხო თასში. დაამატეთ წყალი, შაქარი და აურიეთ რომ მიიღოთ გლუვი მასა.  3 დააფარეთ პლასტმასის თავსახური და შედგით მიკროტალღურ ღუმელში, 3-4 წუთი. ამასობაში, წითელი ლობიოს პასტა გამოიღეთ მაცივრიდან და გაყავით 8 თანაბარ ბურთულად.  4 გამოიღეთ ბრინჯის ფქვილის ნაზავი მიკროტალღური ღუმელიდან, მოურიეთ და გააცხელეთ თავდახურული, კიდევ 15-30 წამი.  5 მაგიდის ზედაპირი დანამეთ სიმინდის სახამებლით, 2 ს/კ ცხელი ბრინჯის ფქვილიდან გააკეთეთ ბურთულა, გააბრტყელეთ და ცენტრში მოათავსეთ ერთი ბურთი გაყინული წითელი ლობიოს პასტა და შეკარით ცომი.  6 ბურთულას მოაყარეთ სიმინდის სახამებელი და მოჩი მოათავსეთ მაფინის ქაღალდში. გაიმეორეთ იგივე პროცესი სხვა ბურთულების დასამზადებლად და მიირთვით." },
-        { id: 131, cat: "დესერტები", name: "მოჩის ნაყინი", time: "2სთ 30წთ", views: "15.215", cal: "70", por: "12", img: "https://i.postimg.cc/mrJKjX5N/godzis.webp", ing: ["1 ჭიქა წებოვანი ბრინჯის ფქვილი", "1/4 ჭიქა შაქარი", "2 ს/კ შაქრის ფხვნილი", "1 ჭიქა წყალი", "საკვების საღებავი ფერისთვის", "სიმინდის ან კარტოფილის სახამებელი", "ნაყინი"], text: "1 საცხობ ფირფიტაზე დააფინეთ პერგამენტის ქაღალდი, მოათავსეთ მასზე თქვენთვის სასურველი ნაყინის ბურთულები და 1 საათით შედგით საყინულეში.  2 მიკროტალღური ღუმელისთვის განკუთვნილ თასში მოათავსეთ ბრინჯის ფქვილი, შაქარი, შაქრის ფხვნილი, დაუმატეთ წყალი და მოურიეთ ერთგვაროვანი მასის მისაღებად. დააფარეთ თავსახური და შედგით მიკროტალღურში 1 წუთის განმავლობაში. შემდეგ, მოურიეთ ცომს და შედგით 1 წუთი. ისევ მოურიეთ და ამჯერად შედგით ნახევარი წუთით.  3 მაგიდაზე მოათავსეთ პერგამენტის ქაღალდი, მოაყარეთ სახამებელი და ცხელი ცომი გადაიტანეთ პერგამენტზე. მოაყარეთ სახამებელი და გააბრტყელეთ (სისქე დაახლოებით 6 მმ). თუ ცომი წებოვანია, გაბრტყელებისას დამატებით მოაყარეთ სახამებელი. შემდეგ, კი 30 წუთით შედგით მაცივარში.  4 გამოიღეთ ცომი მაცივრიდან და დაჭერით 8-10 სანტიმეტრის დიამეტრის წრეებად. მოაშორეთ ზედმეტი სახამებელი და თითო წრის ცენტრში მოათავსეთ გაყინული ნაყინის ბურთულები ისე, რომ გარშემო დარჩეს ცომი და შემდეგ მთლიანად დალუქეთ.  5 მიღებული თითო ბურთულა მჭიდროდ შეფუთეთ ცელოფნით ან სხვა მასალით და შედგით საყინულეში მინიმუმ 1 საათით. სანამ მიირთმევთ, უმჯობესია მოჩის ნაყინი ოთახის ტემპერატურაზე გააჩეროთ 5-10 წუთით." },
-        { id: 130, cat: "დესერტები", name: "გოზინაყი", time: "35 წთ", views: "15.412", cal: "320", por: "16", img: "https://i.postimg.cc/3wKsW0DG/goz.webp", ing: ["800 გრ ნიგოზი", "480 გრ თაფლი", "4 ს/კ შაქარი", "2 ჩ/კ მცენარეული ზეთი"], text: "1 გააცხელეთ ღუმელი 175 გრადუსზე. დაჭერით ნიგოზი, დაალაგეთ საცხობ ფირფიტაზე და მოხალეთ 5-7 წუთის განმავლობაში. ამასობაში, მცენარეული ზეთი წაუსვით სხვა საცხობ ფირფიტას.  2 დიდ ტაფაში მოათავსეთ თაფლი და შაქარი და დადგით საშუალო ცეცხლზე. ურიეთ სანამ არ დაიწყებს დუღილს და მუქ ფერს არ მიიღებს, დაახლოებით 5 წუთი.  3 დაამატეთ ნიგოზი და განუწყვეტლივ ურიეთ, რადგან თაფლი და ნიგოზი შეერიოს ერთმანეთს. განაგრძეთ მოხალვა 4-5 წუთის განმავლობაში, სანამ ნარევი არ შესქელდება.  4 დაასხით ცხელი გოზინაყი ზეთიან საცხობ ფირფიტაზე და გააბრტყელეთ, რომ მიიღოთ დაახლოებით 2.5 სანტიმეტრის სისქე. გააგრილეთ 10 წუთის განმავლობაში და შემდეგ დაჭერით პატარა რომბის ფორმის ნაჭრებად.  5 მირთმევამდე სრულად გააგრილეთ და შეინახეთ ჰერმეტულად დახურულ კონტეინერში." },
-        { id: 129, cat: "დესერტები", name: "ნაყინი", time: "2 სთ 30 წთ", views: "21.542", cal: "420", por: "4", img: "https://i.postimg.cc/Rhjdtypq/naq'.webp", ing: ["2 ¼ ჭიქა რძე", "1 ჭიქა სქელი ნაღები", "¾ ჭიქა თეთრი შაქარი", "2 ჩ/კ ვანილის ექსტრაქტი"], text: "1 რძე, ნაღები და შაქარი აურიეთ ქვაბში და დადგით დაბალ ცეცხლზე, სანამ შაქარი არ დაიშლება. ურიეთ და გააგრძელეთ სანამ პატარ ბუშტუკები არ გამოჩნდება.  2 კრემის ნარევი გადაიტანეთ კონტეინერში და შეურიეთ ვანილის ექსტრაქტი და გააციეთ, მინიმუმ 2 საათი.  3 ჩაასხით ცივი ნარევი ნაყინის აპარატში და ამუშავეთ 20-25 წუთი, ან მიჰყევით აპარატის ინსტრუქციას.  4 როდესაც ნაყინი სასურველ სიგრილემდე მიაღწევს, მიირთვით ან მოათავსეთ კონტეინერში და შეინახეთ საყინულეში." },
-        { id: 128, cat: "დესერტები", name: "შუ", time: "1 სთ 40 წთ", views: "16.451", cal: "120", por: "16", img: "https://i.postimg.cc/260X1Hfm/shu.webp", ing: ["115 გრ უმარილო კარაქი", "300 მლ სქელი ნაღები", "120 მლ წყალი", "120 მლ რძე", "1/4 ჩ/კ მარილი", "3 ს/კ შაქარი", "1/2 ჩ/კ ვანილი", "125 გრ უნივერსალური ფქვილი", "4 დიდი კვერცხი", "1 კვერცხი ათქვეფილი 1 ს/კ რძესთან"], text: "საშუალო ცეცხლზე აურიეთ კარაქი, წყალი, რძე, მარილი, 1 ს/კ შაქარი და ურიეთ კარაქის გადნობამდე. მიიყვანეთ ადუღებამდე, შეამცირეთ სითბო და დაუმატეთ ფქვილი. ურიეთ სანამ არ მიიღებთ სქელ ცომს და გადაიტანეთ თასში გასაციებლად.  2 ცომი ათქვიფეთ მიქსერით და დაუმატეთ თითო თითო კვერცხი, დაახლოებით 30 წამის ინტერვალით. ათქვიფეთ სასურველი კონსისტენციის მიღებამდე. შეგიძლიათ ცომი შეინახოთ მაცივარში და მოგვიანებით გამოაცხოთ.  3 ამასობაში მოამზადეთ კრემიც. მიქსერის გამოყენებით, ათქვიფეთ ნაღები, 2 ს/კ შაქარი და ვანილის ექსტრაქტი საშუალო სიჩქარით, დაახლოებით 3-4 წუთის განმავლობაში. უნდა მიიღოთ გლუვი მასა.  4 გააცხელეთ ღუმელი 200°C-ზე. საცხობ ფირფიტაზე დააფინეთ პერგამენტის ქაღალდი და დანამეთ წყლით. ცომი გადაიტანეთ კრემის მოსართავში და საცხობ ფირფიტაზე გადაიტანეთ პატარა ბურთულების სახით. ზემოდა წაუსვით რძის და კვერცხის ნარევი.  5 გამოაცხვეთ 20 წუთის განმავლობაში, შემდეგ შეამცირეთ სითბო 175°C-მდე და გააგრძელეთ გამოცხობა კიდევ 10-15 წუთის განმავლობაში. გამოიღეთ ღუმელიდან და ბოლომდე გააგრილეთ.  6 ამის შემდეგ შუაზე გაჭერით თითო ნამცხვარი და შეავსეთ მომზადებული კრემით, რომელსაც შეგიძლიათ ასევე შეურიოთ ჯემი ან სასურველი შიგთავსი. შუ შეგიძლიათ შეინახოთ მაცივარში 2-3 დღის განმავლობაში." },
-        { id: 127, cat: "დესერტები", name: "კრუასანი", time: "1 სთ 50 წთ", views: "15.214", cal: "350", por: "12", img: "https://i.postimg.cc/bJRf3Hc5/k'ruas.webp", ing: ["500 გრ ფქვილი", "1 ½ ჩ/კ მარილი", "50 გრ შაქარი", "15 გრ საფუარი", "300 გრ კარაქი", "1 კვერცხი", "ზეთი"], text: "1 თასში მოათავსეთ ფქვილი, მარილი, შაქარი და დაამატეთ 300 მლ ცივ წყალში გახსნილი საფუარი. მოზილეთ ცომი 10 წუთის განმავლობაში, გადააფარეთ და გააჩერეთ 2 საათით.  2 საცხობი პერგამენტის 2 ფურცელს შორის მოათავსეთ კარაქი და გააბრტყელეთ, დაახლოებით 20×15 სმ. ცომი გააბრტყელეთ 40×20 სმ მართკუთხედად და დაადეთ კარაქი ისე, რომ შუა მესამედი დაიფაროს.  3 ცომი ორი მხრიდან მოკეცეთ ისე, რომ ზუსტად ცენტრში შეიკრას და გააბრტყელეთ. შემდეგ გადაკეცეთ რამდენჯერმე ფენების მისაღებად და შეინახეთ მთელი ღამით.  4 მეორე დღეს კრუასანის ცომი გააბრტყელეთ დაახლოებით 60×30 სმ მართკუთხედად და კიდეები ჩამოაჭერით. გაჭერით შუაზე ისე, რომ მიიღოთ 2 გრძელი ზოლი და თითო ზოლი დაჭერით 6 ან 7 სამკუთხედად.  5 თითოეული სამკუთხედი ფორმის ცომი ოდნავ გაწელეთ კუთხეებიდან და შემდეგ ერთი კუთხიდან დაიწყეთ გადახვევა, რომ მიღოთ კრუასანის ფორმა. ბოლოები შემოუკეცეთ, გადაიტანეთ პერგამენტიან საცხობ ფირფიტაზე, გადააფარეთ ზეთიანი სამზარეულოს ცელოფანი და გააჩერეთ 2 საათით.  6 გააცხელეთ ღუმელი 200 გრადუსზე. ათქვიფეთ კვერცხი, შეურიეთ ცოტაოდენი მარილი და მოასხით თითო ნაჭერს. კრუასანი გამოაცხვეთ 15-20 წუთის განმავლობაში, სანამ არ გახდება ოქროსფერი." },
-        { id: 126, cat: "დესერტები", name: "ჩიას პუდინგი", time: "8 სთ 45 წთ", views: "18.541", cal: "240", por: "4", img: "https://i.postimg.cc/Dyvwk0xy/chia.webp", ing: ["1 ჭიქა ნუშის რძე ვანილით", "1 ჭიქა ვანილის უცხიმო იოგურტი", "4 ს/კ ნეკერჩხლის სიროფი", "1 ჩ/კ ვანილის ექსტრაქტი", "⅛ ჩ/კ მარილი", "¼ ჭიქა ჩიას თესლი", "400 გრ მარწყვი", "¼ ჭიქა მოხალული ნუში"], text: "1 ნუშის რძე, იოგურტი, 2 ს/კ სიროფი, ვანილი და მარილი მოათავსეთ ერთ თასში და კარგად აურიეთ. დაუმატეთ ჩიას თესლი, მოურიეთ და გააჩერეთ ჩიას 30 წუთის განმავლობაში.  2 ამის შემდეგ, მოურიეთ ნაზავს, მოათავსეთ დალუქულ კონტეინერში და შეინახეთ მაცივარში 8 საათით, ან მთელი ღამით.  3 მარწყვი დაჭერით, მოათავსეთ ცალკე თასში, დაამატეთ 2 ს/კ სიროფი და მოურიეთ. შემდეგ მოაყარეთ დაჭრილი ან მთლიანი ნუში და კიდევ ერთხელ მოურიეთ.  4 ოთხ ჭიქაში გაანაწილეთ ჩიას პუდინგი, ზემოდან მორთეთ მარწყვის ტოპინგით და მიირთვით." },
-        { id: 125, cat: "დესერტები", name: "ფუნთუშა", time: "2 სთ", views: "11.845", cal: "350", por: "10", img: "https://i.postimg.cc/v8W4wpbY/pun.webp", ing: ["500 გრ ფქვილი", "230 მლ რძე", "50 გრ კარაქი", "2 კვერცხი", "120 გრ ქიშმიში", "1 ს/კ ზეთი", "50 გრ არაჟანი", "20 გრ საფუარი", "150 გრ შაქარი", "მარილი და ვანილი"], text: "1 თასში ჩაყარეთ ქიშმიში, დაასხით მდუღარე წყალი, გადაწურეთ და აურიეთ 2 ს/კ ფქვილი. ერთმანეთში აურიეთ 100 მლ თბილი რძე, საფუარი, 1 ჩ/კ ფქვილი და 1 ჩ/კ შაქარი და გააჩერეთ 10 წთ.  2 ამასობაში, დარჩენილი რძე გააცხელეთ და გაადნეთ კარაქი. დაამატეთ შაქარი, 1 კვერცხი, არაჟანი, მარილი, ვანილი და საფუვრის მასა. მოაყარეთ ფქვილი და მოზილეთ ცომი.  3 ცომს შეურიეთ ქიშმიში, გადააფარეთ და გააჩერეთ რომ აფუვდეს.ამის შემდეგ, ცომისგან გააკეთეთ გუნდები, მოათავსეთ საცხობ ფორმებში და გააჩერეთ ნახევარი საათით.  4 ბოლოს კი, წაუსვით ათქვეფილი კვერცხი და ფუნთუშა გამოაცხვეთ ღუმელში, 180 გრადუსზე." },
-        { id: 124, cat: "დესერტები", name: "ჟოლოს მუსი", time: "25 წთ", views: "8.124", cal: "270", por: "6", img: "https://i.postimg.cc/zvmHFN5m/zholos.webp", ing: ["2 ჟელატინის ფენა", "350 გრ ჟოლო", "60 გრ შაქარი", "1 ლიმონის წვენი", "500 მლ ნაღები"], text: "1 ჟელატინის ფენები მოათავსეთ თასში, დაფარეთ თბილი წყლით და გააჩერეთ 5 წუთი. გადაასხი წყალი და გაწურეთ ჟელატინი.  2 ჟოლო, ლიმონის წვენთან და შაქართან ერთად მოათავსეთ ტაფაში და მოამზადეთ საშუალო ან დაბალ ცეცხლზე, 5 წუთის განმავლობაში, სანამ კენკრა მთლიანად არ დაიშლება. გადაიტანეთ საცერში და მოაშორეთ თესლები.  3 შემდეგ შეურიეთ ჟელატინი და გასახსნელად კარგად აურიეთ. შეგიძლიათ ოდნავ შეათბოთ, თუ ჟელატინი არ გაიხსნა. დასრულების შემდეგ მიღებული მასა გააჩერეთ 15 წუთის განმავლობაში.  4 მიქსერით ათქვიფეთ ნაღები და შეურიეთ ან ზემოდან მოასხით ჟოლოს და ჟელატინის მასას. მოათავსეთ კონტეინერში და ჟოლოს მუსი შეინახეთ მაცივარში, მინიმუმ 6 საათით." },
-        { id: 123, cat: "დესერტები", name: "რასგულა", time: "1 სთ", views: "8.745", cal: "90", por: "15", img: "https://i.postimg.cc/gJjxWJc9/rasg.webp", ing: ["2 ლ რძე", "3 ს/კ ძმარი", "ზაფრანა", "200 გრ შაქარი", "4 კარდამონი", "1 ს/კ ვარდის წყლის ექსტრაქტი"], text: "1 რძე მიიყვანეთ ადუღებამდე და ნელ-ნელა დაუმატეთ 2-3 ს/კ ძმარი და ურიეთ. შემდეგ გადმოდგით და რამდენიმე წუთით დააყოვნეთ.  2 მიღებული მასა ჩაასხით მუსლინის ქსოვილიან საცერში და გაწურეთ. ძმრის მოსაშორებლად გაავლეთ გამდინარე წყალში. ისევ გაწურეთ, შეკარით და დაკიდეთ 1 საათით.  3 ამის შემდეგ, მოათავსეთ თასში და მოურიეთ დაახლოებით 5 წუთი, ცომის მისაღებად. მთავარია, ძალიან არ გამაგრდეს და შემდეგ კი გააკეთეთ პატარა ბურთულები.  4 სიროფის მოსამზადებლად ტაფაში ჩაყარეთ შაქარი, 1 ლ წყალი, კარდამონი და ვარდის წყლის ექსტრაქტი.  5 მოათავსეთ საშუალო ცეცხლზე, მიიყვანეთ ადუღებამდე და ხარშეთ დაახლოებით 10 წუთის განმავლობაში, სანამ ნარევი არ გახდება წებოვანი.  6 მოათავსეთ ცომის ბურთულები სიროფში, დააფარეთ თავსახური და მოხარშეთ 10 წუთის განმავლობაში.  7 ბოლოს გადმოიღეთ თეფშზე, გააციეთ და მოაყარეთ ზაფრანა. დაელოდეთ, რომ რასგულა გაცივდეს და შემდეგ მიირთვით." },
-        { id: 122, cat: "დესერტები", name: "პასკა", time: "4 სთ 30 წთ", views: "7.842", cal: "600", por: "5", img: "https://i.postimg.cc/7hc7czST/p'ask'a.webp", ing: ["2 კგ ფქვილი", "500 მლ რძე", "480 გრ კარაქი", "500 გრ შაქარი", "240 გრ ქიშმიში", "8 ცალი კვერცხი", "1/2 ჭიქა ზეთი", "2 ს/კ არაჟანი", "1 ჩ/კ მარილი", "3 ს/კ საფუარი", "1 ს/კ დაფქული მუსკატი", "1 ს/კ დაფქული კარდამონი", "1/4 ს/კ დაფქული ჯანჯაფილი"], text: "1 დაახლოებით 2 ჩ/კ შაქარი ჩაყარეთ თბილ რძეში, დაამატეთ ცოტა ფქვილი და საფუარი. მოურიეთ და ნელ-ნელა დაამატეთ ფქვილი რომ მიიღოთ თხევადი ცომის მასა. დააფარეთ და გადადგით განზე.  2 ერთმანეთში ათქვიფეთ კარაქი, შაქარი, მარილი, კვერცხები, არაჟანი და ყველა სანელებელი. ცომის ამოსვლის შემდეგ დაამატეთ ეს ნარევი და იმდენი ფქვილი, რომ მიიღოთ დარბილებული ცომი.  3 შემდეგ ცომი მოათავსეთ თბილ ადგილზე და დაელოდეთ აფუებას. ამის შემდეგ კი ზეთიანი ხელებით მოზილეთ და გადადგით კიდევ ერთხელ ასაფუებლად.  4 მხოლოდ ამის შემდეგ დაუმატეთ ქიშმიში და გადაიტანეთ სპეციალურ, პასკის ფორმებში, რომელსაც შიგნიდან ექნება პერგამენტი. ცომმა ფორმის ნახევარზე ოდნავ მეტი უნდა დაფაროს.  5 ცომს უკვე დააცადეთ ფორმაშივე ამოვიდეს და შემდეგ პ" },
-        { id: 121, cat: "დესერტები", name: "დარიჩინის ფუნთუშა", time: "10 წთ", views: "18.754", cal: "400", por: "12", img: "https://i.postimg.cc/nhQzT5dv/darich.webp", ing: ["ცომი", "½ ჭიქა რძე", "¼ ჭიქა კარაქი", "3 ჭიქა უნივერსალური ფქვილი", "½ ჭიქა შაქარი", "½ ჩ/კ მარილი", "1 შეფუთვა საფუარი", "1 კვერცხი", "შიგთავსი", "¼ ჭიქა კარაქი", "1 ჭიქა ყავისფერი შაქარი", "1 ს/კ დაფქული დარიჩინი", "მინანქარი", "90 გრ ნაღების ყველი", "1 ს/კ კარაქი", "1 ს/კ რძე", "½ ჩ/კ ვანილის ექსტრაქტი", "2 ჭიქა საკონდიტრო შაქარი"], text: "1 გააცხელეთ რძე, წყალი და 1/4 ჭიქა კარაქი ერთად ქვაბში საშუალო ცეცხლზე, დაახლოებით 5 წუთი. შემდეგ გააციეთ 1-2 წუთი და დაამატეთ ათქვეფილი კვერცხი. ცალკე თასში აურიეთ ფქვილი, თეთრი შაქარი, მარილი და საფუარი.  2 ჩაასხით რძის ნარევი და ფქვილის ნარევის 1/3 თასში, ათქვიფეთ მიქსერით, სანამ არ დატენიანდება. დაუმატეთ დარჩენილი ფქვილის ნაზავი, სანამ ცომი არ შესქელდება.  3 მოზილეთ ფქვილმოყრილ ზედაპირზე 8 წუთის განმავლობაში. მოათავსეთ თავდახურულ თასში და დატოვეთ მშრალ, თბილ ადგილას, სანამ ზომაში გაორმაგდება, 1-2 საათის განმავლობაში.  4 დაჭერით და გააბრტყელეთ ცომი დაახლოებით 40×30 სმ მართკუთხედებად და თანაბრად გადაუსვით 1/4 ჭიქა კარაქი. თასში აურიეთ ყავისფერი შაქარი, დარიჩინი და თანაბრად მოაყარეთ ცომს. შემოახვიეთ მოკლე მხრიდან და დაჭერით 12 თანაბარ რულეტად.  5 შემდეგ მოათავსეთ ცხიმწასმულ მინის საცხობ ფორმაში, დააფარეთ და დატოვეთ მშრალ, თბილ ადგილას, 8 საათის განმავლობაში.  6 გააცხელეთ ღუმელი 190 გრადუსზე და გამოაცხვეთ დარიჩინის ფუნთუშა ოქროსფერ შეფერილობამდე, დაახლოებით 20 წუთი.  7 მინანქრისთვის, თასში ათქვიფეთ კრემის ყველი, 1 სუფრის კოვზი კარაქი, რძე და ვანილის ექსტრაქტი ელექტრო მიქსერის გამოყენებით, სანამ კრემისებრი გახდება. ნელ-ნელა აურიეთ საკონდიტრო შაქარში ერთგვაროვანი მასის მიღებამდე.  8 გამოიღეთ დარიჩინის ხვეულები ღუმლიდან, გადმობრუნებული მოათავსეთ გასაგრილებლად, 5-10 წუთით და შემდეგ მოასხით მინანქარი." },
-        { id: 120, cat: "დესერტები", name: "ალადები", time: "30 წთ", views: "14.634", cal: "200", por: "8", img: "https://i.postimg.cc/D0cHP2s7/alad.webp", ing: ["2 ჭიქა უნივერსალური ფქვილი", "2 კვერცხი", "1 ჭიქა კეფირი", "2 ს/კ შაქარი", "⅔ ჩ/კ საცხობი სოდა", "2 ს/კ მცენარეული ზეთი", "მარილი"], text: "1 დიდ თასში შეურიეთ 1 ჭიქაზე ოდნავ მეტი ფქვილი, კეფირი, კვერცხი, შაქარი, საცხობი სოდა, მარილი გემოვნებით და ათქვიფეთ ცომის მისაღებად.  2 გააცხელეთ ზეთიანი ტაფა საშუალო და დაბალ ცეცხლზე, ჩაასხით დაახლოებით 2 სუფრის კოვზი ცომი ტაფაში თითო ბლინისთვის.  3 ალადები კარგად რომ შეიბრაწოს და ამავდროულად ჰქონდეს ფაფუკი შიგთავსი, თითო მხარე შეწვით 2-დან 3 წუთამდე." },
-        { id: 119, cat: "დესერტები", name: "სამარხვო ბლინი", time: "30 წთ", views: "19.412", cal: "100", por: "6", img: "https://i.postimg.cc/xd40LPQx/samblin.webp", ing: ["60 გრ ფქვილი", "1/2 ჩ/კ სოდა", "1 ჩ/კ ლიმონის წვენი", "2 ს/კ ზეთი", "1 ს/კ შაქარი", "1/4 ჩ/კ მარილი", "ხილის ჯემი"], text: "1 პირველ რიგში, 350-400 მლ ანადუღარ წყალში შეურიეთ ზეთი და ლიმონის წვენი. ცალკე თასში კი მოათავსეთ ფქვილი, მარილი, შაქარი და სოდა.  2 სითხის ნახევარი დაასხით ფქვილს და კარგად აურიეთ. შემდეგ დაამატეთ სითხის მეორე ნახევარი და აურიეთ ისე, რომ თხელი ცომის მასა მიიღოთ.  3 პატარა ზომის გაცხელებულ ტაფაზე დაასხით ზეთი და ჩაასხით ცომი, რომ დაიფაროს მთლიანი ზედაპირი და ასე გამოაცხვეთ ბლინის თითო მხარე.  4 შემწვარ მხარეს მოათავსეთ 1 ს/კ სასურველი ხილის ჯემი, გადაახვიეთ და სამარხვო ბლინი შეწვით ყველა მხრიდან." },
-        { id: 118, cat: "ტორტები", name: "მარწყვის ტორტი", time: "1 სთ", views: "13.421", cal: "380", por: "14", img: "https://i.postimg.cc/nrCZj2tH/khilit'ort'.webp", ing: ["2 ჭიქა თეთრი შაქარი", "1 ჭიქა კარაქი", "80 მლ მარწყვის ჟელატინი", "4 დიდი კვერცხი", "2 ¾ ჭიქა ნამცხვრის ფქვილი", "2 ½ ჩ/კ გამაფხვიერებელი", "1 ჭიქა რძე", "½ ჭიქა მარწყვის პიურე", "1 ს/კ ვანილის ექსტრაქტი"], text: "1. გააცხელეთ ღუმელი 175 გრადუსზე და საცხობ ფორმას წაუსვით ცხიმი და მოაყარეთ ფქვილი.  2. შაქარი, კარაქი და მარწყვის ჟელატინი ერთად ავთქვიფოთ თასში, სანამ მსუბუქი და ფუმფულა გახდება. დაუმატეთ კვერცხები სათითაოდ, ყოველი დამატების შემდეგ კარგად ათქვიფეთ.  3. ცალკე აურიეთ ფქვილი და გამაფხვიერებელი და დაამატეთ კარაქის ნარევს რძესთან ერთად. შემდეგ შეურიეთ მარწყვის პიურე და ვანილი.  4. მომზადებული ცომი გადაანაწილეთ საცხობ ფორმებში და გამოაცხვეთ დაახლოებით 25-30 წუთი. მარწყვის ტორტი გამოცხობის შემდეგ გააციეთ." },
-        { id: 117, cat: "ტორტები", name: "ხილის ტორტი", time: "50 წთ", views: "16.412", cal: "600", por: "6", img: "https://i.postimg.cc/D0jZRm7P/khilis.webp", ing: ["250 გრ შაქარი", "3 ს/კ საკონდიტრო შაქარი", "250 გრ კარაქი", "5 კვერცხი", "250 გრ ფქვილი", "250 მლ ორმაგი კრემი", "ხილი"], text: "1. ორ საცხობ ფირფიტაზე დააფინეთ პერგამენტის ქაღალდი და წაუსვით ცხიმი. ღუმელი გაათბეთ 200°C-ზე.  2. ჩაყარეთ შაქარი და კარაქი თასში და ურიეთ სანამ ფუმფულა მასას არ მიიღებთ. ცალკე თასში ათქვიფეთ კვერცხი.  3. კარაქისა და შაქრის ნარევს დაუმატეთ 1 ს/კ კვერცხის ნარევი, ათქვიფეთ და ნელ-ნელა დაამატეთ დარჩენილი მასა. ათქვიფეთ ერთგვაროვანი მასის მიღებამდე.  4. ბოლოს დაამატეთ ფქვილი და კარგად მოზილეთ ცომი. შემდეგ მოათავსეთ ცომი საცხობ ფორმებში და გამოაცხვეთ 20-25 წუთის მანძილზე. დასრულების შემდეგ გამოიღეთ და გააგრილეთ.  5. ამასობაში, თასში მოათავსეთ კრემი და საკონდიტრო შაქარი. ათქვიფეთ მკვრივი კრემის მისაღებად. დაჭერით სასურველი ხილი (მოცვი, მარწყვი, ჟოლო, ატამი).  6. ხილის ტორტის ერთ ცომს წაუსვით კრემი და მოაყარეთ ხილი, ზემოდან დაადეთ ცომის მეორე ნაჭერი და მოაყარეთ დარჩენილი ხილი. შეგიძლიათ კრემი წაუსვათ გვერდებზეც." },
-        { id: 116, cat: "ტორტები", name: "შოკოლადის ტორტი", time: "45 წთ", views: "9.741", cal: "350", por: "8", img: "https://i.postimg.cc/MT11k7LD/shok'.webp", ing: ["260 გრ ჩვეულებრივი ფქვილი", "55 გრ კაკაო", "1.5 ჩ/კ გამაფხვიერებელი", "1.5 ჩ/კ საცხობი სოდა", "440 გრ თეთრი შაქარი", "1 ჩ/კ მარილი", "2 კვერცხი", "250 მლ რძე", "125 მლ მცენარეული ზეთი", "2 ს/კ ვანილის ექსტრაქტი"], text: "1. გააცხელეთ ღუმელი 180°C-ზე და საცხობ ფორმებს წაუსვით კარაქი.  2. ფქვილი, კაკაო, გამაფხვიერებელი, სოდა, შაქარი და მარილი აურიეთ ჯამში. დაამატეთ კვერცხი, რძე, ზეთი, ვანილი და კარგად ათქვიფეთ.  3. მოასხით 250 მლ მდუღარე წყალი და ათქვიფეთ და მიღებული თხელი ცომი ჩაასხით ფორმებში.  4. შოკოლადის ტორტი გამოაცხვეთ 35 წუთის განმავლობაში. შემდეგ გააგრილეთ ფორმებში 10 წუთის განმავლობაში.  5. ბოლომდე რომ გაგრილდება, ამოიღეთ საცხობი ფორმიდან და ზემოდან მოასხით სასურველი კრემი, შოკოლადი, კარამელი და ა.შ." },
-        { id: 115, cat: "ტორტები", name: "ჟელეს ტორტი", time: "8 სთ 30 წთ", views: "7.412", cal: "420", por: "10", img: "https://i.postimg.cc/JzTqK5fg/zhele.webp", ing: ["5 ფერი ტკბილი ჟელატინი", "30 გრ ჟელატინის ფხვნილი", "400 გრ ტკბილი შესქელებული რძე", "1 ¼ ჭიქა სქელი ნაღები", "1 ჩ/კ ვანილის ექსტრაქტი"], text: "1. თითოეული ჟელატინი მოათავსეთ ცალკე თასში, თითო თასში ჩაასხით 1/2 ჭიქა მდუღარე წყალი და ურიეთ სანამ ჟელატინი არ დაიშლება. დაამატეთ 1/2 ჭიქა ცივი წყალი და მოურიეთ.  2. ჟელატინები მოათავსეთ საყინულეში 4 საათით. ამასობაში, მოამზადეთ ტორტის საცხობი ფორმები და დაასხით სამზარეულოს სპრეი.  3. გაყინული ჟელატინები დაჭერით პატარა კუბებად, აურიეთ ერთმანეთში და გადაიტანეთ ტაფაში.  4. 1 ჭიქა ცივი წყალი და ჟელატინის ფხვნილი მოათავსეთ თასში და გააჩერეთ სანამ არ დაიშლება. დაამატეთ დარჩენილი 1 ჭიქა მდუღარე წყალი და ურიეთ სანამ მთლიანად არ დაიშლება.  5. ბლენდერში ათქვიფეთ შესქელებული რძე, ნაღები, ჟელატინის ფხვნილის ნარევი და ვანილი. აურიეთ სანამ კარგად არ გაერთიანდება.  6. ნამცხვრის ფორმაში ჩაყარეთ ჟელატინის კუბიკები, რძის ნარევი და შედგით მაცივარში დაახლოებით 4 საათით. ჟელეს ტორტი დაჭერით და მიირთვით." },
-        { id: 114, cat: "ტორტები", name: "ჩინური ტორტი", time: "1 სთ 55 წთ", views: "8.745", cal: "60", por: "12", img: "https://i.postimg.cc/8kHTyF5V/tshi.webp", ing: ["10 კვერცხის ცილა", "10 კვერცხის გული", "1/2 ჩ/კ ტარტარის კრემი", "1/2 ჩ/კ გამაფხვიერებელი", "200 გრ შაქარი", "200 გრ ზეთი", "110 გრ ნამცხვრის ფქვილი", "2 ჩ/კ ვანილი", "1/4 ჩ/კ მარილი"], text: "1. დიდ თასში, 8 წუთს განმავლობაში მიქსერით აურიეთ კვერცხის ცილა, კრემი, გამაფხვიერებელი, და 100 გრ შაქარი.  2. მეორე თასში აურიეთ კვერცხის გული, ზეთი, ფქვილი, 100 გრ შაქარი, ვანილი და მარილი 4 წუთის მანძილზე.  3. ცილის ნარევის 1/4 აურიეთ კვერცხის გულის მასაში. შემდეგ მეორე მეოთხედი. ბოლოს შეურიეთ დარჩენილი მასა და ნაზად მოურიეთ.  4. მიღებული ნარევი მოათავსეთ უცხიმო საცხობ ფორმაში და გამოაცხვეთ 175 გრადუსზე, 30 წუთის განმავლობაში. შემდეგ 150 გრადუსზე კიდევ 30 წუთით.  5. გამოიღეთ ნამცხვარი, დატოვეთ საცხობ ფორმაში და გააციეთ. ბოლომდე გაგრილების შემდეგ ამოიღეთ ფორმიდან.  6. სურვილისამებრ, ჩინური ტორტი შეგიძლიათ მიირთვათ კრემით ან ხილით." },
-        { id: 113, cat: "ნამცხვრები", name: "სომხური ქადა", time: "1 სთ 30 წთ", views: "7.451", cal: "350", por: "10", img: "https://i.postimg.cc/SsncZ065/somkh.webp", ing: ["550 გრ მარგარინი", "500 მლ მაწონი", "3 ჭიქა შაქარი", "4 ჭიქა ფქვილი", "2 კვერცხი", "1 ჩ/კ სოდა", "1 ვანილი", "ძმარი"], text: "1. თასში მოათავსეთ ოდნავ დარბილებული, 500 გრ მარგარინი, 2 ჭიქა ფქვილი მოზილეთ. შემდეგ დაამატეთ სოდა, ძმარი, ერთი კვერცხი, მაწონი და კარგად მოზილეთ.  2. კარგად შერევის შემდეგ, დაამატეთ ცოტა ფქვილი და მოზილეთ ცომი. შემდეგ რამდენჯერმე გააბრტყელეთ, გადაახვიეთ და მოზილეთ.  3. შიგთავსის მოსამზადებლად 2 ჭიქა ფქვილი, შაქარი, დარჩენილი მარგარინი და ვანილი მოათავსეთ ტაფაზე, ძალიან დაბალ ცეცხლზე და ურიეთ სანამ მარგარინი ბოლომდე არ გადნება.  4. მომზადებული ცომი გააბრტყელეთ, ზემოდან დაადეთ შიგთავსი, გადაახვიეთ რულეტის სტილში და სასურველია ზემოდან წაუსვათ ათქვეფილი კვერცხი და მოაყაროთ შაქარი.  5. ქადა გამოაცხვეთ წინასწარ გაცხელებულ ღუმელში, 170-180 გრადუსზე, სანამ მოყავისფრო-მოწითალო შეფერილობას არ მიიღებს." },
-        { id: 112, cat: "ნამცხვრები", name: "სამარხვო კექსი", time: "1 სთ 30 წთ", views: "18.742", cal: "240", por: "12", img: "https://i.postimg.cc/Hk18Qcv5/samar.webp", ing: ["3 ჭიქა ფქვილი", "6 ს/კ კაკაო", "1 ჭიქა შაქარი", "1 ს/კ სოდა", "1 ს/კ ვანილი", "250 მლ ფორთოხლის წვენი", "1/4 ჭიქა ზეთი", "2 ს/კ ძმარი"], text: "1. საშუალო ზომის თასში ერთმანეთში კარგად აურიეთ ზეთი და შაქარი, შემდეგ დაამატეთ ფორთოხლის წვენი, სოდა და კიდევ ერთხელ აურიეთ.  2. ძმარი აურიეთ დაახლოებით ნახევარ ჭიქა წყალში და ჩაასხით თასში არსებულ მასას და მოურიეთ რამდენიმე წუთის განმავლობაში.  3. ბოლოს კი დაუმატეთ კაკაო და ფქვილი, კარგად აურიეთ ერთმანეთში და მიღებული მასა მოათავსეთ სასურველ საცხობ ფორმაში.  4. ღუმელი გააცხელეთ 170-175 გრადუსზე, შედგით სამარხვო კექსი და გამოაცხვეთ ერთი საათის განმავლობაში. ყურადღებით იყავით, რომ არ დაიწვას.  5. გამოცხობის შემდეგ კი, შეგიძლიათ მორთოთ ხილით, თხილეულით, ქიშმიშით ან მოასხათ სასურველი სიროფი ან მინანქარი." },
-        { id: 111, cat: "ნამცხვრები", name: "იდეალი", time: "1 სთ 30 წთ", views: "14.745", cal: "300", por: "10", img: "https://i.postimg.cc/VvHBffzx/idea.webp", ing: ["5 კვერცხი", "1 ჭიქა ნიგოზი", "1 ქილა შესქელებული რძე", "200 გრ კარაქი", "3 ს/კ თაფლი", "2 ჭიქა შაქარი", "1 ჩ/კ სოდა", "1 ჩ/კ ძმარი", "ფქვილი და ვანილი"], text: "1. პირველ რიგში, ცომის მოსამზადებლად ათქვიფეთ კვერცხი და შაქარი, დაამატეთ სოდა და ძმარი, თაფლი, ნახევარი ჭიქა ნიგოზი და აურიეთ.  2. შემდეგ დაამატეთ იმდენი ფქვილი, რომ გამოვიდეს ნაზი ცომი. იდეალის ცომი არ უნდა იყოს ზედმეტად სქელი, მაგრამ არ უნდა გეწებებოდეთ ხელზე.  3. გააბრტყელეთ ცომი, შეგიძლიათ გაუკეთოთ წვრილი ნახვრეტები და გამოაცხვეთ ფირფიტები.  4. რაც შეეხება კრემს, მის მოსამზადებლად მოხარშული შედედებული რძე ათქვიფეთ ვანილთან და კარაქთან ერთად, წაუსვით გამომცხვარ ფენებს და დაადეთ ერთმანეთზე.  5. იდეალი მზად არის და ზემოდან შეგიძლიათ მოაყაროთ ნიგოზი, შოკოლადის ნატეხები ან კაკაო." },
-        { id: 110, cat: "ნამცხვრები", name: "შოკოლადის რულეტი", time: "1 სთ", views: "12.845", cal: "450", por: "8", img: "https://i.postimg.cc/76nKkrG6/shok'.webp", ing: ["5 კვერცხის ცილა", "250 გრ შაქარი", "60 გრ კაკაო", "100 გრ შავი შოკოლადი", "250 მლ ორმაგი კრემი", "1 ჩ/კ ლიმონის წვენი", "1 ჩ/კ სიმინდის სახამებელი", "100 გრ კარამელის სოუსი", "ზღვის მარილი", "მცენარეული ზეთი"], text: "1. გააცხელეთ ღუმელი 175 გრადუსზე. საცხობ ფორმას წაუსვით ზეთი და მოათავსეთ საცხობი პერგამენტი.  2. კვერცხის ცილა, ლიმონის წვენი და ცოტა მარილი ათქვიფეთ მიქსერით. დაუმატეთ 1 ს/კ შაქარი და ათქვიფეთ, შემდეგ დაუმატეთ დარჩენილი შაქარი თითო-თითო კოვზით (მოიტოვეთ 30 გრ), სანამ მასა არ გახდება სქელი.  3. დაუმატეთ კაკაო და სიმინდის სახამებელი. მიღებული მასა მოათავსეთ ფორმებში და გამოაცხვეთ 15 წუთის განმავლობაში. გასაციებლად დატოვეთ ფორმაში.  4. შიგთავსის მოსამზადებლად შოკოლადი და ნაღები მოათავსეთ ცეცხლგამძლე თასში, ჩადეთ მდუღარე წყალში და ურიეთ სანამ არ გადნება. გადმოდგით და დატოვეთ ოთახის ტემპერატურამდე. კრემის შიგთავსისთვის, ათქვიფეთ ნაღები და 30 გრ შაქარი.  5. ამოიღეთ ფორმიდან და მოაცილეთ პერგამენტი. გაჭერით ხაზი, კიდიდან 2 სმ დაშორებით. წაუსვით შოკოლადის შიგთავსი და კრემი, შემდეგ მოასხით კარამელის სოუსის უმეტესი ნაწილი. მოაყარეთ ზღვის მარილი და და შიგთავსი კარგად გადაანაწილეთ დანით.  6. ამის შემდეგ, გადაახვიეთ და შოკოლადის რულეტი მზად არის. შეგიძლიათ მოასხათ დარჩენილი კარამელის სოუსი." },
-        { id: 109, cat: "ნამცხვრები", name: "მედოკი", time: "2 სთ 30 წთ", views: "8.745", cal: "500", por: "12", img: "https://i.postimg.cc/VNrymvmk/medok'.webp", ing: ["370 გრ უნივერსალური ფქვილი", "4 ს/კ თაფლი", "150 გრ შაქარი", "2 ს/კ უმარილო კარაქი", "3 კვერცხი", "1 ჩ/კ საცხობი სოდა", "900 გრ არაჟანი", "240 გრ შაქრის ფხვნილი", "230 მლ სქელი ნაღები"], text: "1. ცომის მოსამზადებლად გაადნეთ 3/4 ჭიქა შაქარი, 1/4 ჭიქა თაფლი და 2 ს/კ კარაქი დაბალ ცეცხლზე, 5–7 წუთი. გადმოდგით ცეცხლიდან და დაამატეთ კვერცხები, თან ათქვიფეთ.  2. დაუმატეთ სოდა, მოურიეთ რომ კარგად შეერიოს და შემდეგ დაუმატეთ 3 ჭიქა ფქვილი. ცომი კარგად მოზილეთ და დაყავით რვა თანაბარ ნაწილად.  3. თითოეული ნაჭერი გააბრტყელეთ და მიეცით წრიული ფორმა. მოაჭერით კიდეები და შეინახეთ ნამცეცები. თითო ნაჭერი გამოაცხვეთ ღუმელში, 175 გრადუსზე, 5 წუთის განმავლობაში. ნამსხვრევებიც გამოაცხვეთ და შემდეგ დაფშვენით.  4. მედოკის კრემის მოსამზადებლად ათქვიფეთ 1 ჭიქა ნაღები, სანამ მასა ფუმფულა არ გახდება. ცალკე თასში ათქვიფეთ არაჟანი შაქრის ფხვნილთან ერთად და შეურიეთ ნაღებს. გამოყენებამდე, შედგით მაცივარში.  5. ნამცხვრის თითოეულ ფენას წაუსვით დაახლოებით 1/3 ჭიქა კრემი, დაადეთ ფენები ზემოდან და თან ნაზად დააწექით, რომ კარგად შეერთდეს. დარჩენილი კრემი წაუსვით ზემოდან და გვერდებზე.  6. დაფშვნილი ნამცეცებიც მოაყარეთ გვერდებზე და ზედაპირზე, გადააფარეთ და მედოკი შედგით მაცივარში, რამდენიმე საათით ან მთელი ღამით." },
-        { id: 108, cat: "ნამცხვრები", name: "ბანანის ნამცხვარი", time: "2 სთ 15 წთ", views: "4.874", cal: "450", por: "18", img: "https://i.postimg.cc/C5jSY1Cg/ban.webp", ing: ["1 ½ ჭიქა ბანანი", "2 ჩ/კ ლიმონის წვენი", "3 ჭიქა უნივერსალური ფქვილი", "1 ½ ჩ/კ საცხობი სოდა", "¼ ჩ/კ მარილი", "2⅛ ჭიქა შაქარი", "3 ½ ჭიქა საკონდიტრო შაქარი", "1 1/4 ჭიქა კარაქი", "3 კვერცხი", "3 ჩ/კ ვანილის ექსტრაქტი", "1 ½ ჭიქა ნაღები", "220 გრ ნაღების ყველი"], text: "1. ღუმელი 135 გრადუსზე გააცხელეთ და საცხობ ფორმას წაუსვით ცხიმი და ფქვილი. თასში შეურიეთ დაჭყლეტილი ბანანი და ლიმონის წვენი.  2. საშუალო ზომის თასში აურიეთ ფქვილი, სოდა და მარილი. ათქვიფეთ შაქარი და 3/4 ჭიქა კარაქი ცალკე თასში, 3-4 წუთის განმავლობაში.  3. ათქვიფეთ კვერცხები სათითაოდ და შეურიეთ 2 ს/კ ვანილი. ფქვილის და კარაქის ნარევი დაამატეთ ბანანის მასას. მიღებული ცომი მოათავსეთ საცხობ ფორმებში.  4. გამოაცხვეთ წინასწარ გახურებულ ღუმელში დაახლოებით 1 საათი. გამოცხობის შემდეგ შედგით საყინულეში 45 წუთით, დასატენიანებლად.  5. კრემის მოსამზადებლად დარჩენილი კარაქი და კრემის ყველი ათქვიფეთ, დაამატეთ დარჩენილი ვანილი, საკონდიტრო შაქარი და ათქვიფეთ გლუვი მასის მისაღებად.  6. გამოიღეთ ბანანის ნამცხვარი მაცივრიდან, 5-10 წუთით გააჩერეთ და წაუსვით კრემი." },
-        { id: 107, cat: "ნამცხვრები", name: "სნიკერსი", time: "1 სთ", views: "8.745", cal: "290", por: "16", img: "https://i.postimg.cc/zvFqn6RV/sni.webp", ing: ["1 შოკოლადის ტორტის მიქსი", "3 კვერცხი", "½ ჭიქა მცენარეული ზეთი", "400 გრ კარამელი", "¼ ჭიქა რძე", "⅓ ჭიქა კარაქი", "2 ჭიქა შოკოლადი", "1 ჭიქა პეკანი"], text: "1. ინსტრუქციის მიხედვით აურიეთ ერთმანეთში ნამცხვრის მიქსი, დაამატეთ კვერცხი, 1⅓ ჭიქა წყალი და მცენარეული ზეთი.  2. ცომის ნახევარი მოათავსეთ ცხიმწასმულ საცხობ ფორმაში და გამოაცხვეთ 175 გრადუსზე 20 წუთის განმავლობაში.  3. სანამ ცხვება, კარამელი, რძე და კარაქი მოათავსეთ ქვაბში და გაადნეთ დაბალ ცეცხლზე, მუდმივად ურიეთ სანამ კარამელი არ გადნება და გლუვი არ გახდება.  4. ცხობის დასრულებისთანავე ცომს მოასხით კარამელი. ზემოდან მოაყარეთ შოკოლადის ნატეხები და პეკანი.  5. ზემოდან მოაყარეთ ნამცხვრის მიქსის დარჩენილი ნახევარი. აცხვეთ კიდევ 20 წუთი 175 გრადუსზე.  6. სნიკერსის ნამცხვარი გამოიღეთ ღუმელიდან და გააციეთ. შეგიძლიათ ზემოდან მოასხათ ნაყინი." },
-        { id: 106, cat: "ნამცხვრები", name: "კაკაოს ნამცხვრი", time: "1 სთ", views: "4.874", cal: "160", por: "24", img: "https://i.postimg.cc/xCWXswCv/k'ak'aos.webp", ing: ["¾ ჭიქა კაკაო", "2 ჭიქა თეთრი შაქარი", "1 ¾ ჭიქა უნივერსალური ფქვილი", "1 ½ ჩ/კ გამაფხვიერებელი", "1 ½ ჩ/კ სოდა", "1 ჩ/კ მარილი", "2 დიდი კვერცხი", "1 ჭიქა რძე", "½ ჭიქა მცენარეული ზეთი", "2 ჩ/კ ვანილის ექსტრაქტი"], text: "1. გააცხელეთ ღუმელი 175 გრადუსზე და საცხობ ფორმას წაუსვით ცხიმი და მოაყარეთ ცოტაოდენი ფქვილი.  2. თასში აურიეთ შაქარი, ფქვილი, კაკაო, გამაფხვიერებელი, სოდა და მარილი. დაუმატეთ კვერცხი, რძე, ზეთი და ვანილი. მიქსერით ურიეთ 2 წუთის განმავლობაში, საშუალო სიჩქარით.  3. შეურიეთ მდუღარე წყალი და მოურიეთ რომ ძალიან თხელი არ იყოს. ბოლოს კი ჩაასხით საცხობ ფორმებში.  4. გამოაცხვეთ ღუმელში 30-35 წუთის განმავლობაში. გამოცხობის შემდეგ გამოიღეთ და კაკაოს ნამცხვარი დატოვეთ ფორმებში 10 წუთით. ბოლოს ამოიღეთ და გააგრილეთ ბოლომდე." },
-        { id: 105, cat: "ნამცხვრები", name: "ფახლავა", time: "1 სთ 20 წთ", views: "4.845", cal: "200", por: "36", img: "https://i.postimg.cc/0QHQzLDN/pakhlava.webp", ing: ["450 გრ თხილი", "1 ჩ/კ დაფქული დარიჩინი", "1 პაკეტი ფილოს ცომი", "1 ჭიქა კარაქი", "1 ჭიქა თეთრი შაქარი", "1 ჭიქა წყალი", "½ ჭიქა თაფლი", "1 ჩ/კ ვანილის ექსტრაქტი", "1 ჩ/კ გახეხილი ლიმონის ცედრა"], text: "1. გააცხელეთ ღუმელი 175 გრადუსზე და საცხობ ფორმას წაუსვით კარაქი. ასევე, ერთმანეთში აურიეთ დაჭრილი თხილი და დარიჩინი.  2. გახსენით ფილო და გაჭერით შუაზე. გადააფარეთ დანესტილი ტილო, რომ არ გამოშრეს.  3. საცხობ ფორმაზე მოათავსეთ ფილოს 2 ფურცელი, წაუსვით გამდნარი კარაქი და ზემოდან მოაყარეთ 2-3 სუფრის კოვზი თხილის და დარიჩინის ნაზავი. გაიმეორეთ იგივე საფეხური 6 ფენის მისაღებად.  4. ამის შემდეგ დაჭერით რომბის ან კვადრატის ფორმებად, რაოდენობა დამოკიდებულია ზომებზე. გამოაცხვეთ ღუმელში, სანამ არ გახდება ოქროსფერი, დაახლოებით 50 წუთი.  5. ამასობაში, აურიეთ შაქარი და წყალი პატარა ქვაბში საშუალო ცეცხლზე და მიიყვანეთ ადუღებამდე. შეურიეთ თაფლი, ვანილი და ლიმონის ცედრა. შეამცირეთ სითბო და ადუღეთ 20 წუთი.  6. გამოიღეთ ფახლავა ღუმელიდან და მოასხით სიროფი. მიირთვით ცივი და შეინახეთ დახურვის გარეშე." },
-        { id: 104, cat: "ნამცხვრები", name: "კექსი", time: "35 წთ", views: "3.874", cal: "350", por: "12", img: "https://i.postimg.cc/B635hPVP/k'eks.webp", ing: ["260 გრ კარაქი", "110 გრ ყავისფერი შაქარი", "300 გრ თეთრი შაქარი", "2 დიდი კვერცხი", "1 ½ ჩ/კ ვანილის ექსტრაქტი", "110 გრამი ფქვილი", "3 ს/კ რძე", "საკვები საღებავი (სურვილისამებრ)"], text: "1. გააცხელეთ ღუმელი 160-180 გრადუსზე. ათქვიფეთ 110 გრ კარაქი და 110 გრ ყავისფერი შაქარი. დაამატეთ ორი კვერცხი და ათქვიფეთ კარგად.  2. დაუმატეთ ½ ჩ/კ ვანილის ექსტრაქტი, 110 გრამი ფქვილი და ცოტა მარილი, ათქვიფეთ რომ კარგად შეერიოს და მოათავსეთ კექსის ფორმებში.  3. კექსი გამოაცხვეთ 15 წუთის განმავლობაში, სანამ ოქროსფერი არ გახდება. ამის შემდეგ გამოიღეთ ღუმელიდან და გააციეთ.  4. კრემის მოსამზადებლად ათქვიფეთ 150 გრ კარაქი, სანამ არ გახდება ძალიან რბილი, შემდეგ დაამატეთ 300 გრ შაქარი, 1 ჩ/კ ვანილის ექსტრაქტი და ცოტა მარილი.  5. ათქვიფეთ ერთგვაროვანი მასის მისაღებად, შემდეგ დაუმატეთ რძე და კიდევ ათქვიფეთ. თუ იყენებთ საღებავს, შეურიეთ. მიღებული მასა მოასხით კექსის ზედაპირზე." },
-        { id: 103, cat: "ნამცხვრები", name: "ხაჭოს ნამცხვრი", time: "3სთ 50წთ", views: "4.874", cal: "220", por: "16", img: "https://i.postimg.cc/nLjw8m2z/khach'.webp", ing: ["450 გრ ხაჭო", "1 ჭიქა თეთრი შაქარი", "3 ს/კ უნივერსალური ფქვილი", "1 ჩ/კ ახალი ლიმონის წვენი", "1 მწიკვი მარილი", "3 კვერცხის გული და ცილა", "350 მლ შესქელებული რძე", "1 ½ ჭიქა რძე", "2 ნამცხვრის ფორმა"], text: "1. ხაჭო მოათავსეთ საწურში და გააჩერეთ დაახლოებით 1 საათი, სანამ კარგად არ გაიწურება. გააცხელეთ ღუმელი 220 გრადუსზე.  2. დიდ თასში მოათავსეთ ხაჭო, შაქარი, ფქვილი, ლიმონის წვენი, მარილი, კვერცხის გული, შესქელებული და ჩვეულებრივი რძე და კარგად აურიეთ.  3. ცალკე თასში კარგად ათქვიფეთ კვერცხის ცილა და შეურიეთ ხაჭოს ნარევს, სანამ გლუვი არ გახდება და ჩაასხით ნამცხვრის ფორმაში.  4. გამოაცხვეთ 15 წუთის განმავლობაში წინასწარ გახურებულ ღუმელში. შეამცირეთ ღუმელის ტემპერატურა 175 გრადუსამდე და განაგრძეთ ცხობა 25 წუთის განმავლობაში.  5. ხაჭოს ნამცხვარი გააგრილეთ და მოათავსეთ მაცივარში მინიმუმ 2 საათით, უკეთესი არომატისთვის კი 1 დღით." },
-        { id: 102, cat: "ნამცხვრები", name: "სტაფილოს ნამცხვარი", time: "2სთ 25წთ", views: "8.457", cal: "230", por: "8", img: "https://i.postimg.cc/FKSD0jn8/st'appp.webp", ing: ["1 გამოუმცხვარი ღვეზელის ფორმა", "¾ ჭიქა შაქარი", "2 ჭიქა დაჭრილი სტაფილო", "2 დიდი კვერცხი", "1 ჩ/კ დაფქული დარიჩინი", "1 ჩ/კ ვანილის ექსტრაქტი", "¾ ჭიქა რძე"], text: "1. გააცხელეთ ღუმელი 200 გრადუსზე და ნამცხვრის ცომი ჩააფინეთ გამოსაცხობ ფორმაში ისე, რომ დაიფაროს ძირი და კედლები.  2. გამოაცხვეთ ღუმელში 3-5 წუთის განმავლობაში, მხოლოდ გასამაგრებლად. შემდეგ გამოიღეთ ღუმელიდან და გადადეთ ცალკე.  3. სტაფილო მოათავსეთ ქვაბში, დაფარეთ წყლით, მიიყვანეთ ადუღებამდე და ხარშეთ დაახლოებით 10 წუთი. გადაწურეთ წყალი და დაჭყლიტეთ სტაფილო გლუვი მასის მიღებამდე.  4. საშუალო თასში აურიეთ სტაფილოს პიურე, შაქარი, კვერცხი, დარიჩინი და ვანილი. მორევისას თანდათან დაამატეთ რძე. მიღებული მასა ჩაასხით გამომცხვარ ცომის ფორმაში.  5. გამოაცხვეთ 10 წუთის განმავლობაში. შეამცირეთ სითბო 175 გრადუსამდე და განაგრძეთ ცხობა 40-45 წუთის განმავლობაში. სტაფილოს ნამცხვარი მირთმევამდე გააგრილეთ." },
-        { id: 101, cat: "ნამცხვრები", name: "ვაშლის ნამცხვარი", time: "1სთ 30წთ", views: "12.547", cal: "370", por: "8", img: "https://i.postimg.cc/766hpV8Q/vashshsh.webp", ing: ["8 პატარა ვაშლი", "½ ჭიქა უმარილო კარაქი", "3 ს/კ უნივერსალური ფქვილი", "½ ჭიქა თეთრი შაქარი", "½ ჭიქა ყავისფერი შაქარი", "¼ ჭიქა წყალი", "1 ორმაგი ქერქის ღვეზელის ცომი"], text: "1. ვაშლი გაფცქვენით, ამოაცალეთ შუაგული და დაჭერით თხლად. ამასობაში, ღუმელი გააცხელეთ 220 გრადუსზე.  2. გაადნეთ კარაქი ჯამში, დაუმატეთ ფქვილი, აურიეთ და ხარშეთ დაახლოებით 2 წუთის განმავლობაში. დაამატეთ შაქარი, წყალი და მიიყვანეთ ადუღებამდე. ადუღეთ დაბალ ცეცხლზე 3-5 წუთის განმავლობაში.  3. ცომი მოათავსეთ ღვეზელის ჯამში ისე, რომ დაიფაროს ძირი და გვერდები. დარჩენილი ცომი გააბრტყელეთ და დაჭერით დაახლოებით 3 სანტიმეტრის გრძელ ნაჭრებად.  4. მოათავსეთ დაჭრილი ვაშლი ცომიან თასში და ზემოდან დააფინეთ წვრილად დაჭრილი ცომის ნაჭრები, ჰორიზონტალურად და ვერტიკალურად. საბოლოოდ უნდა მიიღოთ ვაშლის ნამცხვარი გისოსის მაგვარი ზედაპირით.  5. შაქრის და კარაქის ნაზავი მოასხით ზემოდან ისე, რომ ჩავიდეს ქვემოთ მოთავსებულ ვაშლის ნაჭრებში. ასევე, წაუსვით ნაზავი ვაშლის ღვეზელის ზედაპირს.  6. გამოაცხვეთ წინასწარ გახურებულ ღუმელში 15 წუთის განმავლობაში. შეამცირეთ ტემპერატურა 175 გრადუსამდე და განაგრძეთ ცხობა სანამ ვაშლი არ გახდება რბილი, 35-45 წუთი." },
-        { id: 100, cat: "ნამცხვრები", name: "მაფინი", time: "35 წთ", views: "14.541", cal: "180", por: "12", img: "https://i.postimg.cc/2S8sdXQN/mapi.webp", ing: ["2 ჭიქა უნივერსალური ფქვილი", "3 ჩ/კ გამაფხვიერებელი", "½ ჩ/კ მარილი", "¾ ჭიქა თეთრი შაქარი", "1 დიდი კვერცხი", "1 ჭიქა რძე", "¼ ჭიქა მცენარეული ზეთი", "ხილი, შოკოლადი (სურვილისამებრ)"], text: "1. გააცხელეთ ღუმელი 200 გრადუსზე და მაფინის ფორმებს შიდა მხრიდან წაუსვით ცხიმი ან ჩააფინეთ ქაღალდის სპეციალური საფენი.  2. შემდეგ, დიდ ჯამში აურიეთ ფქვილი, გამაფხვიერებელი, მარილი, შაქარი და ცენტრში გააკეთეთ ღრმული.  3. ათქვიფეთ კვერცხი, რძე და ზეთი პატარა თასში და ჩაასხით ფქვილის ნარევში. მოურიეთ სანამ ცომი ერთგვაროვანი გახდება. დაამატეთ ხილი ან შოკოლადის ნატეხები, თუ იყენებთ.  4. მიღებული მასა გადაანაწილეთ მაფინის ფორმებში, ისე, რომ შეივსოს ფორმის 3/4.  5. მაფინი გამოაცხვეთ წინასწარ გახურებულ ღუმელში, სანამ ზედაპირი ფაფუკი არ გახდება, დაახლოებით 25 წუთის განმავლობაში." },
-        { id: 99, cat: "ნამცხვრები", name: "გოგრის ნამცხვრი", time: "1სთ", views: "11.547", cal: "380", por: "8", img: "https://i.postimg.cc/dtKvCBNs/gogrrr.webp", ing: ["420 გრ გოგრის პიურე", "400 გრ შედედებული რძე", "2 დიდი კვერცხი", "1 ჩ/კ დაფქული დარიჩინი", "½ ჩ/კ დაფქული ჯანჯაფილი", "½ ჩ/კ დაფქული მუსკატის კაკალი", "½ ჩ/კ მარილი", "1 გამოუმცხვარი ღვეზელის ქერქი"], text: "1. მოიმარაგეთ ყველა ინგრედიენტი და ღუმელი გააცხელეთ 220 გრადუსზე.  2. საშუალო თასში ათქვიფეთ გოგრის პიურე, შესქელებული რძე, კვერცხი, დარიჩინი, ჯანჯაფილი, მუსკატის კაკალი და მარილი.  3. მიღებული მასა ჩაასხით ღვეზელის ქერქში და გამოაცხვეთ წინასწარ გახურებულ ღუმელში 15 წუთის განმავლობაში.  4. ამის შემდეგ, დაუწიეთ ღუმელს 175 გრადუსზე და განაგრძეთ გამოცხობა 35-40 წუთი. გოგრის ნამცხვარი მირთმევამდე ოდნავ გააგრილეთ." },
-        { id: 98, cat: "ნამცხვრები", name: "ამერიკული ნამცხვრი", time: "50წთ", views: "1.541", cal: "183", por: "36", img: "https://i.postimg.cc/15xRHPtw/amer.webp", ing: ["230 გრ კარაქი", "230 გრ შაქარი", "215 გრ ყავისფერი შაქარი", "2 ს/კ ვანილის ექსტრაქტი", "2 კვერცხი", "410 გრ უნივერსალური ფქვილი", "1 ჩ/კ სოდა", "1/2 ჩ/კ გამაფხვიერებელი", "1 ჩ/კ ზღვის მარილი", "400 გრ შოკოლადი"], text: "1. გააცხელეთ ღუმელი 190 გრადუსზე და საცხობის ფურცელზე დააფინეთ პერგამენტის ქაღალდი.  2. საშუალო ზომის თასში ერთმანეთში აურიეთ ფქვილი, სოდა, გამაფხვიერებელი და მარილი.  3. კარგად ათქვიფეთ კარაქი და შაქარი და ცალკე ათქვიფეთ კვერცხები და ვანილი დაახლოებით 1 წუთის განმავლობაში.  4. ათქვეფილ მასას შეურიეთ დანარჩენი ინგრედიენტები, მოურიეთ კარგად შერევისთვის და ბოლოს, დაამატეთ შოკოლადის ნატეხები და კიდევ მოურიეთ.  5. მიღებული მასისგან გააკეთეთ სასურველი ზომის ბურთულები და მოათავსეთ საცხობ ფირფიტაზე, ერთმანეთისგან მოშორებით. მთავარია გაშლის დროს ერთმანეთს არ შეერიოს.  6. გამოაცხვეთ წინასწარ გახურებულ ღუმელში დაახლოებით 8-10 წუთის განმავლობაში, სანამ არ მიიღებს ოქროსფერ შეფერილობას. გამოცხობის შემდეგ გააჩერეთ საცხობ ფირფიტაზე 5 წუთით, რის შემდეგაც შეგიძლიათ მიირთვათ." },
-        { id: 97, cat: "ნამცხვრები", name: "ტირამისუ", time: "5სთ 30წთ", views: "8.194", cal: "387", por: "12", img: "https://i.postimg.cc/FKhQ6H5n/t'iramisu.webp", ing: ["6 კვერცხის გული", "¾ ჭიქა თეთრი შაქარი", "⅔ ჭიქა რძე", "1 ¼ ჭიქა კრემი", "½ ჩ/კ ვანილის ექსტრაქტი", "450 გრ ყველი მასკარონე", "¼ ჭიქა მოდუღებული ყავა", "2 ს/კ რომი", "2 შეკვრა სავოიარდი", "1 ს/კ უშაქრო კაკაოს ფხვნილი"], text: "1. საშუალო ზომის ჯამში კარგად ათქვიფეთ კვერცხის გული და შაქარი. დაამატეთ რძე, ათქვიფეთ და მოხარშეთ საშუალო ცეცხლზე, გამუდმებით ურიეთ ადუღებამდე.  2. ადუღეთ 1 წუთი, შემდეგ გადმოდგით ცეცხლიდან გასაციებლად, კარგად შეფუთეთ და შედგით მაცივარში 1 საათით.  3. ნაღები და ვანილი ათქვიფეთ საშუალო თასში მიქსერით, სანამ არ მიიღებთ მყარ მასას.  4. გამოიღეთ კვერცხის გულის მიქსი მაცივრიდან, დაუმატეთ ყველი და ათქვიფეთ ერთგვაროვანი მასის მიღებამდე.  5. პატარა თასში ერთმანეთს შეურიეთ ყავა და რომი და მიღებული მასა მოასხით სავოიარდს. დასველებული სავოიარდის ½ მოათავსეთ საცხობ ფირფიტაზე.  6. მასკარპონეს ნარევის 1/2 წაუსვით სავოიარდს, შემდეგ ზემოდან წაუსვით ათქვეფილი კრემის 1/2. გაიმეორეთ პროცესი დამატებითი ფენისთვის და ზემოდან მოაყარეთ კაკაო.  7. ბოლოს კი შეფუთეთ ტირამისუ, შედგით მაცივარში 4-6 საათით, რის შემდეგაც შეგიძლიათ მიირთვათ." },
-        { id: 96, cat: "ნამცხვრები", name: "ბრაუნი", time: "40წთ", views: "8.124", cal: "225", por: "24", img: "https://i.postimg.cc/L4Q6ZLdW/bra.webp", ing: ["1 ჭიქა გამდნარი კარაქი", "1 ჭიქა თეთრი შაქარი", "1 ჭიქა ყავისფერი შაქარი", "4 კვერცხი", "1 ს/კ ვანილის ექსტრაქტი", "1 ჭიქა უნივერსალური ფქვილი", "1 ჭიქა უშაქრო კაკაოს ფხვნილი", "1 ჩ/კ ესპრესო ფხვნილი", "1 ჩ/კ კოშერის მარილი", "1 ¼ ჭიქა დაჭრილი შოკოლადი"], text: "1. გააცხელეთ ღუმელი 175 გრადუსზე. საცხობ ფორმას შეასხურეთ არაწებოვანი სპრეი, გადააფარეთ პერგამენტის ქაღალდი და კვლავ შეასხურეთ. ეს გააადვილებს გამოცხობის შემდეგ ბრაუნის ამოღებას.  2. დიდ თასში ათქვიფეთ გამდნარი კარაქი, თეთრი და ყავისფერი შაქარი. ათქვიფეთ სანამ შაქარი არ გაიხსნება. დაუმატეთ კვერცხები და ვანილის ექსტრაქტი, სანამ არ გახდება გლუვი და ერთგვაროვანი.  3. ფქვილი და კაკაო გაცერით, დაუმატეთ მარილი და ესპრესო ფხვნილი და ურიეთ სანამ კარგად არ შეერევა ერთმანეთს. მოაყარეთ 1 ჭიქა დაჭრილი შოკოლადი. შემდეგ კი თანაბრად გადაანაწილეთ მომზადებულ საცხობ ფირფიტაზე და ზემოდან მოაყარეთ დარჩენილი შოკოლადი.  4. შედგით საცხობი ფირფიტა ღუმელში, შუა თაროზე და დაელოდეთ 25-30 წუთი. ბოლოს კი, გამოიღეთ ღუმელიდან და გააგრილეთ სანამ კვადრატებად დაჭრით. სურვილისამებრ, შეგიძლიათ მოაყაროთ ცოტაოდენი ზღვის მარილი." },
-        { id: 95, cat: "სენდვიჩები", name: "ავოკადოს ტოსტი", time: "15 წთ", views: "8.124", cal: "330", por: "4", img: "https://i.postimg.cc/3w2dXRj2/avok'a.webp", ing: ["4 ნაჭერი პური", "2 კბილი ნიორი", "2 ავოკადო", "2 ჩ/კ ლიმონის წვენი", "1/4 ჩ/კ მარილი", "1/4 ჩ/კ შავი პილპილი", "წითელი წიწაკა"], text: "1. პურის ნაჭრები გახუხეთ ტოსტერში ან ტაფაზე და ზემოდან წაუსვით გახეხილი ნიორი, ისე, რომ მთლიანი ზედაპირი დაიფაროს.  2. ავოკადო გათალეთ, დაჭერით და მოათავსეთ პატარა ჯამში. დაამატეთ ლიმონის წვენი, მარილი, შავი პილპილი და დანაყეთ. სასურველია, მასა იყოს ოდნავ სქელი.  3. პურის ნაჭრებს გადაუსვით ავოკადო და ზემოდან მოაყარეთ წითელი წიწაკა. ავოკადოს ტოსტი შეგიძლიათ მორთოთ დამატებითი ტოპინგით – პომიდვრით, მწვანილით, კიტრით და ა.შ." },
-        { id: 94, cat: "სენდვიჩები", name: "ბეკონის სენდვიჩი", time: "15 წთ", views: "3.124", cal: "800", por: "1", img: "https://i.postimg.cc/D0nsJGtm/bek'.webp", ing: ["5 ნაჭერი ბეკონი", "2 ნაჭერი სენდვიჩის პური", "1 ჩ/კ კარაქი", "1 ჩ/კ ტკბილი მდოგვი"], text: "1. ტაფა გააცხელეთ მაღალ ცეცხლზე და შეწვით ბეკონის ნაჭრები ორივე მხრიდან, 2-3 წუთის განმავლობაში.  2. პურის თითო ნაჭერს ერთი მხრიდან წაუსვით კარაქი და შუაში მოათავსეთ შემწვარი ბეკონი.  3. დააბრუნეთ ტაფაში და თითო მხარე შეწვით 2 წუთის განმავლობაში, რომ შეიბრაწოს და ბეკონის ცხიმი შეიწოვოს პურმა.  4. ბეკონის სენდვიჩი მიირთვით მდოგვთან ერთად." },
-        { id: 93, cat: "სენდვიჩები", name: "ბურიტო", time: "35 წთ", views: "5.124", cal: "380", por: "6", img: "https://i.postimg.cc/tgszphjn/burit'.webp", ing: ["450 გრ უცხიმო საქონლის ფარში", "½ ხახვი", "30 გრ ტაკოს სუნელი", "2 ს/კ ქინძი", "6 ტორტილა", "450 გრ დაჭყლეტილი ლობიო", "1½ ჭიქა მექსიკური ყველი", "2 ჭიქა მოხარშული ბრინჯი", "1 ჭიქა სალსა"], text: "1. გააცხელეთ ღუმელი 175 გრადუსზე და საცხობ ფირფიტაზე დააფინეთ პერგამენტის ქაღალდი.  2. საქონლის ხორცი და ხახვი ტაფით დადგით საშუალო ცეცხლზე. ურიეთ კოვზით და მიიყვანეთ ხორცი ყავისფერ შეფერილობამდე.  3. დაამატეთ ტაკოს სუნელი და მოშუშეთ კიდევ ერთი წუთი. ბოლოს შეურიეთ დაჭრილი ქინძი.  4. ტორტილებში ჩადეთ ლობიო, ბრინჯი, შემწვარი ფარში, ყველი და სალსა. კარგად შეკარით და მოათავსეთ საცხობ ფირფიტაზე.  5. გამოაცხვეთ 5-10 წუთის განმავლობაში, სანამ ყველი არ გადნება და ბურიტო ოდნავ ხრაშუნა არ გახდება. შეგიძლიათ დაამატოთ გუაკამოლე." },
-        { id: 92, cat: "სენდვიჩები", name: "ტაკო", time: "45 წთ", views: "4.412", cal: "190", por: "10", img: "https://i.postimg.cc/BnqY9Lb0/t'ak'o.webp", ing: ["450 გრ უცხიმო საქონლის ხორცი", "1 ჭიქა სალსა", "10 ტაკოს პური", "სალათის ფოთოლი", "1 პომიდორი", "1 ჭიქა ჩედარის ყველი"], text: "1. ტაფაზე შეწვით საქონლის ხორცი საშუალო ცეცხლზე, 8-10 წუთის განმავლობაში, დროდადრო აურიეთ, სანამ არ გახდება ყავისფერი. ბოლოს გადაწურეთ.  2. ხორცს შეურიეთ სალსა, გააცხელეთ ადუღებამდე და მუდმივად ურიეთ. შეამცირეთ სითბო და განაგრძეთ პროცესი 5 წუთი, დროდადრო აურიეთ.  3. დასრულების შემდეგ გადაიტანეთ ცალკე თასში და სითბოს შესანარჩუნებლად, გადააფარეთ.  4. გააცხელეთ პურები, მოათავსეთ ხორცის თბილი მასა, დაამატეთ პომიდორი, სალათის ფურცელი, ყველი და მიირთვით ტაკო." },
-        { id: 91, cat: "სენდვიჩები", name: "ჩიზბურგერი", time: "40 წთ", views: "7.845", cal: "570", por: "4", img: "https://i.postimg.cc/ZYBXVdBX/chiz.webp", ing: ["680 გრ საქონლის ფარში", "4 ნაჭერი პომიდორი", "12 ნაჭერი კიტრის მწნილი", "4 სალათის ფურცელი", "1 ს/კ სტეიკის სოუსი", "1 ჩ/კ შავი პილპილი", "¾ ჩ/კ ნივრის მარილი", "4 ნაჭერი ამერიკული ყველი", "4 ბურგერის ფუნთუშა"], text: "1. საქონლის ხორცი, სტეიკის სოუსი, პილპილი და ნივრის მარილი აურიეთ ერთ თასში და გააკეთეთ რვა თხელი კატლეტი.  2. ყველის ნაჭრები დაადეთ ერთმანეთს და გაჭერით ოთხ კვადრატად. თითო ყველის ნაჭერი მოათავსეთ ორ კატლეტს შორის.  3. გააცხელეთ ტაფა საშუალო ცეცხლზე და შეწვით კატლეტების თითო მხარე 4 წუთის განმავლობაში.  4. ბოლოს ააწყეთ ჩიზბურგერი – ფუნთუშებს შორის მოათავსეთ ხორცი, კიტრი, სალათის ფურცელი და სხვა ინგრედიენტები." },
-        { id: 90, cat: "სენდვიჩები", name: "თინუსის სენდვიჩი", time: "10 წთ", views: "4.124", cal: "340", por: "6", img: "https://i.postimg.cc/bvP5BmWm/t'inusi.webp", ing: ["140 გრ თინუსი", "2 ნაჭერი პური", "200 გრ მაიონეზი", "30 გრ ნიახური", "2 ს/კ ხახვი", "2 ს/კ კიტრის მწნილი", "1 ს/კ ლიმონის წვენი", "1 კბილი ნიორი", "მარილი და შავი პილპილი"], text: "1. თინუსი გაწურეთ და წვრილად დაჭერით ნიახური, ხახვი, ნიორი და კიტრის მწნილი. პურის ნაჭრები გახუხეთ.  2. საშუალო ზომის თასში აურიეთ თინუსი, მაიონეზი, ნიახური, ხახვი, კიტრი, ლიმონის წვენი და ნიორი.  3. გემოვნებით მოაყარეთ მარილი და პილპილი, მოათავსეთ გახუხულ პურებს შორის და მიირთვით თინუსის სენდვიჩი." },
-        { id: 89, cat: "სენდვიჩები", name: "პანინი", time: "20 წთ", views: "7.512", cal: "800", por: "1", img: "https://i.postimg.cc/C1sS2ZcM/p'anini.webp", ing: ["1 ს/კ ზეითუნის ზეთი", "2 ნაჭერი იტალიური პური", "2 ს/კ მაიონეზი", "3 ნაჭერი ლორი", "2 ნაჭერი ჩედარი", "1 ნაჭერი პომიდორი", "1 ნაჭერი ხახვი"], text: "1. პურის ორივე ნაჭრის ერთ მხარეს წაუსვით ზეითუნის ზეთი, ხოლო მეორე მხარეს თითო სუფრის კოვზი მაიონეზი.  2. ქვედა ნაჭერზე, მაიონეზის მხრიდან დაალაგეთ ლორი, ჩედარის ყველი, პომიდვრის და ხახვის ნაჭრები. ზემოდან დაადეთ პურის მეორე ნაჭერი.  3. გააცხელეთ გრილი საშუალო ან მაღალ ცეცხლზე და შეასხურეთ სამზარეულოს სპრეი. მოათავსეთ პანინი გრილზე და შეწვით ყველის გადნობამდე, 3-დან 5 წუთამდე თითო მხარე." },
-        { id: 88, cat: "სენდვიჩები", name: "ჰოთ დოგი", time: "30 წთ", views: "11.241", cal: "700", por: "4", img: "https://i.postimg.cc/Pf1wtKRD/hot'.webp", ing: ["4 სოსისი", "4 ჰოთ დოგის ფუნთუშა", "4 ს/კ ყვითელი მდოგვი", "4 ს/კ ხახვი", "2 პომიდორი", "2 კიტრის მწნილი", "4 ჰალაპენიო", "მარილი გემოვნებით"], text: "1. დაჭერით ხახვი და კიტრის მწნილი წვრილად, თითო ჰალაპენიო გაჭერით სამ ნაჭრად, ხოლო პომიდორი რვა ნაჭრად.  2. აადუღეთ წყალი, შეამცირეთ სითბო მინიმუმამდე, მოათავსეთ სოსისები და მოხარშეთ, დაახლოებით 5 წუთი. ფუნთუშები გაათბეთ ტაფაზე.  3. სოსისი მოათავსეთ ფუნთუშებში და დაამატეთ ინგრედიენტები – მდოგვი, ხახვი, კიტრის მწნილი, პომიდვრის ორი და ჰალაპენიოს სამი ნაჭერი თითო ჰოთ დოგში და მარილი გემოვნებით." },
-        { id: 87, cat: "სენდვიჩები", name: "ბურგერი", time: "25 წთ", views: "4.512", cal: "300", por: "4", img: "https://i.postimg.cc/T2BCskWW/burg.webp", ing: ["4 ბურგერის პური", "1 დიდი კვერცხი", "½ ჩ/კ მარილი", "½ ჩ/კ შავი პილპილი", "450 გრ საქონლის ფარში", "½ ჭიქა პურის ნამსხვრევები"], text: "1. პირველ რიგში, გააცხელეთ გრილი ან ტაფა და წაუსვით ზეთი.  2. შემდეგ, საშუალო თასში ათქვიფეთ კვერცხი, მარილი და პილპილი.  3. დაამატეთ ფარში, პურის ნამსხვრევები და აურიეთ ხელით რომ კარგად შეერიოს. ბოლოს, გააკეთეთ 4 ცალი წრიული ფორმის კატლეტი.  4. მოათავსეთ გაცხელებულ ტაფაზე ან გრილზე, დააფარეთ თავზე და ბურგერი შეწვით 6-8 წუთის განმავლობაში თითო მხარე.  5. დაამატეთ პომიდორი, კიტრი ან კიტრის მწნილი, მდოგვი, მაიონეზი ან სასურველი ინგრედიენტი." },
-        { id: 86, cat: "სალათები", name: "შუბა", time: "5", views: "2.541", cal: "200", por: "1", img: "https://i.postimg.cc/FKbZkmPH/shuba.jpg", ing: ["3  ცალი კარტოფილი", "2  ცალი დიდი სტაფილო", "2  თავი ჭარხალი", "1  თავი პატარა ყვითელი ხახვი", "340  გრამი ქაშაყის ფილე ზეთში", "6  ს/კ (90მლ) მაიონეზი", "მარილი და დაფქული შავი წიწაკა გემოვნებით"], text: "1. დადგით დიდი ზომის ქვაბი ცეცხლზე და აადუღეთ წყალი. ხარშეთ მდუღარე წყალში კარტოფილი – 15-20 წუთით, სტაფილო – 25-30 წუთით და ჭარხალი – 40 წუთით. აცალეთ ბოსნეულს ოდნავ შეგრილება და შემდეგ გაფცქვენით. სათითაოდ გახეხეთ მსხვილ სახეხზე.  2. თხლად დაჭერით და ლანგარის ზედაპირზე გადაანაწილეთ ხახვი თევზის ფილესთან ერთად. შემდეგ ფენებად თანმიმდევრობით გადაანაწილეთ კარტოფილის ნახევარი, სტაფილოს ნახევარი და ჭარხლის ნახევარი. მოასხით მაიონეზის მასის ნახევარი, გემოვნებისამებრ მოაყარეთ მარილი, წიწაკა და ხელახლა გაიმეორეთ იგივე პროცედურები. გადააფარეთ კულინარიული ცელოფანი და მინიმუმ 1 საათით შედგით მაცივარში გასაცივებლად." },
-        { id: 85, cat: "წვნიანები", name: "ხარჩო", time: "1 სთ 50 წთ", views: "7.512", cal: "500", por: "8", img: "https://i.postimg.cc/kGvfrCbT/kharch.webp", ing: ["1 კგ საქონლის ხორცი", "400 გრ ნიგოზი", "2 პომიდორი", "2 ხახვი", "4 კბილი ნიორი", "100 გრ კარაქი", "1 ს/კ უცხო სუნელი", "1 ჩ/კ ყვითელი ყვავილი", "1 ს/კ ხმელი ქინძი", "2 ს/კ სიმინდის ფქვილი", "მარილი, წითელი წიწაკა"], text: "1. სანამ ხარჩოს მომზადებას დაიწყებთ, ნიგოზი გაატარეთ ხორცსაკეპ მანქანაში, ორჯერ. ხახვი დაჭერით წვრილად, პომიდორი დამდუღრეთ, მოაცალეთ კანი, თესლი და ათქვიფეთ ბლენდერით.  2. ხორცი დაჭერით სასურველი ზომის ნაჭრებად, მოათავსეთ ქვაბში ცოტა წყალთან ერთად და მოშუშეთ. დაუმატეთ კარაქი, ხახვი და განაგრძეთ მომზადება 20-25 წუთით. ბოლოს დაუმატეთ პომიდორი.  3. ამის შემდეგ, დაამატეთ მცირე რაოდენობით მდუღარე წყალი და განაგრძეთ ნელ ცეცხლზე. ამასობაში, გატარებულ ნიგოზს შეურიეთ სუნელები, წიწაკა, მარილი, ფქვილი, წყალი და აურიეთ.  4. ეს ნიგვზიანი მასა ათქვიფეთ ბლენდერში და მოხარშულ ხორცს დაუმატეთ ქვაბში. წამოდუღების შემდეგ, დაუმატეთ წიწაკა, ნიორი, მარილი და ისევ წამოადუღეთ.  5. ხარჩო მირთმევამდე შეგიძლიათ მორთოთ ცოცხალი მწვანილით, ბროწეულით და სხვა სასურველი ინგრედიენტით." },
-        { id: 84, cat: "წვნიანები", name: "მაწვნის სუპი", time: "40 წთ", views: "3.451", cal: "300", por: "5", img: "https://i.postimg.cc/59X4xtKN/mats'vn.webp", ing: ["1 ლ მაწონი", "220 გრ ბრინჯი", "2 კვერცხი", "1 ხახვი", "კარაქი", "კამა", "მარილი"], text: "1. ქვაბი გააცხელეთ და წვრილად დაჭრილი ხახვი მოშუშეთ კარაქთან ერთად. დასრულების შემდეგ დაამატეთ ცოტა წყალი, ბრინჯი და მოხარშეთ.  2. მას შემდეგ რაც ბრინჯი მზად იქნება, დაამატეთ წყალში გახსნილი მაწონი და გამუდმებით ურიეთ, მაწვნის აჭრისგან თავის ასარიდებლად.  3. სანამ მაწვნის სუპი მზადდება, ათქვიფეთ კვერცხი და წამოდუღების შემდეგ დაამატეთ ქვაბში და განაგრძეთ მორევა.  4. კვერცხის მოხარშვის შემდეგ, დაამატეთ მარილი და კამა გემოვნებით. ეს წვნიანი შეგიძლიათ მიირთვათ მაწვნის დიეტის დროს." },
-        { id: 83, cat: "წვნიანები", name: "ჩიხირთმა", time: "1 სთ", views: "6.451", cal: "200", por: "6", img: "https://i.postimg.cc/d09M9bHJ/chikhir.webp", ing: ["1 ქათამი", "2 ცალი კვერცხი", "4 ს/კ ფქვილი", "4 თავი ხახვი", "3 ს/კ ძმარი", "ქინძი და მარილი"], text: "1. ქათამი კარგად გარეცხეთ და მოხარშეთ. დასრულების შემდეგ ქათამი ამოიღეთ, დაჭერით პატარა ნაჭრებად და გააგრძელეთ ქათმის ბულიონის ხარშვა დაბალ ცეცხლზე.  2. ამასობაში დაჭერით ხახვი წვრილად, დაასხით ბულიონის ცხიმიანი ნაწილი, დაამატეთ მარილი და მოშუშეთ ტაფაში რამდენიმე წუთი. ბოლოს კი დაამატეთ ბულიონს.  3. ფქვილი გააზავეთ ცივ წყალში და მდუღარე ბულიონს დაამატეთ. თან გამუდმებით მოურიეთ. კვერცხი ათქვიფეთ და თან დაამატეთ ძმარი. მიღებული მასა ჩაასხით ბულიონში და ურიეთ.  4. სურვილისამებრ, ბულიონს დაამატეთ მარილი, მოათავსეთ ქათმის დაჭრილი ნაჭრები, მოაყარეთ წვრილად დაჭრილი ქინძი და ჩიხირთმა მზადაა." },
-        { id: 82, cat: "წვნიანები", name: "ქათმის ბულიონი", time: "1 სთ 20 წთ", views: "1.845", cal: "250", por: "5", img: "https://i.postimg.cc/y8kWtPqp/katts'vnian.webp", ing: ["1 ქათამი", "1 სტაფილო", "1 ხახვი", "2 კბილი ნიორი", "1/2 ჭიქა ბრინჯი", "მარილი", "კამა", "ოხრახუში"], text: "1. პირველ რიგში, ქათამი დაჭერით საშუალო ან პატარა ზომის ნაჭრებად, მოათავსეთ ქვაბში, დაფარეთ წყლით და მოხარშეთ. ხარშვის დროს, პერიოდულად მოაცილეთ ქაფი.  2. სანამ ბოლომდე მოიხარშება, დაამატეთ ხახვი, ბრინჯი, ნიორი და ჩააჭერით სტაფილო. ასევე, დაამატეთ მწვანილი და მარილი გემოვნებით.  3. ადუღეთ რამდენიმე წუთის განმავლობაში და მას შემდეგ რაც ბრინჯი მოიხარშება, ქათმის ბულიონი მზად არის." },
-        { id: 81, cat: "წვნიანები", name: "სატაცურის სუპი", time: "25 წთ", views: "5.845", cal: "100", por: "4", img: "https://i.postimg.cc/kG08hb2v/sat'ats.webp", ing: ["25 გრ კარაქი", "350 გრ სატაცურის ღერი", "3 ხახვი", "2 კბილი ნიორი", "2 დიდი ისპანახი", "700 მლ ბოსტნეულის ბულიონი", "ზეითუნის და მცენარეული ზეთი", "პური"], text: "1. ქვაბში გაათბეთ კარაქი და ზეთი აქაფებამდე და შეწვით სატაცურის წვერები დასარბილებლად, რამდენიმე წუთის განმავლობაში. შემდეგ ამოიღეთ და  გადადეთ გვერდზე.  2. ქვაბში დაამატეთ დაჭრილი ხახვი , სატაცურის ღეროები, დაჭყლეტილი ნიორი და მოხარშეთ 5-10 წუთის განმავლობაში, სანამ არ დარბილდება.  3. დაამატეთ ისპანახი და ბოსტნეულის ბულიონი, მიიყვანეთ ადუღებამდე და ბოლოს ათქვიფეთ ხელის ბლენდერით.  4. სატაცურის სუპი ჩაასხით ჯამებში, დაამატეთ მცენარეული და ზეითუნის ზეთი, მოაყარეთ სატაცურის შემწვარი წვერები და მიირთვით პურთან ერთად." },
-        { id: 80, cat: "წვნიანები", name: "კუსკუსის სუპი", time: "1 სთ", views: "3.541", cal: "280", por: "6", img: "https://i.postimg.cc/x82nxj0q/k'usk'usists'vn.webp", ing: ["1 ჭიქა კუსკუსი", "2 ს/კ ზეითუნის ზეთი", "1 ხახვი", "1 ჭიქა ნიახური", "1 ჭიქა სტაფილო", "1 ს/კ ნიორი", "2 ჩ/კ ჯანჯაფილი", "1/2 ჩ/კ ქარის ფხვნილი და კურკუმა", "1/4 ჩ/კ ხმელი ქონდარა", "1 დაფნის ფოთოლი", "450 გრ ქათმის მკერდი", "7 ჭიქა ქათმის ბულიონი", "2 ს/კ ოხრახუში", "3/4 ჭიქა ბარდა", "პილპილი და ზღვის მარილი"], text: "1. საშუალო ცეცხლზე ქვაბით დადგით ზეითუნის ზეთი და გაცხელების შემდეგ დაუმატეთ დაჭრილი ხახვი, ნიახური, გახეხილი სტაფილო და 1/4 ჩ/კ მარილი და პილპილი. მოშუშეთ და ურიეთ 5-7 წუთის განმავლობაში.  2. ამის შემდეგ, დაამატეთ დაჭყლეტილი ნიორი, გახეხილი ჯანჯაფილი, ქარის ფხვნილი, კურკუმა და ქონდარა. შეგიძლიათ გემოვნებით დაამატოთ მარილი და პილპილი. ურიეთ 1 წუთი და დაამატეთ ქათმის ხორცი, ბულიონი და დაფნა.  3. წვნიანი მიიყვანეთ ადუღებამდე და შემდეგ შეურიეთ კუსკუსი. მიიყვანეთ ადუღებამდე, შეამცირეთ ცეცხლი და თავდახურული მოხარშეთ 20 წუთის განმავლობაში, კუსკუსის დარბილებამდე და ხორცის მოხარშვამდე.  4. კუსკუსის სუპი გადმოდგით ცეცხლიდან, ამოიღეთ ქათმის მკერდი, დაჭერით წვრილად და ბარდასთან და ოხრახუშთან ერთად ჩააბრუნეთ ქვაბში და კარგად აურიეთ.  5. სურვილისამებრ, შეიძლება დაამატოთ ლიმონის წვენი სიმჟავისთვის. გადაიტანეთ თეფშებში და მიირთვით თბილ ან გახუხულ პურთან ერთად." },
-        { id: 79, cat: "წვნიანები", name: "საცივი", time: "1 სთ", views: "7.547", cal: "500", por: "4", img: "https://i.postimg.cc/RVwnZq3P/sats.webp", ing: ["500 გრ ქათმის მკერდი", "500 მლ ქათმის ბულიონი", "200 გრ ნიგოზი", "4 კბილი ნიორი", "½ ჩ/კ უცხო სუნელი", "¼ ჩ/კ დარიჩინი", "⅛ ჩ/კ წითელი წიწაკა", "½ ხახვი"], text: "1. ქათმის მკერდი მოათავსეთ ქვაბში, დაასხით წყალი და მოაყარეთ 1 ს/კ მარილი. მიიყვანეთ ადუღებამდე, გამორთეთ ცეცხლი და დააყოვნეთ 10 წუთი. შემდეგ ამოიღეთ ხორცი და გადადეთ ცალკე.  2. ნიგოზი გაატარეთ ხორცის საკეპ მანქანაში და შემდეგ დაამატეთ და აურიეთ გახეხილი ნიორი, უცხო სუნელი, დარიჩინი და წიწაკა.  3. ამასობაში, საშუალო ცეცხლზე მოშუშეთ ხახვი ზეთში. შემდეგ დაამატეთ ნიგვზის ნაზავი და გააგრძელეთ პროცესი 1 წუთამდე.  4. ბოლოს ჩაამატეთ ბულიონი, აურიეთ და მიიყვანეთ ადუღებამდე. ადუღეთ სანამ ოდნავ შესქელდება, 5-10 წუთი.  5. დაჭრილი ქათმის ხორცი დაამატეთ ტაფაში ისე, რომ დაიფაროს სოუსში და გამორთეთ ცეცხლი.  6. მაცივარში შენახვამდე უმჯობესია საცივი ცოტა ხნით ოთახის ტემპერატურაზე დატოვოთ. მიირთვით ცივი." },
-        { id: 78, cat: "წვნიანები", name: "ქათმის წვნიანი", time: "1 სთ 10 წთ", views: "4.541", cal: "400", por: "4", img: "https://i.postimg.cc/fTRv3cNF/katts'v.webp", ing: ["500 გ ქათმის ხორცი", "2 ც სტაფილო", "1 ც ხახვი", "1 ც ბულგარული წიწაკა", "2 ს/კ კარაქი", "2 ს/კ ფქვილი", "1 ლ ქათმის ბულიონი", "200 მლ ნაღები (15-20%)", "ოხრახუში, კამა", "მარილი, პილპილი, დაფქული პაპრიკა"], text: "1. დაჭერით ქათმის ხორცი სასურველ ნაჭრებად, სტაფილო კუბიკებად, ხახვი წვრილად, წიწაკა ზოლებად.  2. გააცხელეთ კარაქი ქვაბში და მოშუშეთ ხახვი 5 წუთის განმავლობაში. დაამატეთ სტაფილო და წიწაკა, შეწვით 5-7 წუთი.  3. ჩაყარეთ ფქვილი და კარგად აურიეთ 2-3 წუთი. თანდათანობით დაასხით ბულიონი, მუდმივად ურიეთ 5 წუთის განმავლობაში.  4. დაამატეთ ქათმის ხორცის ნაჭრები, აადუღეთ და ხარშეთ დაბალ ცეცხლზე 15-20 წუთი.  5. ჩაასხით ნაღები, დაამატეთ სანელებლები და მწვანილი, ხარშეთ კიდევ 5 წუთი." },
-        { id: 77, cat: "წვნიანები", name: "ოსტრი", time: "1 სთ 30 წთ", views: "9.872", cal: "450", por: "5", img: "https://i.postimg.cc/MpWJfrTJ/ost'.webp", ing: ["800 გრ საქონლის ხორცი", "3 ხახვი", "4 პომიდორი", "2 დაფნა", "2 ნიორი", "1 ჩ/კ ხმელი ქინძი", "1 ს/კ ცხარე წიწაკა", "1 ს/კ ტომატის პასტა", "90 გრ კარაქი", "მარილი და ოხრახუში"], text: "1. კუბიკებად დაჭრილი ხორცი ჩაყარეთ ქვაბში, დაამატეთ დაფნა და დაასხით 180-200 მლ წყალი. ხარშეთ 2 საათის განმავლობაში დაბალ ცეცხლზე. ბოლოს, გადაწურეთ და ნახარში შეინახეთ.  2. ხორციან ქვაბში ჩააგდეთ კარაქი, მოაყარეთ მარილი, დაუმატეთ დაჭრილი ხახვი, აურიეთ და დაბალ ცეცხლზე ხარშეთ რამდენიმე წუთი.  3. შემდეგ დაამატეთ კანგაცლილი და დაჭრილი პომიდვრები, მოურიეთ და ხარშეთ დაახლოებით 5 წუთი.  4. დაამატეთ დაჭრილი ნიორი, ხმელი ქინძი, ტომატის პასტა, წიწაკა და კარგად აურიეთ.  5. ბოლოს ჩაასხით ხორცის ნახარში, მოურიეთ და დაბალ ცეცხლზე მოხარშეთ რამდენიმე წუთის განმავლობაში.  6. ამის შემდეგ დაამატეთ დაჭრილი ოხრახუში და მოურიეთ. ოსტრი ხარშეთ კიდევ 5 წუთი, დაბალ ცეცხლზე. მიირთვით ცხელი." },
-        { id: 76, cat: "წვნიანები", name: "გუფთა", time: "2 სთ", views: "4.845", cal: "350", por: "6", img: "https://i.postimg.cc/PxVBgtz5/gup.webp", ing: ["2 ლ წყალი", "1 კგ ფარში", "160 გრ ბრინჯი", "3 ხახვი", "3 კარტოფილი", "1 სტაფილო", "1 პომიდორი", "1 კვერცხი", "0.5 ჩ/კ უცხო სუნელი", "ქინძი, რეჰანი", "დაფქული წითელი წიწაკა, მარილი"], text: "1. მზა ფარშს დაუმატეთ 100 გრ ნახევრად მოხარშული ბრინჯი, გატარებული ხახვი, ქინძი, წიწაკა, უცხო სუნელი, მარილი გემოვნებით და კვერცხი. კარგად აურიეთ და გააკეთეთ პატარა ბურთულები.  2. საშუალო ზომის ქვაბში ჩაასხით 2 ლიტრი წყალი, ჩაყარეთ ხორცის ბურთულები და დადგით ცეცხლზე. ადუღების შემდეგ დაამატეთ კუბიკებად დაჭრილი კარტოფილი და დარჩენილი ბრინჯი.  3. ტაფაში მოშუშეთ ხახვი, სტაფილო, უცხო სუნელი და პილპილი. რამდენიმე წუთის შემდეგ დაამატეთ წვრილად დაჭრილი პომიდორი, მოშუშეთ 5 წუთის განმავლობაში და შემდეგ დაუმატეთ გუფთას.  4. გუფთა კიდევ ერთხელ წამოადუღეთ, ჩააჭერით ქინძი, რეჰანი და მარილით გემოვნებით." },
-        { id: 75, cat: "წვნიანები", name: "სოკოს სუპი", time: "1სთ", views: "5.415", cal: "80", por: "8", img: "https://i.postimg.cc/5NDfHmzt/sok'os.webp", ing: ["2 ს/კ კარაქი", "1 ჭიქა სტაფილო", "1 ჭიქა ხახვი", "½ ჭიქა ნიახური", "900 გრ სოკო", "1 ჩ/კ ბეგქონდარა", "6 ჭიქა ქათმის ბულიონი", "½ ჭიქა მწვანე ხახვი", "მარილი და პილპილი გემოვნებით"], text: "1. სოკოს სუპის მოსამზადებლად დაჭერით სტაფილო, ხახვი, ნიახური, სოკო და ბეგქონდარა.  2. კარაქი გაადნეთ ქვაბში, საშუალო ცეცხლზე და დაუმატეთ დაჭრილი ინგრედიენტები, სოკოს და ბეგქონდარას გარდა. ხარშეთ და ურიეთ დაახლოებით 10 წუთის განმავლობაში, ისე, რომ ბოსტნეული არ დაიბრაწოს.  3. დაამატეთ სოკო და ბეგქონდარა და ხარშეთ დაახლოებით 5 წუთი. ქვაბში ჩაასხით ქათმის ბულიონი, მოაყარეთ მარილი და პილპილი. ბოლოს, დააფარეთ თავსახური და ხარშეთ დაბალ ცეცხლზე 30 წუთის განმავლობაში.  4. მომზადებული სოკოს სუპი გადაიტანეთ ღრმა თეფშებში და მირთმევამდე შეგიძლიათ მოაყაროთ მწვანე ხახვი." },
-        { id: 74, cat: "წვნიანები", name: "ბარდის სუპი", time: "3სთ", views: "4.512", cal: "133", por: "8", img: "https://i.postimg.cc/BQm1Rkd9/bard.webp", ing: ["1 ს/კ ზეითუნის ზეთი", "2 ჭიქა ხახვი", "2 ჭიქა სტაფილო", "2 ჭიქა ნიახური", "1 ½ ჩ/კ დაფქული ნიორი", "1 ჭიქა ყვითელი ბარდა", "1 ჭიქა მწვანე ბარდა", "8 ჭიქა უცხიმო ქათმის ბულიონი", "1 ½ ჩ/კ უმარილო სანელებლების ნაზავი", "1 ჩ/კ მარილი"], text: "1. პირველ რიგში, დაჭერით ხახვი, სტაფილო და ნიახური. შემდეგ, ჩაასხით ზეთი ქვაბში და გააცხელეთ დაბალ ცეცხლზე.  2. დაამატეთ ხახვი, სტაფილო, ნიახური და ნიორი და ურიეთ სანამ ხახვი გამჭვირვალე არ გახდება, 5-7 წუთი.  3. დაამატეთ ქათმის ბულიონი, ორივე ტიპის ბარდა და სანელებლები. ქვაბს დააფარეთ თავსახური და მიიყვანეთ ადუღებამდე.  4. ადუღების შემდეგ, გააგრძელეთ დუღილი დაბალ ცეცხლე დაახლოებით 2.5 საათი და ხშირად ურიეთ.  5. დასრულების შემდეგ ოდნავ გააციეთ ბარდის სუპი, ათქვიფეთ ხელის ბლენდერით და მიირთვით." },
-        { id: 73, cat: "წვნიანები", name: "ოსპის სუპი", time: "55წთ", views: "3.845", cal: "311", por: "6", img: "https://i.postimg.cc/59k71KcC/osp'i.webp", ing: ["2 ს/კ ზეითუნის ზეთი", "1 ხახვი, დაჭრილი", "2 კბილი ნიორი, დაჭრილი", "1 სტაფილო, დაჭრილი", "2 ნიახურის ღერო", "400 გრ გამხმარი ოსპი", "400 გრ დაჭყლეტილი პომიდორი", "1.5 ლ ბოსტნეულის ან ქათმის ბულიონი", "1/2 ჩ/კ ქინძის ფხვნილი", "1/2 ჩ/კ ძირას ფხვნილი", "1.5 ჩ/კ პაპრიკას ფხვნილი", "2 დაფნის ფოთოლი", "1 ლიმონი, გაწურული", "1/4 ჩ/კ მარილი და პილპილი"], text: "1. გააცხელეთ ზეთი დიდ ქვაბში საშუალო ცეცხლზე, დაამატეთ ნიორი, ხახვი და ხარშეთ 2 წუთის განმავლობაში. დაამატეთ ნიახური, სტაფილო და მოხარშეთ 7-10 წუთის განმავლობაში, ან სანამ არ დარბილდება.  2. დაამატეთ დანარჩენი ინგრედიენტები, ლიმონის წვენის და მარილის გარდა და გააგრძელეთ მორევა.  3. მოუმატეთ ცეცხლს და მიიყვანეთ ადუღებამდე. მოაცილეთ ზედაპირზე არსებული ქაფი, დააფარეთ თავსახური, შეამცირეთ ცეცხლი და ადუღეთ 35-40 წუთის განმავლობაში, ოსპის დარბილებამდე. ამოიღეთ დაფნის ფოთლები.  4. თუ გათხელება გსურთ, შეგიძლიათ დაამატოთ ცოტა წყალი და მოაყარეთ მარილი და პილპილი გემოვნებით.  5. თეფშზე გადაღების შემდეგ მოასხით ცოტა ლიმონის წვენი და შეგიძლიათ მოაყაროთ ოხრახუში. სასურველია მიირთვათ თბილ, კარაქიან პურთან ერთად." },
-        { id: 72, cat: "წვნიანები", name: "გასპაჩო", time: "20წთ", views: "2.123", cal: "180", por: "5", img: "https://i.postimg.cc/zXBsFRNH/gas.webp", ing: ["1 კგ პომიდორი რომა", "250 გრ კიტრი", "1 მწვანე ბულგარული წიწაკა", "1/2 წითელი ხახვი", "2 კბილი ნიორი", "3 ს/კ ზეითუნის ზეთი", "2 ს/კ ღვინის ძმარი", "1 ჩ/კ ზღვის მარილი", "1/2 ჩ/კ შავი პილპილი", "1/2 ჩ/კ დაფქული ძირა", "1 ნაჭერი თეთრი პური"], text: "1. პომიდორი გაჭერით შუაზე და ამოაცალეთ გული, კიტრი გათალეთ და ამოჭერით თესლები, ბულგარული წიწაკა გაჭერით შუაზე და მოაცილეთ თესლები. აიღეთ ერთი ნაჭერი პური და მოაცილეთ ქერქი.  2. ყველა ინგრედიენტი მოათავსეთ ბლენდერში და ურიეთ 1 წუთის განმავლობაში. თუ უფრო თხელი მასის მიღება გსურთ, შეგიძლიათ კიდევ ნახევარი წუთი ამუშაოთ ბლენდერი.  3. დააგემოვნეთ მიღებული მასა და გემოვნებით დაამატეთ მარილი, პილპილი ან ძირა. ამის შემდეგ, ჩაასხით თასში, დალუქეთ და მოათავსეთ მაცივარში 3-4 საათის განმავლობაში.  4. გასპაჩო მიირთვით ცივი და შეგიძლიათ დაამატოთ ისეთი ინგრედიენტები, როგორიცაა მწვანილი, ბოსტნეული და არაჟანი. ასევე, შეგიძლიათ შეურიოთ ხამონი." },
-        { id: 71, cat: "წვნიანები", name: "ბორში", time: "1სთ 5წთ", views: "4.548", cal: "257", por: "10", img: "https://i.postimg.cc/CL7Kz8Nk/bor.webp", ing: ["450 გრ ღორის ხორცი", "3 ჭარხალი, გახეხილი", "3 სტაფილო, გახეხილი", "3 კარტოფილი, კუბიკებად დაჭრილი", "1/2 კომბოსტო, წვრილად დაჭრილი", "1 ჭიქა დაჭრილი პომიდორი, გადაწურული", "1 ს/კ მცენარეული ზეთი", "1 ხახვი, დაჭრილი", "170 გრ ტომატის პასტა", "8 ჭიქა წყალი", "3 კბილი ნიორი, დაჭრილი", "1 ჩ/კ შაქარი", "მარილი და პილპილი", "1/2 ჭიქა არაჟანი", "დაჭრილი კამა ან ოხრახუში"], text: "1. დაქუცმაცებული ძეხვი მოათავსეთ ტაფაში და დადგით საშუალო ცეცხლზე. შეწვის დროს მოურიეთ და როდესაც მიიღებს ვარდისფერ შეფერილობას, გადადგით.  2. დიდი ქვაბი ნახევრად შეავსეთ წყლით და მიიყვანეთ ადუღებამდე. დაამატეთ ძეხვი, დაახურეთ თავსახური და გააგრძელეთ დუღილი.  3. დაამატეთ ჭარხალი და ადუღეთ 10 წუთის განმავლობაში. დაუმატეთ სტაფილო და კარტოფილი და განაგრძეთ ხარშვა, სანამ კარტოფილი არ დარბილდება, კიდევ 10 წუთი. დაამატეთ კომბოსტო და პომიდორი.  4. ტაფაში ჩაასხით ზეთი და დადგით საშუალო ცეცხლზე. დაუმატეთ ხახვი და მოშუშეთ დარბილებამდე. აურიეთ ტომატის პასტა და დარჩენილი 3/4 ჭიქა წყალი, სანამ კარგად არ შეერევა. შემდეგ კი გადაიტანეთ ქვაბში.  5. წვნიანს დაუმატეთ ნიორი, დაახურეთ თავსახური და გამორთეთ ცეცხლი. გააჩერეთ 5 წუთი. შეურიეთ შაქარი და მოაყარეთ მარილი და პილპილი.  6. მომზადებული ბორში გადაიტანეთ ღრმა თეფშებში, მოასხით არაჟანი, მოაყარეთ კამა და მიირთვით." },
-        { id: 70, cat: "წვნიანები", name: "სოკოს კრემ სუპი", time: "40წთ", views: "890", cal: "309", por: "4", img: "https://i.postimg.cc/7LxbKVLv/sok'ts'.webp", ing: ["90 გრ კარაქი", "2 დაჭრილი ხახვი", "1 კბილი დაჭყლეტილი ნიორი", "500 გრ სოკო, წვრილად დაჭრილი", "2 ს/კ ფქვილი", "1 ლ ქათმის ცხელი ბულიონი", "1 დაფნის ფოთოლი", "4 ს/კ კრემი", "დაჭრილი ოხრახუში (სურვილისამებრ)"], text: "1. დიდ ქვაბში გაადნეთ კარაქი, დაამატეთ ხახვი და ნიორი და მოთუშეთ დარბილებამდე, მაგრამ არ უნდა დაიბრაწოს. დაახლოებით 8-10 წუთის განმავლობაში.  2. დაუმატეთ სოკო და ადუღეთ მაღალ ცეცხლზე კიდევ 3 წუთი, სანამ არ დარბილდება. მოაყარეთ ფქვილი და აურიეთ, რომ ინგრედიენტები კარგად შეერიოს ერთმანეთს.  3. შემდეგ, ჩაასხით ქათმის ბულიონი, მიიყვანეთ ადუღებამდე და დაუმატეთ დაფნის ფოთოლი და ადუღეთ კიდევ 10 წუთი.  4. ამის შემდეგ, მოაცილეთ დაფნის ფოთოლი, სოკოს მიქსი გადმოდგით ცეცხლიდან და ხელის ბლენდერით მოურიეთ, სანამ არ გახდება გლუვი.  5. ისევ დადგით დაბალ ცეცხლზე, დაამატეთ კრემი და ნაზად მოურიეთ 1-2 წუთის განმავლობაში. მირთმევამდე შეგიძლიათ მოაყაროთ ოხრახუში.სურვილისამებრ მოაყარეთ ოხრახუში და მიირთვით." },
-        { id: 69, cat: "წვნიანები", name: "გოგრის სუპი", time: "25წთ", views: "4.145", cal: "189", por: "5", img: "https://i.postimg.cc/q7d24yMq/gog.webp", ing: ["1.2 კგ გოგრა", "1 დაჭრილი ხახვი", "2 კბილი გახეხილი ნიორი", "750 მლ ბოსტნეულის ან ქათმის ბულიონი", "250 მლ წყალი", "მარილი და პილპილი", "125-180 მლ კრემი ან ნაღები"], text: "1. დაჭერით გოგრა 3 სმ სისქის ნაჭრებად, მოაცალეთ კანი და თესლი. შემდეგ კი თითო ნაჭერი დაჭერით 4 სმ სისქის კუბიკებად.  2. ქვაბში მოათავსეთ გოგრა, ხახვი, ნიორი, ბულიონი და წყალი ისე, რომ გოგრა მთლიანად არ დაიფაროს. ქვაბს არ დაახუროთ თავსახური და მიიყვანეთ ადუღებამდე. შემდეგ, დაბალ ცეცხლზე გააგრძელეთ დუღილი სანამ გოგრა რბილი არ გახდება რბილი, დაახლოებით 10 წუთი.  3. ამის შემდეგ, დაელოდეთ მასის ოდნავ გაციებას და ათქვიფეთ ხელის ბლენდერის გამოყენებით სანამ არ მიიღებთ თხელ მასას. მოაყარეთ მარილი და პილპილი გემოვნებით, დაამატეთ ნაღები და მოურიეთ.  4. მიღებული წვნიანი ჩაასხით თასებში, მოასხით ცოტაოდენი ნაღები და სურვილისამებრ მოაყარეთ წიწაკა და ოხრახუში. გოგრის სუპი უმჯობესია მიირთვათ ქერქიან პურთან ერთად." },
-        { id: 68, cat: "წვნიანები", name: "ბროკოლის სუპი", time: "30წთ", views: "2.412", cal: "366", por: "5", img: "https://i.postimg.cc/Zn0T17Gg/brts'v.webp", ing: ["1 ს/კ კარაქი", "2 კბილი დაჭრილი ნიორი", "1 დაჭრილი ხახვი", "1 ლ ქათმის ბულიონი", "325 მლ წყალი", "700 გ ბროკოლი", "2 კუბიკებად დაჭრილი კარტოფილი", "¾ ჩ/კ მარილი", "¼ ჩ/კ შავი პილპილი", "150 გრ გახეხილი ჩედარის ყველი", "165 მლ ნაღები ან რძე"], text: "1. გაადნეთ კარაქი დიდ ქვაბში საშუალო მაღალ ცეცხლზე. დაამატეთ ხახვი და ნიორი, მოთუშეთ 2 წუთის განმავლობაში, ხახვის დარბილებამდე.  2. დაუმატეთ ბულიონი, წყალი, ბროკოლი, კარტოფილი, მარილი და პილპილი. მიიყვანეთ ადუღებამდე, შემდეგ დაახურეთ თავსახური, შეამცირეთ ცეცხლი საშუალოზე და მოხარშეთ 20 წუთის განმავლობაში.  3. გამორთეთ ღუმელი, მაგრამ ქვაბი დატოვეთ ღუმელზე. ხელის ბლენდერით აურიეთ პიურე სანამ არ მიიღებთ ერთგვაროვან მასას.  4. შემდეგ შეურიეთ ნაღები და დაუმატეთ თითო-თითო მუჭა ყველი. ინგრედიენტების დამატებისას თან ურიეთ, რომ უფრო ადვილად შეერიოს ერთმანეთს.  5. ბოლოს, გასინჯეთ და გემოვნების მიხედვით დაამატეთ მარილი. ამის შემდეგ კი შეგიძლიათ გადაანაწილოთ პორციები თასებში და მიირთვათ." },
-        { id: 67, cat: "ცომეული", name: "მჭადი", time: "30 წთ", views: "1.547", cal: "200", por: "6", img: "https://i.postimg.cc/W32CydBq/mch'ad.webp", ing: ["400 გრ სიმინდის ფქვილი", "1/4 ჩ/კ მარილი", "1 ჭიქა ცივი წყალი", "მარილი"], text: "1. სიმინდის ფქვილს მოაყარეთ მარილი (გემოვნებით), დაუმატეთ წყალი და მოზილეთ ხელით. უნდა მიიღოთ შეკრული მასა, თუმცა უნდა იყოს სველი.  2. მომზადების შემდეგ, ხელით გააკეთეთ ცომის ბურთულები და ხელით გააბრტყელეთ, რომ მიიღოთ ოვალური ფორმის მჭადები. სისქე დაახლოებით 2-3 სანტიმეტრი.  3. შემდეგ გააცხელეთ ტაფა, მოასხით ზეთი და მოათავსეთ მჭადები. თითო მხარე შეწვით 5-6 წუთის განმავლობაში და უნდა მიიღოს ოქროსფერი შეფერილობა.  4. მჭადი უხდება თითქმის ყველა კერძს და განსაკუთრებით გემრიელია ლობიოსთან და მწნილთან ერთად." },
-        { id: 66, cat: "ცომეული", name: "ჭვიშტარი", time: "35 წთ", views: "4.547", cal: "150", por: "8", img: "https://i.postimg.cc/sDDfWX1M/ch'vi.webp", ing: ["1 ჭიქა სიმინდის ფქვილი", "1 ჭიქა ყველი", "1 კვერცხი", "1/2 ჭიქა ზეთი"], text: "1. თასში მოათავსეთ სიმინდის ფქვილი, ყველი და კვერცხი. კარგად აურიეთ, დაამატეთ წყალი საჭიროებისამებრ და მოზილეთ ცომი 10 წუთის განმავლობაში.  2. ტაფა გააცხელეთ საშუალო ცეცხლზე. დაასხით ზეთი იმდენი, რომ ტაფის ძირი დაიფაროს. ცომისგან მოამზადეთ თანაბარი ზომის ბურთულები და ოდნავ გააბრტყელეთ, ოვალური ფორმის მისაღებად.  3. ჭვიშტარი გამოაცხვეთ ორივე მხრიდან, სანამ არ მიიღებს ოქროსფერ შეფერილობას." },
-        { id: 65, cat: "ცომეული", name: "პიცის ცომი", time: "45 წთ", views: "9.845", cal: "170", por: "1", img: "https://i.postimg.cc/qvvtpw2S/tsom.webp", ing: ["1 ჭიქა თბილი წყალი", "7 გრ აქტიური საფუარი", "1 ჩ/კ თეთრი შაქარი", "2 ½ ჭიქა პურის ფქვილი", "2 ს/კ ზეითუნის ზეთი", "1 ჩ/კ მარილი"], text: "1 გააცხელეთ ღუმელი 230 გრადუსზე და პიცის საცხობ დაფაზე წაუსვით ცხიმი.  2 ჩაასხით თბილი წყალი თასში, დაამატეთ საფუარი და შაქარი. აურიეთ და გააჩერეთ დაახლოებით 10 წუთი.  3 საფუვრის ნარევს დაუმატეთ ფქვილი, ზეთი, მარილი და კარგად მოზილეთ, გლუვი მასის მისაღებად. გააჩერეთ 5 წუთი.  4 ცომი გადაიტანეთ ფქვილმოყრილ ზედაპირზე, გააბრტყელეთ წრიულ ფორმაზე და გადაიტანეთ მომზადებულ პიცის საცხობზე.  5 პიცის ცომი მზად არის და ახლა შეგიძლიათ დაამატოთ სასურველი ინგრედიენტები და გამოაცხოთ პიცა." },
-        { id: 64, cat: "ცომეული", name: "მეგრული ხაჭაპური", time: "1 სთ 30 წთ", views: "5.842", cal: "500", por: "4", img: "https://i.postimg.cc/02pGzVMq/megruli.webp", ing: ["200 გრ იმერული ყველი", "150 გრ სულგუნი", "75 მლ თბილი რძე", "½ ჩ/კ საფუარი", "2 კვერცხი", "1 ს/კ ზეთი", "200 გრ უნივერსალური ფქვილი", "1 ჩ/კ მარილი"], text: "1 პატარა თასში ათქვიფეთ საფუარი რძეში, სანამ არ დაიშლება. გააჩერეთ ოდნავ აქაფებამდე, დაახლოებით 5-10 წუთი. დაამატეთ და ათქვიფეთ კვერცხი და ზეთი.  2 დიდ თასში მოათავსეთ ფქვილი, მარილი და დაამატეთ რძის ნარევი და მიიყვანეთ ერთგვაროვან მასამდე. გადაიტანეთ მაგიდაზე და მოზილეთ ცომი. შემდეგ მოათავსეთ ზეთიან ჭურჭელში, გადააფარეთ და დატოვეთ 1 საათით.  3 პატარა თასში აურიეთ იმერული ყველი, სულგუნი, კვერცხი და გადადგით. გააცხელეთ ღუმელი 220 გრადუსზე. ცომი გააბრტყელეთ და მიეცით წრის ფორმა, 2-3 მმ სისქე.  4 ყველის შიგთავსი მოათავსეთ ცომის ცენტრში და კარგად დალუქეთ. შემდეგ გააბრტყელეთ და ცენტრში გაუკეთეთ პატარა ნახვრეტი. ზემოდან მოაყარეთ 50 გრამი გახეხილი სულგუნი.  5 მეგრული ხაჭაპური გადაიტანეთ პერგამენტიან საცხობ ფირფიტაზე და გამოაცხვეთ ყველი გადნობამდე, დაახლოებით 10-15 წუთი." },
-        { id: 63, cat: "ცომეული", name: "იმერული ხაჭაპური", time: "1 სთ 25 წთ", views: "8.745", cal: "460", por: "4", img: "https://i.postimg.cc/RZ7t0hYJ/imer.webp", ing: ["200 გრ იმერული ყველი", "100 გრ სულგუნი", "75 მლ თბილი რძე", "1 ჩ/კ შაქარი", "1 ჩ/კ საფუარი", "200 გრ უნივერსალური ფქვილი", "½ ჩ/კ მარილი", "2 დიდი კვერცხი", "1 ს/კ მზესუმზირას ზეთი"], text: "1 აურიეთ რძე, შაქარი, საფუარი და გააჩერეთ 5-10 წუთი. ფქვილი და მარილი ათქვიფეთ დიდ თასში, დაუმატეთ კვერცხი, რძე და საფუვრის ნაზავი და ზეთი. ურიეთ სქელი ცომის მისაღებად.  2 მოზილეთ ცომი და გადაიტანეთ ზეთიან თასში, გადააფარეთ ნესტიანი ტილო და გააჩერეთ ოთახის ტემპერატურაზე 1-2 საათით.  3 ამასობაში, ორივე ყველი გახეხეთ და მოათავსეთ დიდ თასში. დაუმატეთ კვერცხი და მოურიეთ ერთიანი მასის მისაღებად.  4 გააცხელეთ ღუმელი 200 გრადუსამდე და საცხობი ფურცელი პერგამენტის ქაღალდით მოათავსეთ ღუმელის ცენტრში. ცომი გააბრტყელეთ ფქვილიან ზედაპირზე და მიეცით წრიული ფორმა, დაახლოებით 4-5 მილიმეტრის სისქის.  5 ყველის შიგთავსი მოათავსეთ ცომის ცენტრში, შეკარით კარგად და გააბრტყელეთ. იმერული ხაჭაპური მოათავსეთ ღუმელში და გამოაცხვეთ 10-15 წუთის განმავლობაში." },
-        { id: 62, cat: "ცომეული", name: "ხინკალი", time: "1 სთ 35 წთ", views: "2.845", cal: "80", por: "24", img: "https://i.postimg.cc/fRtHqck1/khink'.webp", ing: ["250 გრ უნივერსალური ფქვილი", "4 გრ მარილი", "1 კვერცხი", "2 ს/კ ზეთი", "⅓ ჭიქა ცხელი წყალი", "150 გრ ღორის ფარში", "150 გრ საქონლის ფარში", "½ ხახვი", "2 კბილი ნიორი", "10 გრ ქინძი", "½ ჩ/კ წიწაკა"], text: "1 დიდ თასში მოათავსეთ ფქვილი, მარილი, კვერცხი, ზეთი და აურიეთ. შემდეგ დაამატეთ წყალი და მოზილეთ, რომ მიიღოთ გლუვი ცომი. მოათავსეთ თასში, გადააფარეთ სველი ტილო და დატოვეთ ოთახის ტემპერატურაზე 1 საათით.  2 ამასობაში, დიდ თასში შეურიეთ ღორის და საქონლის ხორცი, დაჭრილი ხახვი, ნიორი, ქინძი და წიწაკა. დაამატეთ მარილი და პილპილი და ურიეთ სანამ კარგად არ შეერევა ერთმანეთს.  3 მას შემდეგ, რაც ცომი მზად იქნება, გააბრტყელეთ 1-2 მილიმეტრის სისქემდე. წრიული ფორმის საშუალებით გააკეთეთ ცომის წრეები.  4 წრიული საჭრელით გამოჭერით მრგვალი ფორმის ცომები. ოდნავ გაწელეთ თითო წრე დიამეტრში და ცენტრში მოათავსეთ შიგთავსი, დაახლოებით 15 გრამი. შეახვიეთ შიგთავსი ცომში ისე, რომ მთლიანად შეიკრას.  5 დიდი ქვაბით წყალი მიიყვანეთ ადუღებამდე მაღალ ცეცხლზე. თითი-თითო ხინკალი მოათავსეთ წყალში და ადუღეთ 7-10 წუთის განმავლობაში. მოხარშვის შემდეგ გადმოიტანეთ თასზე, მოაყარეთ პილპილი და მიირთვით ცხელი." },
-        { id: 61, cat: "ცომეული", name: "ბლინები", time: "1სთ 5წთ", views: "1.874", cal: "90", por: "8-10", img: "https://i.postimg.cc/NFxhM1R7/blin.webp", ing: ["250 გრ ფქვილი", "500 მლ რძე", "2 კვერცხი", "50 გრ გამდნარი კარაქი", "1 ს/კ შაქარი", "1/4 ჩ/კ მარილი", "ზეთი ტაფის შესაზეთად"], text: "1 დიდ ჯამში ჩაყარეთ ფქვილი, დაუმატეთ შაქარი და მარილი და კარგად აურიეთ. ასევე ცალკე ჯამში ათქვიფეთ კვერცხი, დაუმატეთ რძე და ისიც აურიეთ.  2 თანდათანობით ჩაასხით რძიანი ნარევი ფქვილში და ურიეთ რომ არ წარმოიქმნას სიმყარეები. დაუმატეთ გამდნარი (მაგრამ არა ცხელი) კარაქი და კარგად აურიეთ.  3 გაფილტრეთ ცომი წვრილი საცერით, რომ მიიღოთ გლუვი, ერთგვაროვანი მასა. დააყოვნეთ ცომი ოთახის ტემპერატურაზე 30 წუთის განმავლობაში.  4 გაახურეთ  ტაფა საშუალო ცეცხლზე და ოდნავ შეზეთეთ. აიღეთ დაახლოებით 60-70 მლ ცომი და ჩაასხით ტაფის ცენტრში. სწრაფად დაატრიალეთ ტაფა, რომ ცომმა დაფაროს მთელი ზედაპირი თხელ ფენად.  5 დააყოვნეთ დაახლოებით 1-2 წუთი, სანამ კიდეები არ დაიწყებს აწევას და ზედაპირი არ გახდება მშრალი.  6 ფრთხილად გადმოაბრუნეთ ბლინი მეორე მხარეს 30-40 წამი. გადაიტანეთ მზა ბლინი თეფშზე და გააგრძელეთ დანარჩენი ცომის გამოცხობა." },
-        { id: 60, cat: "ცომეული", name: "აჭარული ხაჭაპური", time: "3სთ 10წთ", views: "9.845", cal: "715", por: "4", img: "https://i.postimg.cc/rz61xQD6/ach'ar.webp", ing: ["1 ¼ ჭიქა რძე", "1 ჩ/კ მშრალი საფუარი", "¾ ჩ/კ შაქარი", "3 ჭიქა ფქვილი", "1 ს/კ მზესუმზირას ზეთი", "¾ ჩ/კ მარილი", "3 ჭიქა გახეხილი ყველი", "4 კვერცხის გული", "2 ს/კ უმარილო კარაქი"], text: "1 ათქვიფეთ რძე, საფუარი და შაქარი დიდ თასში, გადააფარეთ ტილო და გააჩერეთ 10 წუთი. დაუმატეთ ფქვილი, ზეთი, მარილი და ურიეთ სანამ სქელი ცომს არ მიიღებთ. გადაიტანეთ სამუშაო მაგიდაზე და მოზილეთ დაახლოებით 5 წუთი.  2 თითო ნაწილისგან გააკეთეთ ბურთი, გადაუსვით ზეთი, მოათავსეთ თასში, დააფარეთ თავსახური და გააჩერეთ დაახლოებით 70-80 გრადუსზე საათ ნახევრით. ამასობაში, ყველას დაუმატოთ მწიკვი მარილი და კარგად შეზილეთ.  3 ცომი გაყავით 4 თანაბარ ნაწილად და მიეცით ოვალური ფორმა. დაასხით 1/4 ჭიქა ყველი თითოეულ ოვალზე და კიდეები დატოვეთ ხელუხლებელი. თითოეული ოვალის გრძელი კიდეები გადაკეცეთ შიგნით, ამოატრიალეთ და ცენტრში დანით გააკეთეთ ზოლი, თუმცა არა ბოლომდე. ხელით გააფართოვეთ ისე, რომ ცომში გაჩნდეს ღრმული.  4 თანაბრად გაყავით და გაანაწილეთ დარჩენილი ყველი ცომის ცენტრში და დაალაგეთ პერგამენტიან საცხობ ფირფიტაზე, ერთმანეთისგან 3-4 სანტიმეტრის დაშორებით. გადააფარეთ ტილო და დატოვეთ ასე 25-30 წუთის განმავლობაში, თბილ ადგილას.  5 ღუმელი გააცხელეთ 200 გრადუსზე და გამოაცხვეთ აჭარული ხაჭაპური 20-25 წუთის განმავლობაში, სანამ კიდეები არ გახდება ოქროსფერი. თითოეულის ცენტრში კოვზით გააკეთეთ პატარა ღრმული, მოათავსეთ კვერცხის გული და განაგრძეთ გამოცხობა, დაახლოებით 40 წამი.  6 გამოცხობის შემდეგ, გადაიტანეთ თეფშზე, ზემოდან დაადეთ 1/2 სუფრის კოვზი კარაქი და მიირთვით." },
-        { id: 59, cat: "ცომეული", name: "ლანგოსი", time: "1სთ 20წთ", views: "2.874", cal: "310", por: "4", img: "https://i.postimg.cc/63YbVJXn/lang.webp", ing: ["2 მოხარშული კარტოფილი", "2 ½ ჩ/კ საფუარი", "1 ჩ/კ შაქარი", "210 გრ ფქვილი", "1 ჩ/კ ზეთი", "3/4 ჩ/კ მარილი", "120 მლ რძე", "მზესუმზირას ზეთი", "2 კბილი ნიორი", "არაჟანი", "გახეხილი ყველი"], text: "1 მოხარშული და დაჭყლეტილი კარტოფილი მოათავსეთ თასში საფუართან, შაქართან, ზეთთან, მარილთან და რძესთან ერთად. ინგრედიენტები აზილეთ ერთმანეთში.  2 ამის შემდეგ მოზილეთ ცომი (ის უნდა იყოს რბილი), გადაიტანეთ დაზეთილ თასში და გადააფარეთ სამზარეულოს ტოლო. ცომი ასეთ მდგომარეობაში გააჩერეთ 1 საათით.  3 ამის შემდეგ, ცომი გაყავით ოთხ ნაწილად, გააკეთეთ ოთხი ბურთულა, მოათავსეთ ფქვილიან დაფაზე, გადააფარეთ და გააჩერეთ 20 წუთი. ამასობაში, ტაფით გააცხელეთ მზესუმზირას ზეთი (დაახლოებით 0.5-1 ჭიქა) 180 გრადუსზე.  4 ლანგოსის თითოეული ბურთი გააბრტყელეთ, ოდნავ გაწელეთ და შეწვით ზეთში ოქროსფერი შეფერილობის მიღებამდე. ზეთიდან ამოღების შემდეგ წაუსვით დაჭყლეტილი ნიორი და მოაყარეთ გახეხილი ყველი." },
-        { id: 58, cat: "ცომეული", name: "ჩებურეკი", time: "40წთ", views: "1.874", cal: "285", por: "16", img: "https://i.postimg.cc/RCGxdyRG/cheb.webp", ing: ["450 გრ საქონლის ხორცი", "1 ტკბილი ხახვი", "1 ჩ/კ მარილი", "⅓ ჭიქა ოხრახუში", "¼ ჭიქა წყალი", "16 ტორტილა", "2 ჭიქა მცენარეული ზეთი"], text: "1 დიდ თასში კარგად აურიეთ საქონლის ხორცი, წვრილად დაჭრილი ხახვი, 1 ჩ/კ მარილი და 1/4 ჭიქა წყალი.  2 ტორტილას შუაში მოათავსეთ დაახლოებით 2 ს/კ ხორცის შიგთავსი და გაანაწილეთ ისე, რომ შექმნათ ნახევარწრე და კიდეებზე დატოვეთ პატარა სიცარიელე. შემდეგ კი მჭიდროდ შეკარით ცომი რომ მიიღოთ ნახევარწრე.  3 ტაფაში ჩაასხით ზეთი (დაახლოებით 1.5-2 ჭიქა), მოათავსეთ ორი ჩებურეკი და შეწვით დაბალ ცეცხლზე. თითო მხარის მოსამზადებლად საჭიროა 2-3 წუთი.  4 თეფშზე დააფინეთ სამზარეულოს ხელსახოცი და დადეთ მომზადებული ზედმეტი ცხიმის მოსაშორებლად. მირთმევამდე გააჩერეთ 5 წუთი." },
-        { id: 57, cat: "ცომეული", name: "სპანაკოპიტა", time: "1სთ 10წთ", views: "2.874", cal: "72", por: "30", img: "https://i.postimg.cc/zBSKPBnP/sp'anak'.webp", ing: ["2 ს/კ ზეითუნის ზეთი", "900 გრ ისპანახი", "1/2 ჭიქა ხახვი", "1/2 ჭიქა მწვანე ხახვი", "1 ჩ/კ ნიორი, დაფქული", "2 ს/კ ოხრახუში", "2 ს/კ კამა", "230 გრ ფეტა ყველი", "1 კვერცხი", "450 გრ ფილოს ცომი", "3/4 ჭიქა გამდნარი კარაქი"], text: "1 გააცხელეთ ღუმელი 190 გრადუსზე და 2 ფირფიტაზე მოათავსეთ პერგამენტის ქაღალდი. დიდ ტაფაზე მოშუშეთ ისპანახი 1 ს/კ ზეითუნის ზეთში, 3-4 წუთის განმავლობაში. გააგრილეთ, გადაწურეთ და წვრილად დაჭერით.  2 იმავე ტაფაში მოშუშეთ ხახვი 1 ს/კ ზეითუნის ზეთში 3-4 წუთის განმავლობაში. დაუმატეთ მწვანე ხახვი, ნიორი, ოხრახუში და კამა და ურიეთ ნახევარი წუთი. გადაიტანეთ თასში, დაამატეთ ისპანახი, ფეტა ყველი, და კვერცხით. გემოვნებით მოაყარეთ მარილი და პილპილი და კარგად აურიეთ.  3 გააბრტყელეთ ფილოს ცომი, დააფინეთ ერთი ფირფიტა და წაუსვით გამდნარი კარაქი, ზემოდან დაადეთ ცომის მეორე ფურცელი და წაუსვით კარაქი. დაჭერით ვერტიკალურად, რომ მიიღოთ გრძელი, 7-10 სმ სიგანის ნაჭრები და თითოეული ზოლის ერთ ბოლოზე მოათავსეთ 1 1/2 ჩაის კოვზი შიგთავსი.  4 შიგთავსიანი ბოლო გადაკეცეთ, რომ მიიღოთ სამკუთხედის ფორმა, განაგრძეთ გადაკეცვა როგორც დროშა სანამ ბოლომდე არ გახვალთ და მიიღებთ სამკუთხა ფორმის ნაჭერს. გააკეთეთ იგივე სხვა ნაჭრებისთვის.  5 სამკუთხა ფორმის სპანაკოპიტას ნაჭრები მოათავსეთ მომზადებულ საცხობ ფირფიტაზე, ერთმანეთისგან დაშორებით. გამოაცხვეთ 18-20 წუთის განმავლობაში ან სანამ ოქროსფერ შეფერილობას არ მიიღებს." },
-        { id: 56, cat: "ცომეული", name: "სამოსა", time: "1სთ 50წთ", views: "3.451", cal: "164", por: "14", img: "https://i.postimg.cc/8k7TH3NX/samo.webp", ing: ["260 გრ უნივერსალური ფქვილი", "1 ჩ/კ ინდური კვლიავი", "1/4 ჩ/კ მარილი", "6 ს/კ ზეთი", "4 კარტოფილი", "1 ჩ/კ ძირას თესლი", "1 ჩ/კ ცერეცოს თესლი", "2 ჩ/კ ქინძის თესლი", "1 ჩ/კ ჯანჯაფილი", "1 მწვანე წიწაკა", "1/4 ჩ/კ ასაფეტიდა", "130 გრ ბარდა", "1 ჩ/კ ქინძის ფხვნილი", "1/2 ჩ/კ გარამ მასალა", "1/2 ჩ/კ გამხმარი მანგოს ფხვნილი", "1/4 ჩ/კ წითელი ჩილის ფხვნილი", "3/4 ჩ/კ მარილი"], text: "დიდ თასში აურიეთ ფქვილი, ინდური კვლიავი, მარილი და შეზილეთ ზეთში 3-4 წუთის განმავლობაში. თანდათანობით დაამატეთ დაახლოებით 6 ს/კ წყალი, რომ მიიღოთ მყარი ცომი. დააფარეთ სველი ქსოვილით და გააჩერეთ 40 წუთი.  2 მოხარშეთ და გახეხეთ კარტოფილი. ზეთში მოშუშეთ ძირა, კამა, დაქუცმაცებული ქინძი, ჯანჯაფილი, მწვანე წიწაკა და ზეთში. დაუმატეთ გახეხილი კარტოფილი, ბარდა, ქინძის ფხვნილი, გარამ მასალა, გამხმარი მანგოს ფხვნილი, წითელი წიწაკის ფხვნილი და მარილი. კარგად აურიეთ და გააგრილეთ.  3 ცომი გაყავით 7 ნაწილად, გააბრტყელეთ და თითოეული წრიული ფორმის ცომი გაჭერით შუაზე. შემდეგ, კი მიღებულ ნახევარწრეებს მიეცით კონუსის ფორმა. კონუსის წვერთან დატოვეთ ღრმული, ხოლო ქვედა მხარე დალუქეთ.  4 თითოეული კონუსი შეავსეთ 1-2 სუფრის კოვზი კარტოფილის ნარევით და ღია ნაწილი დალუქეთ წყლის საშუალებით. თქვენ უნდა მიიღოთ სამკუთხა ფორმის ცომი შიგთავსით.  5 ღრმა ტაფაში გააცხელეთ ზეთი დაბალ ცეცხლზე. გაცხელების შემდეგ დაამატეთ 4-5 სამოსა და შეწვით 10-12 წუთის განმავლობაში. მან უნდა მიიღოს ღია ყავისფერი შეფერილობა და გახდეს მკვრივი.  6 მოუმატეთ ცეცხლს და გააგრძელეთ შეწვა სანამ ოქროსფერ შეფერილობას არ მიიღებს, დაახლოებით 8-10 წუთის განმავლობაში. თითო პარტიის შეწვის საერთო დრო სასურველია იყოს 20 წუთი.  7 ამის შემდეგ, ამოიღეთ სამოსას ნაჭრები ზეთიდან, გადაწურეთ ზედმეტი ცხიმის მოსაშორებლად და ოდნავ გააციეთ სანამ მიირთმევთ." },
-        { id: 55, cat: "ცომეული", name: "სტრომბოლი", time: "40წთ", views: "6.874", cal: "639", por: "9", img: "https://i.postimg.cc/5yK5yfV1/st'romb.webp", ing: ["700 გრ პიცის ცომი", "8 ნაჭერი ლორი", "8 ნაჭერი კაპოკოლო", "8 ნაჭერი პროვოლონის ყველი", "8 ნაჭერი მოცარელა", "8 ნაჭერი სალიამი", "8 ნაჭერი პროშუტინი", "2 ს/კ კარაქი", "1/2 ჩ/კ ნიორი", "1 ათქვეფილი კვერცხი", "1 ს/კ იტალიური სუნელი", "1 ს/კ დაფქული ნიორი", "პარმეზანი", "ახალი რეჰანი და ოხრახუში", "მარინარას სოუსი"], text: "1 ღუმელი გააცხელეთ 175 გრადუსზე. ხის საჭრელ დაფაზე მოაყარეთ ფქვილი და გააბრტყელეთ ცომი მართკუთხა ფორმებად, დაახლოებით 20×30 სმ.  2 გამდნარი კარაქი შეურიეთ დაჭყლეტილ ნიორს, ათქვიფეთ და წაუსვით ცომს. ამის შემდეგ, ხორცი და ყველი დაალაგეთ ცომზე.  3 მჭიდროდ გადაახვიეთ ცომი და ინგრედიენტები და მოათავსეთ პერგამენტის ქაღალდით დაფარულ საცხობ ფირფიტაზე.  4 ზემოდან წაუსვით ათქვეფილი კვერცხი ფუნჯის დახმარებით და მოაყარეთ იტალიური სუნელი და დაფქული ნიორი.  5 შედგით ღუმელის ქვედა თაროზე და გამოაცხვეთ 20 წუთის განმავლობაში. ამის შემდეგ გამოიღეთ ღუმელიდან, მოაყარეთ პარმეზანი და კიდევ გამოაცხვეთ 10 წუთის განმავლობაში." },
-        { id: 54, cat: "ცომეული", name: "პიცა", time: "2სთ 30წთ", views: "8.784", cal: "267", por: "16", img: "https://i.postimg.cc/Y0HZRfGB/p'itsa.webp", ing: ["600 მლ თბილი წყალი", "1 ს/კ შაქარი", "2 ჩ/კ საფუარი", "875 გრ უნივერსალური ფქვილი", "6 ს/კ ზეითუნის ზეთი", "1 ½ ჩ/კ კოშერის მარილი", "1 ს/კ კოშერის მარილი (სოუსისთვის)", "30 გრ სემოლინის ფქვილი", "795 გრ დაკონსერვებული მთლიანი პომიდორი"], text: "1 პატარა თასში გახსენით შაქარი თბილ წყალში და დაამატეთ საფუარი. გააჩერეთ 10 წუთის განმავლობაში, სანამ წყლის ზედაპირზე ბუშტები და ქაფი არ წარმოიქმნება.  2 დიდ თასში აურიეთ ფქვილი და მარილი, შუაში გააკეთეთ ღრმული და დაამატეთ ზეითუნის ზეთი და საფუვრის მიქსი. ურიეთ 10-15 წუთი, რადგან ცომი გახდეს გლუვი და შემდეგ გააკეთეთ გუნდა.  3 ჯამის შიგთავსს წაუსვით ზეითუნის ზეთი, შიგნით მოათავსეთ ცომი, შეფუთეთ და ცომის ამოსასვლელად გააჩერეთ მინიმუმ 1 საათი. თუმცა, რამდენიმე საათი უკეთეს შედეგს მოგცემთ.  4 ამის შემდეგ, პიცის ცომი მოათავსეთ ფქვილიან ზედაპირზე, გაჭერით 4 თანაბარ ნაწილად და გააკეთეთ 4 გუნდა. თითოეული ცომის გუნდა შეფუთეთ სამზარეულოს ტილოში და გააჩერეთ 30-60 წუთი.  5 ამასობაში, მოამზადეთ ტომატის სოუსი, თუ არ იყენებთ პიცის სოუსს. ამისთვის დაგჭირდებათ დაკონსერვებული პომიდორი და 1 ს/კ კოშერის მარილი. აურიეთ, რომ მიიღოთ გლუვი სოუსი.  6 ღუმელი გააცხელეთ 230-260 გრადუსზე, მოათავსეთ პიცის საცხობი ქვა და ზემოდან დაადეთ საცხობი ფურცელი. გაითვალისწინეთ, რომ ზედაპირი უნდა იყოს ბრტყელი.  7 თხლად გააბრტყელეთ ცომის ერთი ნაწილი, საცხობ ფირფიტაზე მოაყარეთ სემოლინის ფქვილი. გაბრტყელებულ ცომზე მოასხით ტომატის სოუსი და სხვა სასურველი ინგრედიენტები.  8 მოათავსეთ პიცა გახურებულ ღუმელში და გამოაცხვეთ 15 წუთის განმავლობაში, სანამ ცომი და ყველი ოქროსფერი შეფერილობის არ გახდება. გამოცხობის შემდეგ, შეგიძლიათ მოაყაროთ დამატებითი ინგრედიენტები." },
-        { id: 53, cat: "ცომეული", name: "კალცონე", time: "45წთ", views: "4.514", cal: "578", por: "8", img: "https://i.postimg.cc/s2D42Jf6/k'alts.webp", ing: ["900 გრ პიცის ცომი", "245 გრ პიცის სოუსი", "110 გრ პეპერონი", "55 გრ სალიამი", "225 გრ მოცარელა", "246 გრ რიკოტა ყველი", "2 ს/კ ზეთი", "50 გრ ყველი პარმეზანი"], text: "1 ინგრედიენტების მოსამზადებლად, დაჭერით სალიამი და პეპერონი, გახეხეთ მოცარელა და წვრილად დაჭერით რიკოტა და პარმეზანი.  2 გააცხელეთ ღუმელი 245 გრადუსზე, საცხობ ფირფიტას გადაუსვით პერგამენტის ქაღალდი ან შეასხურეთ ზეთი.  3 ცომი გაყავით 8 თანაბარი ზომის ნაჭრად, გააბრტყელეთ თითოეული ნაჭერი დაახლოებით 6 მმ სისქის წრეებად.  4 თითოეული წრის ნახევარზე მოვათავსოთ პიცის სოუსი, რიკოტა, პეპერონი, სალამი და გახეხილი მოცარელა. ცომის კიდეები დატოვეთ სუფთა, რადგან მარტივად შეძლოთ კალცონეს შეკვრა. ბოლოს კი გადაახვიეთ, რომ მიიღოთ ნახევარწრე და კარგად შეკარით.  5 კალცონეს ნაჭრები მოათავსეთ საცხობ ფირფიტაზე ისე, რომ ნაჭრები ერთმანეთს არ ეხებოდნენ. თითოეული კალცონეს გაუკეთეთ თითო ან რამდენიმე პატარა ნახვრეტი. ზემოდან წაუსვით ზეთი და მოაყარეთ პარმეზანი.  6 ღუმელში გამოაცხვეთ 15 წუთის განმავლობაში ან სანამ ოქროსფერი არ გახდება." },
-        { id: 52, cat: "სალათები", name: "პრასი ნიგვზით", time: "1 სთ", views: "4.514", cal: "320", por: "6", img: "https://i.postimg.cc/h4XXRL5p/p'ras.webp", ing: ["1 კგ პრასი", "300 გრ ნიგოზი", "6 ს/კ ძმარი", "6 კბილი ნიორი", "1 ს/კ ხმელი ქინძი", "1 ს/კ უცხო სუნელი", "1 ს/კ ყვითელი ყვავილი", "1 ს/კ წითელი წიწაკა", "ბროწეულის მარცვლები", "მარილი"], text: "1 პრასი კარგად გარეცხეთ და მოხარშეთ 20-30 წუთის განმავლობაში, მარილიან წყალში. ბოლოს გადაწურეთ და გადაიტანეთ თასში.  2 ამასობაში, ნიორი და ნიგოზი გაატარეთ ხორცსაკეპ მანქანაში, დაუმატეთ სუნელები, მწიკვი მარილი და წიწაკა.  3 შემდეგ ჩაამატეთ ძმარი, 200-240 მლ ანადუღარი ცივი წყალი და კარგად აურიეთ.  4 მოხარშული პრასი კარგად ამოავლეთ ნიგვზის მასაში და მიეცით პატარა ბურთულების ფორმა. რაოდენობა დამოკიდებულია ბურთულას ზომაზე.  5 გადაიტანეთ თეფშზე და მოაყარეთ ბროწეული მარცვლები. პრასი ნიგვზით მზადაა." },
-        { id: 51, cat: "სალათები", name: "ავოკადოს სალათი", time: "15 წთ", views: "2.784", cal: "220", por: "5", img: "https://i.postimg.cc/YqR7Fpf5/avok'.webp", ing: ["2 ავოკადო", "3 კიტრი", "1/4 ხახვი", "2 ს/კ კამა", "2 ს/კ ქინძი", "3 ს/კ ზეითუნის ზეთი", "3 ს/კ ლაიმის წვენი", "1/4 ჩ/კ წითელი წიწაკა", "1/4 ჩ/კ შავი პილპილი", "3/4 ჩ/კ მარილი"], text: "1 საშუალო ზომის ნაჭრებად დაჭერით ავოკადო და კიტრი, ხახვი თხლად, ხოლო ქინძი და კამა წვრილად და მოათავსეთ თასში.  2 მოასხით ზეითუნის ზეთი, ლაიმის წვენი და მოაყარეთ მარილი, პილპილი და წიწაკა. მოურიეთ ხელით, რომ ინგრედიენტები კარგად შეერიოს.  3 ავოკადოს სალათა მირთმევამდე გასინჯეთ და დაუმატეთ მარილი გემოვნებით." },
-        { id: 50, cat: "სალათები", name: "კუსკუსის სალათი", time: "25 წთ", views: "5.874", cal: "350", por: "5", img: "https://i.postimg.cc/6Qm5v9w4/k'usk'usi.webp", ing: ["1 ჭიქა მშრალი კუსკუსი", "1/4 ჭიქა ზეითუნის ზეთი", "2 ს/კ ლიმონის წვენი", "1 კბილი ნიორი", "1 1/2 ჭიქა პომიდორი", "1 1/2 ჭიქა კიტრი", "1/3 ჭიქა ხახვი", "1/3 ჭიქა ფეტა", "1/3 ჭიქა ოხრახუში", "2 ს/კ ახალი პიტნა", "მარილი და დაფქული შავი პილპილი"], text: "1 დაჭყლიტეთ ნიორი, წვრილად დაჭერით ფეტა ყველი, ხახვი, ოხრახუში და პიტნა. პომიდორი გაჭერით შუაზე და კიტრი დაჭერით პატარა კუბიკებად.  2 საშუალო ქვაბით აადუღეთ წყალი, გადმოდგით ცეცხლიდან და ჩაყარეთ კუსკუსი, მარილი, მოურიეთ და თავდახურული გააჩერეთ 5 წუთი.  3 შემდეგ დაამატეთ 1 ჩ/კ ზეითუნის ზეთი, მოურიეთ და გააციეთ დაახლოებით 10 წუთი სალათის თასში. ცალკე თასში ათქვიფეთ დარჩენილი 1/4 ჭიქა ზეითუნის ზეთი, ლიმონის წვენი და ნიორი.  4 კუსკუსის თასში დაამატეთ პომიდორი, კიტრი, ხახვი, ფეტა, ოხრახუში და პიტნა. მოასხით ზეითუნის ზეთის და ლიმონის წვენის ნაზავი და კარგად აურიეთ.  5 ბოლოს, მოაყარეთ მარილი და პილპილი გემოვნებით. კუსკუსის სალათა უმჯობესია მიირთვათ მომზადებისთანავე, ან შეინახოთ მაცივარში 1 დღით." },
-        { id: 49, cat: "სალათები", name: "კარტოფილის სალათი", time: "30 წთ", views: "3.874", cal: "150", por: "4", img: "https://i.postimg.cc/JnMmX9Xx/k'art't'.webp", ing: ["800 გრ კარტოფილი", "2-3 კბ ნიორი", "2 ღერი ახალი როზმარინი", "4 ს/კ ზეითუნის ზეთი", "1 ს/კ წითელი ღვინის ძმარი", "მარილი გემოვნებით", "შავი წიწაკა გემოვნებით", "2 ს/კ წვრილად დაჭრილი ოხრახუში"], text: "1 კარტოფილი გარეცხეთ და გაფცქვენით. დაჭერით საშუალო ზომის კუბიკებად.  2 დიდ ქვაბში ჩაასხით წყალი, დაამატეთ მარილი და აადუღეთ. ჩაყარეთ კარტოფილი და ხარშეთ 12-15 წუთი, სანამ არ დარბილდება (მაგრამ არ გადაიხარშოს).  3 გადაწურეთ კარტოფილი და გააცივეთ ოთახის ტემპერატურამდე.  4 როზმარინი მოაცილეთ ტოტს და დაჭერით წვრილად, შეურიეთ ასევე წვრილად დაჭრილი ნიორი.  5 დიდ თასში შეურიეთ ზეითუნის ზეთი, ღვინის ძმარი, დაჭრილი ნიორი და როზმარინი.  6 დაამატეთ გაგრილებული კარტოფილი, მარილი და წიწაკა გემოვნებით. ბოლოს კი მოაყარეთ დაჭრილი ოხრახუში და ფრთხილად აურიეთ. შეგიძლიათ დაამატოთ წვრილად დაჭრილი ხახვიც." },
-        { id: 48, cat: "სალათები", name: "ცეზარი", time: "35 წთ", views: "6.745", cal: "380", por: "6", img: "https://i.postimg.cc/ZRpBYtSP/tsez.webp", ing: ["6 კბილი ნიორი", "3/4 ჭიქა მაიონეზი", "6 ს/კ პარმეზანი", "5 ანჩოუსის ფილე", "1 ს/კ ლიმონის წვენი", "1 ჩ/კ დიჟონის მდოგვი", "1 ს/კ ვორჩესტერის სოუსი", "1/4 ჭიქა ზეითუნის ზეთი", "4 ჭიქა სუხარი", "1 თავი სალათის ფოთოლი", "მარილი და შავი პილპილი"], text: "1 პატარა თასში მოათავსეთ და აურიეთ 3 კბილი დაჭრილი ნიორი, ვორჩესტერის სოუსი, მაიონეზი, 2 ს/კ გახეხილი ყველი პარმეზანი, ანჩოუსები, ლიმონის წვენი და მდოგვი. გემოვნებით მოაყარეთ მარილი და შავი პილპილი და შედგით მაცივარში.  2 გააცხელეთ ზეთი ტაფაზე საშუალო ცეცხლზე. დარჩენილი ნიორი დაჭერით ოთხად და დაამატეთ ტაფაში. მოშუშეთ სანამ ყავისფერი არ გახდება და შემდეგ ამოიღეთ.  3 პურის კუბიკები შებრაწეთ იგივე, არომატიზებულ ზეთში, გადაიტანეთ თეფშზე და მოაყარეთ მარილი და პილპილი.  4 სალათის ფოთლები მოათავსეთ თასში და დაამატეთ მომზადებული დრესინგი, დარჩენილი პარმეზანი და შებრაწული პურის კუბიკები." },
-        { id: 47, cat: "სალათები", name: "ვინეგრეტი", time: "1 სთ", views: "1.987", cal: "60", por: "10", img: "https://i.postimg.cc/wvTc7jwk/vinegre.webp", ing: ["450 გრ ჭარხალი", "450 გრ სტაფილო", "450 გრ კარტოფილი", "1 ხახვი", "30 გრ ბარდა", "2 დიდი კიტრის მწნილი", "2 ს/კ ზეითუნის ზეთი", "½ ჩ/კ მარილი", "½ ჩ/კ შავი პილპილი", "1 ს/კ ოხრახუში"], text: "1 ჭარხალი მოათავსეთ დიდ ქვაბში და დაფარეთ წყლით. მიიყვანეთ ადუღებამდე მაღალ ცეცხლზე, შეამცირეთ ცეცხლი, დაახურეთ თავსახური და ადუღეთ დაახლოებით 20 წუთის განმავლობაში.  2 დაამატეთ სტაფილო, კარტოფილი და ადუღეთ კიდევ 10 წუთი. გადმოდგით ცეცხლიდან და დატოვეთ ქვაბში 15-20 წუთი.  3 გაფცქვენით და დაჭერით ჭარხალი, სტაფილო და კარტოფილი პატარა, თანაბარ ნაჭრებად და მოათავსეთ დიდ თასში.  4 შეურიეთ ხახვი, ბარდა, მწნილი, ზეითუნის ზეთი, მარილი და პილპილი. ვინეგრეტის სალათა სუფრასთან მიტანის წინ მორთეთ ოხრახუშით." },
-        { id: 46, cat: "სალათები", name: "ისპანახი", time: "1 სთ 10 წთ", views: "2.874", cal: "150", por: "6", img: "https://i.postimg.cc/9XLgPvTd/isp'a.webp", ing: ["300 გრ ისპანახი", "50 გრ გარჩეული ნიგოზი", "2 კბილი ნიორი", "25 გრ ქინძი", "2 ჩ/კ თეთრი ღვინის ძმარი", "½ ჩ/კ დაფქული ქინძის თესლი", "½ ჩ/კ უცხო სუნელი", "¼ ჩ/კ წითელი წიწაკა", "60 მლ ზეთი", "ბროწეულის მარცვლები"], text: "1 დიდი ქვაბით წყალი მიიყვანეთ ადუღებამდე. დაამატეთ ისპანახი, ურიეთ და ხარშეთ ერთი წუთი და შემდეგ კარგად გაწურეთ.  2 ხორცის საკეპ მანქანაში გაატარეთ ნიორი და ნიგოზი, ისე რომ მიიღოთ სველი ქვიშის მაგვარი მასა.  3 დაუმატეთ წვრილად დაჭრილი ისპანახი და ქინძი და კარგად შეურიეთ ერთმანეთში ისე, რომ მიიღოთ ერთგვაროვანი მასა.  4 დაუმატეთ ძმარი, ქინძის თესლი, უცხო სუნელი, წიწაკა, ზეთი და აურიეთ. მოაყარეთ მარილი და პილპილი გემოვნებით.  5 დააფარეთ თავსახური და ისპანახის ფხალი შედგით მაცივარში ერთი საათით. მირთმევამდე მოაყარეთ ბროწეული." },
-        { id: 45, cat: "სალათები", name: "მწვანე ლობიო კარტოფილით", time: "30 წთ", views: "3.451", cal: "180", por: "4-6", img: "https://i.postimg.cc/gc18PsbS/lobbbb.webp", ing: ["500 გრ ახალი/ჩვეულებრივი კარტოფილი", "200 გრ მწვანე ლობიო", "100 გრ ბარდა", "1 კონა სატაცური", "1 ც ხახვი", "6 ც ბოლოკი", "1 კონა კამა", "2 ს/კ ზეითუნის ზეთი", "1 ც ლიმნის წვენი", "მარილი და პილპილი გემოვნებით"], text: "1 მოხარშეთ კარტოფილი მარილიან წყალში 10-15 წუთის განმავლობაში, სანამ რბილი არ გახდება. გადაწურეთ და გააგრილეთ.  2 იმავე ქვაბში მოხარშეთ მწვანე ლობიო, ბარდა და სატაცური 3-4 წუთის განმავლობაში. გადაწურეთ და ჩადეთ ცივ წყალში, რომ შეინარჩუნონ ფერი.  3 დიდ ჯამში შეურიეთ გაგრილებული კარტოფილი, მოხარშული ბოსტნეული, ხახვი, ბოლოკი და კამა.  4 მოამზადეთ სოუსი: შეურიეთ ზეითუნის ზეთი, ძმარი, მდოგვი, ნიორი, მარილი და პილპილი პატარა ჯამში.  5 დაასხით სოუსი სალათს და ფრთხილად აურიეთ. მოაყარეთ დარჩენილი კამა და მიირთვით." },
-        { id: 44, cat: "სალათები", name: "ქათმის სალათი", time: "50 წთ", views: "2.457", cal: "320", por: "4", img: "https://i.postimg.cc/5tRx6R0b/katmis.webp", ing: ["500 გრ მოხარშული ქათმის ფილე", "75 გრ წითელი ბულგარული წიწაკა", "75 გრ მწვანე ბულგარული წიწაკა", "40 გრ წითელი ხახვი", "120 მლ მაიონეზი", "1 ს/კ ლიმნის წვენი", "1/2 ჩ/კ ხმელი დაფქული მდოგვი", "მარილი და შავი პილპილი გემოვნებით", "2 ს/კ ახალი ოხრახუში (სურვილისამებრ)"], text: "მომზადების წესი 1 თავდაპირველად მოხარშეთ ქათმის ფილე, გააცივეთ და შემდეგ დაჭერით წვრილად და გრძლად.  2 დიდ ჯამში მოათავსეთ დაჭრილი ქათამი, დაკუბიკებული წითელი და მწვანე ბულგარული წიწაკა და წვრილად დაჭრილი წითელი ხახვი.  3 სხვა პატარა ჯამში აურიეთ მაიონეზი, ლიმნის წვენი და ხმელი მდოგვი.  4 მაიონეზის ნარევი დაასხით ქათმის ნარევს და კარგად აურიეთ, რომ ყველა ინგრედიენტი თანაბრად შეზავდეს.  5 დაამატეთ მარილი და პილპილი გემოვნებით. ნუ დაგავიწყდებათ, რომ მაიონეზი უკვე შეიცავს მარილს.  6 თუ იყენებთ ოხრახუშს, ახლა დაამატეთ და ფრთხილად აურიეთ.  7 გადაიტანეთ სალათი სერვირების თეფშზე და გააცივეთ მაცივარში მინიმუმ 30 წუთის განმავლობაში სერვირებამდე." },
-        { id: 43, cat: "სალათები", name: "სოკოს სალათი", time: "30წთ", views: "2.784", cal: "20", por: "6", img: "https://i.postimg.cc/nV9kW9fj/sok'k'k'k'.webp", ing: ["250 გრ ქამა სოკო", "½ ჭიქა წითელი ბულგარული წიწაკა", "¼ ჭიქა ხახვი", "¼ ჭიქა ოხრახუში", "⅓ ჭიქა ფორთოხლის წვენი", "1 ს/კ ბალზამიკო", "⅓ ჩ/კ მარილი", "⅙ ჩ/კ შავი წიწაკა"], text: "მომზადების წესი 1 დიდ თასში მოათავსეთ დაჭრილი ქამა სოკო, ხახვი, წითელი ბულგარული წიწაკა და ოხრახუში. 2 დრესინგისთვის ცალკე თასში შეურიეთ ახლად გაწურული ფორთოხლის წვენი, ბალზამიკოს სოუსი, მარილი, შავი პილპილი და კარგად მოურიეთ. 3 მიღებული დრესინგი მოასხით სოკოს ნაზავს და კარგად აურიეთ, რომ თანაბრად გადანაწილდეს. 4 მირთმევამდე, სოკოს სალათა მოათავსეთ მაცივარში 30 წუთით, რადგან გემოები კარგად გაუჯდეს." },
-        { id: 42, cat: "სალათები", name: "ჭარხლის სალათი", time: "1სთ 30წთ", views: "1,874", cal: "830", por: "4", img: "https://i.postimg.cc/CLVy1gFk/charkh.webp", ing: ["400 გრ ჭარხალი", "1 მუჭა ჭარხლის ფოთოლი", "1 კბილი ნიორი", "1 ჩ/კ დაფქული კამა", "1 ჩ/კ დაფქული ოხრახუში", "½ ჩ/კ დაფქული პიტნა", "4 ს/კ ზეითუნის ზეთი", "3 ს/კ წითელი ღვინის ძმარი", "½ ჩ/კ ზღვის მარილი", "60 გრ ფეტა ყველი"], text: "პატარა ქვაბში ჩაყარეთ მთლიანი ჭარხალი, დაამატეთ წყალი და ადუღეთ დაბალ ცეცხლზე, სანამ ჭარხალი ოდნავ არ დარბილდება. შემდეგ გადაიტანეთ ცალკე ჭურჭელში გასაციებლად. 2 გაციების შემდეგ მოაცილეთ კანი და დაჭერით პატარა კუბიკებად. ჭარხლის ფოთლები გარეცხეთ და გაწურეთ. 3 პატარა თასში აურიეთ ზეითუნის ზეთი, წითელი ღვინის ძმარი, ნიორი და მარილი. დაამატეთ დაჭრილი ჭარხალი, ოხრახუში, კამა და პიტნა. 4 ბოლოს დააჭერით ჭარხლის ფოთლები, კარგად აურიეთ და ჭარხლის სალათა შედგით მაცივარში 2 საათით. მირთმევამდე მოაყარეთ ფეტა ყველი." },
-        { id: 41, cat: "სალათები", name: "ბრინჯის სალათი", time: "25წთ", views: "3.433",cal: "320",por: "4", img: "https://i.postimg.cc/HLB91pj6/brrrr.webp", ing: ["3 ჭიქა ბასმატის ბრინჯი", "3 კიტრი", "450 გრ ჩერი პომიდორი", "½ წითელი ხახვი", "¼ ჭიქა ზეთისხილი", "¼ ჭიქა ოხრახუში", "¼ ჭიქა ზეითუნის ზეთი", "3 ს/კ ლიმონის წვენი", "1 ჩ/კ დიჟონის მდოგვი", "1 ჩ/კ ორეგანო", "½ ჩ/კ ძირა", "½ ჩ/კ მარილი", "½ ჩ/კ შავი პილპილი"], text: "დაიწყეთ ბრინჯის მოხარშვა და ამასობაში წვრილად დაჭერით კიტრი, ხახვი, ოხრახუში, ზეთისხილი და პომიდორი გაჭერით შუაზე.ბრინჯის სალათის დრესინგისთვის პატარა ჯამში მოათავსეთ და აურიეთ ზეითუნის ზეთი, ლიმონის წვენი, მდოგვი, ძირა, ორეგანო, მარილი და პილპილი.მოხარშული ბრინჯი და დაჭრილი ინგრედიენტები მოათავსეთ დიდ ჯამში და აურიეთ. შემდეგ დაამატეთ დრესინგი და კიდევ ერთხელ, კარგად აურიეთ ერთმანეთში." },
-        { id: 40, cat: "სალათები", name: "კრაბის სალათი", time: "20წთ", views: "5.438",cal: "245",por: "8", img: "https://i.postimg.cc/52tcMtt0/k'ra.webp", ing: ["680 გრ კრაბის ჩხირები", "½ წითელი ხახვი", "1 ღერი ნიახური", "6 გრ მწვანე ხახვი", "170 გრ უცხიმო მაიონეზი", "60 გრ არაჟანი", "15 გრ ლიმონის წვენი", "5 გრ დიჟონის მდოგვი", "მარილი და პილპილი გემოვნებით"], text: "დაჭერით კრაბის ჩხირები, წითელი ხახვი, მწვანე ხახვი, ნიახური, მოათავსეთ თასში და აურიეთ.ცალკე თასში მოათავსეთ და ერთმანეთში აურიეთ მაიონეზი, არაჟანი, ლიმონის წვენი, დიჟონის მდოგვი, მარილი და შავი პილპილი.მიღებული მასა მოასხით კრაბის და ხახვის ნაერთს და კარგად მოურიეთ. გემოვნებით დაამატეთ მარილი და პილპილით.კრაბის სალათა შეგიძლიათ მიირთვათ დაუყოვნებლივ ან მოათავსოთ კონტეინერში და შეინახოთ მაცივარში, მაქსიმუმ 2 დღით." },
-        { id: 39, cat: "სალათები", name: "ოლივიე", time: "50წთ", views: "2.745",cal: "261",por: "10", img: "https://i.postimg.cc/hPbZvRYn/oliv.webp", ing: ["6 კარტოფილი", "1 სტაფილო", "4 კვერცხი", "6 კიტრის მწნილი", "1 ქილა ბარდა", "½ ჭიქა ლორი", "1 ს/კ ახალი კამა", "½ ჭიქა მაიონეზი"], text: "დიდი ქვაბით აადუღეთ წყალი. ამასობაში, გათალეთ კარტოფილი და დაჭერით კიტრის მწნილი.ადუღებულ წყალს დაამატეთ კარტოფილი და ადუღების შემდეგ დამატებით ხარშეთ 5-10 წუთი. დაუმატეთ მთლიანი სტაფილო, კვერცხები და განაგრძეთ დუღილი 10-15 წუთის განმავლობაში.ამის შემდეგ, გადაწურეთ და ოდნავ გააგრილეთ ნარევი. დაჭერით კარტოფილი, სტაფილო და კვერცხები.დიდ თასში აურიეთ კარტოფილი, სტაფილო, კვერცხი, მწნილი, ბარდა, ლორი და კამა. შეურიეთ მაიონეზი და კარგად აურიეთ ერთმანეთში, რომ მაიონეზი თანაბრად გადანაწილდეს." },
-        { id: 38, cat: "სალათები", name: "ყვავილოვანი კომბოსტო", time: "2სთ 35წთ", views: "3.423",cal: "290",por: "6", img: "https://i.postimg.cc/cLv1ZhDb/bbbb.webp", ing: ["1 ყვავილოვანი კომბოსტო", "¾ ჭიქა მაიონეზი", "1 ს/კ მდოგვი", "1 ჩ/კ მარილი", "3 მოხარშული კვერცხი", "1 ხახვი", "¾ ჭიქა მწვანე ბარდა", "¼ ჭიქა კიტრის მწნილი", "შავი პილპილი გემოვნებით"], text: "ყვავილოვანი კომბოსტო მოათავსეთ დიდ ქვაბში, დაასხით წყალი და მოხარშეთ დარბილებამდე, დაახლოებით 10 წუთი. შემდეგ, ოდნავ გააგრილეთ და დაჭერით პატარა ნაჭრებად.დაჭერით მოხარშული კვერცხი, ხახვი და კიტრის მწნილი. დიდ თასში ათქვიფეთ მაიონეზი, მდოგვი, მარილი და პილპილი. დაამატეთ ყვავილოვანი კომბოსტო და დაჭრილი ინგრედიენტები და მოურიეთ.კარგად დახუფეთ თასი და ყვავილოვანი კომბოსტოს სალათა შედგით მაცივარში მინიმუმ 2 საათით. რაც უფრო დიდხანს გააციებთ, სალათას უკეთესი არომატი ექნება." },
-        { id: 37, cat: "სალათები", name: "თინუსის სალათი", time: "15წთ", views: "1.875",cal: "172",por: "4", img: "https://i.postimg.cc/wBXKDx9R/tin.webp", ing: ["2 ქილა თინუსი", "60 გრ მაიონეზი", "1 ღერი ნიახური", "2 ს/კ წითელი ხახვი", "1 ს/კ ოხრახუში", "1/2 ს/კ დიჟონის მდოგვი", "მარილი და პილპილი, გემოვნებით"], text: "ნიახური და წითელი ხახვი დაჭერით კუბიკებად, ხოლო ოხრახუში წვრილად. თინუსის ქილიდან გადაწურეთ სითხე, მოათავსეთ თასში და ჩანგლით ოდნავ გააცალკევეთ.თინუსს დაამატეთ დაჭრილი ინგრედიენტები, მაიონეზი, დიჟონის მდოგვი, მარილი და პილპილი და კარგად აურიეთ ერთმანეთში.მეტი არომატისთვის შეგიძლიათ დაამატოთ დაჭრილი ავოკადო და ზეთის ხილი.თინუსის სალათა მიირთვით პირდაპირ, სალათის ფურცელში გახვეული ან სენდვიჩის სახით." },
-        { id: 36, cat: "სალათები", name: "კომბოსტოს სალათი", time: "25წთ", views: "1.533",cal: "123",por: "8", img: "https://i.postimg.cc/ZR6qBzMw/kom.webp", ing: ["½ ჭიქა ნუში", "½ მწვანე კომბოსტო", "½ წითელი კომბოსტო", "1 ბულგარული წიწაკა", "1 ჭიქა სტაფილო", "1 ჭიქა ედამამე", "½ ჭიქა ქინძი", "¼ ჭიქა ბრინჯის ძმარი", "2 ს/კ თაფლი", "2 ს/კ სოიას სოუსი", "1 ს/კ არაქისის კარაქი", "1 ს/კ დაფქული ჯანჯაფილი"], text: "პირველ რიგში, წვრილად დაჭერით კომბოსტო, ბულგარული წიწაკა, ქინძი და გახეხილ სტაფილოსთან ერთად მოათავსეთ თასში. დაამატეთ ედამამეს მარცვლები და მოურიეთ.გააცხელეთ ღუმელი 175 გრადუსზე, ნუში გაანაწილეთ ერთ ფენად უცხიმო საცხობ ფირფიტაზე და მოხალეთ 4-6 წუთის განმავლობაში. თუ საჭირო გახდა, გადაატრიალეთ, რომ ყველა მხარე მოიხალოს. ამის შემდეგ, დაამატეთ თასში მოთავსებულ ინგრედიენტებს.საშუალო ზომის თასში აურიეთ ბრინჯის ძმარი, თაფლი, სოიას სოუსი, არაქისის კარაქი და ჯანჯაფილი. მიღებული მასა მოასხით სალათას და აურიეთ, რადგან კარგად გადანაწილდეს.უმჯობესია, თუ 30 წუთით გააჩერებთ, რადგან გემოები კარგად გაუჯდეს სალათას და შემდეგ მიირთვით." },
-        { id: 35, cat: "სალათები", name: "რუკოლას სალათი", time: "15წთ", views: "1.446",cal: "122",por: "6", img: "https://i.postimg.cc/Gp5DJRKV/ruk'.webp", ing: ["150 გრ რუკოლა", "1/3 ჭიქა ყველი პარმეზანი", "3 ს/კ მზესუმზირა ან დაჭრილი თხილი", "1 ს/კ დაჭრილი მწვანილი", "2 ს/კ ლიმონის წვენი", "1 ს/კ ძმარი", "2 ს/კ ზეითუნის ზეთი", "1/2 ჩ/კ კოშერის მარილი"], text: "დიდ თასში მოათავსეთ დაჭრილი რუკოლა და თქვენს მიერ შერჩეული მწვანილი და მოურიეთ.პატარა თასში აურიეთ ინგრედიენტები: ლიმონის წვენი, ძმარი, ზეითუნის ზეთი და მარილი.მიღებული სითხე მოასხით რუკოლას და კარგად აურიეთ, რომ მთლიანი მასა კარგად შეერიოს ერთმანეთს.ბოლოს, რუკოლას სალათას ზემოდან მოაყარეთ პარმეზანი და მზესუმზირა ან თხილი." },
-        { id: 34, cat: "სალათები", name: "სტაფილოს სალათი", time: "35წთ", views: "5.245",cal: "167",por: "6", img: "https://i.postimg.cc/y86m6jLf/st'a.webp", ing: ["450 გრ გახეხილი სტაფილო", "1 ¼ ჭიქა ქიშმიში", "3 ს/კ მაიონეზი", "1 ჩ/კ ლიმონის წვენი", "¼ ჩ/კ მარილი", "1 წიწაკა"], text: "დიდ თასში მოათავსეთ გახეხილი სტაფილო და ქიშმიში და კარგად აურიეთ.პატარა თასში ათქვიფეთ მაიონეზი, ლიმონის წვენი და მარილი ერთგვაროვანი მასის მიღებამდე.ერთ ჯამში მოათავსეთ სტაფილოს, ქიშმიშის და მაიონეზის ნარევი და კარგად აურიეთ ერთმანეთში. გასაციებლად შედგით მაცივარში, მინიმუმ 30 წუთით." },
-        { id: 33, cat: "სალათები", name: "ბროკოლის სალათი", time: "25წთ", views: "1.455",cal: "374",por: "8", img: "https://i.postimg.cc/XNZD4jrB/brok'.webp", ing: ["230 გრ ბეკონი", "2 თავი ახალი ბროკოლი", "1 წითელი ხახვი", "¾ ჭიქა ქიშმიში", "¾ ჭიქა ნუში", "1 ჭიქა მაიონეზი", "½ ჭიქა თეთრი შაქარი", "2 ს/კ თეთრი ღვინის ძმარი"], text: "ბროკოლი და წითელი ხახვი დაჭერით ნაჭრებად, ხოლო ქიშმიში დაჭერით წვრილად.ბეკონი მოათავსეთ ღრმა ტაფაში და შეწვით საშუალო ცეცხლზე, სანამ თანაბრად არ გახდება ყავისფერი, 7-10 წუთის განმავლობაში. მოაშორეთ ზედმეტი ცხიმი, გააციეთ და დატეხეთ პატარა ნაჭრებად.თასში მოათავსეთ ბეკონი, ბროკოლი, ხახვი, ქიშმიში და ნუში აურიეთ კარგად.დრესინგის მოსამზადებლად ცალკე თასში აურიეთ მაიონეზი, შაქარი და ძმარი რომ მიიღოთ ერთგვაროვანი და რბილი მასა.ბოლოს, მიღებული მასა მოასხით თასში მოთავსებულ ინგრედიენტებს, დააყოვნეთ რამდენიმე წუთი და შემდეგ მიირთვით." },
-        { id: 32, cat: "სალათები", name: "ბერძნული სალათი", time: "15წთ", views: "2.433",cal: "396",por: "4", img: "https://i.postimg.cc/NMsrsjsz/berdz.webp", ing: ["1 კიტრი", "470 გრ პატარა პომიდორი", "1 მწვანე ბულგარული წიწაკა", "½ ხახვი", "120 გრ ზეთისხილი", "110 გრ ფეტა ყველი", "80 მლ წითელი ღვინის ძმარი", "1 ლიმონი", "1 ჩ/კ დიჟონის მდოგვი", "2 კბილი ნიორი", "½ ჩ/კ ხმელი ორეგანო", "¼ ჩ/კ მარილი", "¼ ჩ/კ შავი პილპილი", "½ ჭიქა ზეითუნის ზეთი"], text: "პირველ რიგში, საჭიროა გაამზადოთ ინგრედიენტები. კიტრი და ბულგარული წიწაკა დაჭერით კუბიკებად, ხახვი და ნიორი წვრილად, პომიდორი და ზეთისხილი კი გაჭერით შუაზე.ფეტა ყველი შეგიძლიათ დაჭრათ ან დატეხოთ, ხოლო მთლიანი ლიმონი ჩაწურეთ ჭიქაში. შემდეგ კი კიტრი, პომიდორი, ბულგარული წიწაკა, ხახვი, ზეთისხილი და ყველი მოათავსეთ დიდ ჯამში.ცალკე პატარა თასში დაამატეთ ძმარი, ლიმონის წვენი, მდოგვი, ნიორი, ორეგანო, მარილი და პილპილი. ნელ-ნელა დაუმატეთ ზეითუნის ზეთი და აურიეთ, რადგან მიიღოთ ემულსირებული მასა.მიღებული დრესინგი მოასხით დიდ ჯამში მოთავსებულ ინგრედიენტებს და აურიეთ კარგად. ბოლოს კი მოაყარეთ მარილი და პილპილი გემოვნებით." },
-        { id: 31, cat: "კერძები", name: "შქმერული", time: "50 წთ", views: "3.423",cal: "300",por: "5", img: "https://i.postimg.cc/NjZyHxg0/shq.webp", ing: ["1 ქათამი", "1 ჩ/კ ქინძის სუნელი", "1 ჩ/კ უცხო სუნელი", "3 კბილი ნიორი", "კარაქი", "რძე", "მარილი"], text: "ქათამი დაჭერით პატარა ან საშუალო ზომის ნაჭრებად, მოაყარეთ ცოტაოდენი მარილი და შეწვით კარაქში. დასრულების შემდეგ დროებით გადადეთ.ტაფაში არსებულ ცხიმს დაამატეთ დაჭყლეტილი ნიორი, მარილი, ცოტა წყალი, უცხო და ქინძის სუნელი და წამოადუღეთ.ამის შემდეგ შიგნით მოათავსეთ ქათმის ნაჭრები, დაასხით რძე სანამ ნაჭრები არ დაიფარება, დააფარეთ თავსახური და წამოადუღეთ.შქმერული მზად არის და ძალიან გემრიელია ლავაშთან ან შოთის პურთან ერთად." },
-        { id: 30, cat: "კერძები", name: "სოკოს ჩაშუშული", time: "50 წთ", views: "2.543",cal: "160",por: "6", img: "https://i.postimg.cc/zGcSvWb8/sok'.webp", ing: ["1 კგ სოკო", "4 ხახვი", "2 კბილი ნიორი", "ქინძი და კამა", "მარილი და შავი პილპილი", "ზეთი"], text: "სოკო მოაცალეთ ფეხები, კარგად გარეცხეთ, დააცადეთ გაშრობა და შემდეგ დაჭერით პატარა ნაჭრებად.შემდეგ დაჭერით ხახვი წვრილ ან მოგრძო ნაჭრებად, მწვანილი გარეცხეთ და დაჭერით წვრილად, ხოლო ნიორი, დაჭყლიტეთ.წინასწარ გახურებულ, ზეთიან ტაფაზე ცალკე შეწვით ხახვი და შემდეგ სოკო. ხახვი მოშუშეთ დაახლოებით 5 წუთი, ხოლო სოკო 20-30 წუთის განმავლობაში.ბოლოს, სოკოს დაუმატეთ შემწვარი ხახვი, მწვანილები, ნიორი და მარილი და პილპილი გემოვნებით. სოკოს ჩაშუშული ძალიან გემრიელია ცხელ შოთის პურთან." },
-        { id: 29, cat: "კერძები", name: "ნიგვზიანი ბადრიჯნი", time: "1 სთ", views: "3.246",cal: "120",por: "12", img: "https://i.postimg.cc/G3WW88DW/nig.webp", ing: ["250 გრ ნიგოზი", "500 გრ ბადრიჯანი", "1 ჩ/კ უცხო სუნელი", "1 ჩ/კ წითელი წიწაკა", "1 ჩ/კ ხმელი ქინძი", "3 ს/კ თეთრი ღვინის ძმარი", "1 ჩ/კ ყვითელი ყვავილი", "3 კბილი ნიორი", "100 მლ ზეთი", "მარილი და ბროწეული"], text: "ხორცის მანქანაში გაატარეთ ნიგოზი და ნიორი, მოათავსეთ თასში და შეურიეთ სუნელები, მარილი, ძმარი და ცოტაოდენი წყალი და კარგად აურიეთ.ბადრიჯანი დაჭერით სიგრძეზე ისე, რომ გამოვიდეს დაახლოებით 5 თხელი ნაჭერი და შეწვით ზეთში, ორივე მხრიდან. სასურველია, შემწვარ ბადრიჯანს თუ მოაშორებთ ზედმეტ ცხიმს, სამზარეულოს ხელსახოცის გამოყენებით.ამის შემდეგ, ბადრიჯნის ფენებს წაუსვით ნიგვზის სოუსი ნიგვზიანი მასა და გადაკეცეთ ან გააკეთეთ რულეტი. თუ დაგრჩებათ ნიგვზის მასა, გადაუსვით ზემოდან.ნიგვზიანი ბადრიჯანი მორთეთ ბროწეულის მარცვლებით და შეგიძლიათ დაამატოთ მწვანილიც." },
-        { id: 28, cat: "კერძები", name: "ხალადეცი", time: "4 სთ 15 წთ", views: "5.433",cal: "230",por: "6", img: "https://i.postimg.cc/KzZXYd3p/khal.webp", ing: ["ღორის თავ-ფეხი", "2 სტაფილო", "2 ხახვი", "3 დაფნის ფოთოლი", "2 კბილი ნიორი", "წითელი წიწაკა", "მარილი"], text: "ღორის თავ-ფეხი მოათავსეთ ქვაბში, დაფარეთ წყლით, მიიყვანეთ ადუღებამდე და ადუღეთ რამდენიმე წუთი.გადააქციეთ წყალი და ხორცს დაამატეთ სტაფილო, ხახვი, დაფნის ფოთოლი, ნიორი და წიწაკა. დაფარეთ წყლით, მიიყვანეთ ადუღებამდე და ადუღეთ 3 საათი.ადუღების შემდეგ წვენი გადაიტანეთ ცალკე კონტეინერში და შეაზავეთ. ის უნდა იყოს მარილიანი. ხორცს კი მოაცილეთ ძვლები და დაჭერით პატარა ნაჭრებად.დაჭრილი ხორცი მოათავსეთ პატარა თასებში, გემოსთვის შეგიძლიათ დაამატოთ მოხარშული სტაფილოც. ზემოდან დაასხით ნახარში და შეინახეთ მაცივარში მთელი ღამით.ხალადეცი შეგიძლიათ მიირთვათ მდოგვთან ან ძმართან ერთად და გაამდიდრეთ თქვენი საახალწლო სუფრა." },
-        { id: 27, cat: "კერძები", name: "რიზოტო", time: "35 წთ", views: "3.245",cal: "320",por: "8", img: "https://i.postimg.cc/mkfHMyRn/riz.webp", ing: ["4 ს/კ უმარილო კარაქი", "1 ს/კ ზეითუნის ზეთი", "1/2 ხახვი", "2 კბილი ნიორი", "1/2 ჩ/კ ზღვის მარილი", "1.6 ლ ქათმის ბულიონი", "400 გრ ბრინჯი არბორიო", "240 მლ მშრალი თეთრი ღვინო", "50 გრ პარმეზანი", "შავი პილპილი", "1 ს/კ ოხრახუში"], text: "ქათმის ბულიონი მიიყვანეთ ადუღებამდე და შეამცირეთ სითბო ყველაზე დაბალ ტემპერატურაზე.მეორე ქვაბში მოათავსეთ 2 ს/კ კარაქი, ზეთი, დაჭრილი ხახვი, მარილი და მოხრაკეთ დაბალ ცეცხლზე, 5-6 წუთის განმავლობაში. დაამატეთ ნიორი და მოურიეთ 30 წამი.ჩაამატეთ ბრინჯი, მოუმატეთ ცეცხლს და მუდმივად ურიეთ 2-3 წუთის განმავლობაში, სანამ ბრინჯი არ გახდება გამჭვირვალე. ჩაასხით ღვინო და განაგრძეთ მორევა 2 წუთით.დაუმატეთ ერთი ჩამჩა ქათმის ბულიონი და განაგრძეთ მორევა, სანამ კარგად არ შეიწოვება. განაგრძეთ თითო-თითო ჩამჩა ბულიონის დამატება, რათა სითხე მთლიანად შეიწოვოს ბრინჯმა.მას შემდეგ, რაც ბრინჯი სასურველ კონსისტენციას მიიღებს, დაამატეთ 2 ს/კ კარაქი და ახლად გახეხილი პარმეზანი. გემოვნებით მოაყარეთ მარილი და პილპილი. რიზოტო შეგიძლიათ მორთოთ წიწაკით და ოხრახუშით." },
-        { id: 26, cat: "კერძები", name: "მწვანე ლობიო ნიგვზით", time: "1 სთ 40 წთ", views: "1.433",cal: "250",por: "4", img: "https://i.postimg.cc/W34kwycS/mts'va.webp", ing: ["500 გრ მწვანე ლობიო", "70 გრ ნიგოზი", "150 გრ ჩერი პომიდორი", "40 გრ შაშკვლავი", "4 კბილი ნიორი", "2 თავი ხახვი", "150 მლ ზეთი"], text: "მწვანე ლობიო გარეცხეთ, მოჭერით ღეროს ბოლოები და დატეხეთ. ჩაყარეთ ქვაბში, დაამატეთ ორჯერ მეტი წყალი და მოხარშეთ.მოხარშვის შემდეგ დაამატეთ დაჭრილი პომიდვრები და განაგრძეთ ხარშვა დაახლოებით 10 წუთის განმავლობაში.ამასობაში, ტაფაზე მოშუშეთ წვრილად დაჭრილი ხახვი და გატარებული ნიგოზი, 5 წუთით. ნიგვზიანი ხახვი დაუმატეთ მწვანე ლობიოს და ხარშეთ დაბალ ცეცხლზე. კარგად ამოურიეთ.გარეცხეთ შაშკვლავი და გააცალეთ ფოთლები. დაჭერით წვრილად და ჩაამატეთ ქვაბში, მარილთან ერთად. მწვანე ლობიო ნიგვზით მზად არის." },
-        { id: 25, cat: "კერძები", name: "ლობიო", time: "1 სთ 30 წთ", views: "4.674k",cal: "300",por: "8", img: "https://i.postimg.cc/Qt38X79T/lob.webp", ing: ["1 კგ ლობიო", "2 ს/კ ტომატის პასტა", "3 დაფნის ფოთოლი", "2 ხახვი", "3 კბილი ნიორი", "დაფქული წითელი წიწაკა", "დაფქული ქონდარი", "ქინძი და ნიახური", "ოხრახუში და კამა", "მარილი"], text: "ქვაბში ჩაყარეთ ლობიო, დაამატეთ წყალი და წამოდუღების შემდეგ, წყალი გადაასხით. დაამატეთ ახალი წყალი და მოხარშეთ ლობიო.მოხარშვის შემდეგ ამოზილეთ და სასურველი სისქის მისაღებად, დაამატეთ ან მოაკელით წყალი. თუ არ გსურთ ამოზელილი ლობიო, შეგიძლიათ ეს საფეხური გამოტოვოთ.ზეთიან ტაფაში მოშუშეთ ხახვი, დაამატეთ ტომატის პასტა და შეურიეთ ლობიოს.ამის შემდეგ, ლობიოს დაამატეთ წიწაკა, ქონდარი, დაჭყლეტილი ნიორი, ქინძი, ნიახური, ოხრახუში კამა და ჩააგდეთ დაფნის ფოთლები. ხარშეთ 5-7 წუთი.დასრულების შემდეგ დაამატეთ მარილი გემოვნებით და თქვენი ლობიო მზად არის." },
-        { id: 24, cat: "კერძები", name: "ხორციანი ბლინი", time: "1 სთ 15 წთ", views: "1.643k",cal: "247",por: "7", img: "https://i.postimg.cc/7Y8zC7xL/khkhkhkh.webp", ing: ["500 გრ ხორცი", "3 კვერცხი", "1 ს/კ ზეთი", "2 ჭიქა ფქვილი", "1 ხახვი", "1 ჭიქა მოხარშული ბრინჯი", "1/2 ჩ/კ უცხო სუნელი", "ქინძი და ქონდარი", "მწარე წიწაკა და მარილი"], text: "ცომის მოსამზადებლად, ათქვიფეთ კვერცხი, დაამატეთ 3 ჭიქა ცივი წყალი, 2 ჭიქა ფქვილი და ათქვიფეთ.დაუმატეთ მწიკვი მარილი, 1 ს/კ ზეთი და გააჩერეთ 10 წუთით, რომ მზად იყოს შებრაწვისთვის.ხორციანი ბლინის შიგთავსის მოსამზადებლად მოხარშეთ ხორცი და შემდეგ გაატარეთ ხორცის საკეპ მანქანაში.ამასობაში, მოშუშეთ დაჭრილი ხახვი, დაამატეთ 1 ს/კ უცხო სუნელი, დაფქული ქონდარი, წიწაკა და მარილი. შემდეგ დაამატეთ წინასწარ მოხარშული ბრინჯი, დაჭრილი ქინძი და კარგად აურიეთ.გააცხელეთ ტაფა და დაასხით ერთი დიდი კოვზი თხელი ცომი. გაშალეთ ტაფის მთლიან ზედაპირზე და შებრაწეთ მხოლოდ ერთი მხარე. გაიმეორეთ პროცესი დარჩენილი ცომისთვის.თითოეული ბლინის დაბრაწულ მხარეს მოათავსეთ 1 სუფრის კოვზი შიგთავსი, შეახვიეთ და ზეთიან ტაფაზე შებრაწეთ ორივე მხრიდან. ხორციანი ბლინები გემრიელია ცხელიც და ცივიც." },
-        { id: 23, cat: "კერძები", name: "ჩაქაფული", time: "1 სთ 45 წთ", views: "4.433k",cal: "247",por: "7", img: "https://i.postimg.cc/ZYjHpVMB/tshak.webp", ing: ["700 გრ ბატკნის ხორცი", "200 გრ ტარხუნა", "2 მწვანე წიწაკა", "150 გრ ტყემალი", "200 გრ მწვანე ხახვი", "150 გრ ქინძი", "200 მლ თეთრი ღვინო", "30 გრ ნიორი", "მარილი"], text: "დაჭერით ბატკნის ხორცი და მოათავსეთ ქვაბში. დაასხით თეთრი ღვინო და ხარშეთ დაბალ ტემპერატურაზე 15–20 წუთის განმავლობაში. ზოგჯერ მოურიეთ.ამასობაში, წვრილად დაჭერით ტარხუნის ფოთლები, ხახვი, ქინძი, მწვანე წიწაკა და ნიორი დაჭყლიტეთ.დაჭრილი ინგრედიენტები, ნიორი და ტყემალი ჩაყარეთ ხორციან ქვაბში, დაამატეთ 1 ლიტრი წყალი, დააფარეთ თავსახური და 1 საათი ხარშეთ დაბალ ტემპერატურაზე.შიგადაშიგ ურიეთ და მოხარშვის შემდეგ დაუმატეთ მარილი გემოვნებით. შეგიძლიათ ჩაქაფული მიირთვათ შოთის პურთან ერთად." },
-        { id: 22, cat: "კერძები", name: "ტოლმა ვაზის ფოთოლში", time: "1 სთ 30 წთ", views: "1.733k",cal: "247",por: "7", img: "https://i.postimg.cc/MKvTtpd1/tol.webp", ing: ["230 გრ ვაზის ფოთოლი", "1 ს/კ ზეითუნის ზეთი", "2 თავი ხახვი", "1 ½ ჭიქა ბრინჯი", "2 ს/კ ტომატის პასტა", "2 ს/კ ხმელი მოცხარი", "2 ს/კ ფიჭვის კაკალი", "1 ს/კ დაფქული დარიჩინი", "1 ს/კ გამხმარი პიტნა", "1 ს/კ ხმელი კამა", "1 ჩ/კ იამაიკური პილპილი", "1 ჩ/კ დაფქული ძირა"], text: "გააცხელეთ ზეთი ქვაბში საშუალო ცეცხლზე, დაუმატეთ ხახვი და მოშუშეთ დაახლოებით 5 წუთი. შეურიეთ ბრინჯი, დაფარეთ ცხელი წყლით, დაახურეთ თავსახური და ხარშეთ 10 წუთი.გადმოდგით ცეცხლიდან და შეურიეთ ტომატის პასტა, მოცხარი, ფიჭვის კაკალი, დარიჩინი, პიტნა, კამა, წიწაკა და ძირა. აურიეთ და გააციეთ 15 წუთი.ვაზის ფოთლის ცენტრში მოათავსეთ დაახლოებით 1 ჩაის კოვზი ბრინჯის ნარევი, მოუკეცეთ გვერდები და შეახვიეთ მოგრძო ფორმის მისაღებად. გამზადებულ ქვაბში მოათავსეთ ფენებად.ქვაბში ჩაასხით იმდენი თბილი წყალი, რომ პირველი ფენის ძირამდე მიაღწიოს. დააფარეთ და ტოლმა ვაზის ფოთოლში ხარშეთ დაბალ ცეცხლზე 30-45 წუთის განმავლობაში. საჭიროების შემთხვევაში დაამატეთ წყალი." },
-        { id: 21, cat: "კერძები", name: "ფალაფელი", time: "55 წთ", views: "3.433k",cal: "247",por: "7", img: "https://i.postimg.cc/c1FsnNtb/p'a.webp", ing: ["200 გრ მუხუდო", "80 გრ ხახვი", "60 გრ ოხრახუში", "15 გრ ქინძი", "1 ჰალაპენიო", "3 კბილი ნიორი", "1 ჩ/კ ძირა", "1 ჩ/კ მარილი", "1/2 ჩ/კ კარდამონი", "1/4 ჩ/კ შავი პილპილი", "2 ს/კ ფქვილი", "1/2 ჩ/კ სოდა"], text: "საუკეთესო შედეგისთვის, მუხუდო დაატენიანეთ წყალში, 8-12 საათის განმავლობაში. არ გამოიყენოთ დაკონსერვებული მუხუდო.საკვების პროცესორში მოათავსეთ მუხუდო, ხახვი, ოხრახუში, ქინძი, ნიორი, წიწაკა და სანელებლები. ჩართეთ აპარატი და სასურველია ბოლომდე არ დააბლენდეროთ. მასა უნდა იყოს მსხვილი ქვიშის მსგავსი.ნაზავი გადაიტანეთ თასში და დაუმატეთ ფქვილი და სოდა. აურიეთ, დაახურეთ თავსახური და შედგით მაცივარში 30 წუთიდან ერთ საათამდე.გააკეთეთ ფალაფელის პატარა ბურთები. ტაფაში ჩაასხით დაახლოებით 80-10 მლ ზეთი, დადგით საშუალო ცეცხლზე და ჩაყარეთ ბურთულები. მომზადებისთვის საკმარისია 2-3 წუთი.როდესაც მიიღებს ყავისფერ შეფერილობას, ამოიღეთ და მოათავსეთ სამზარეულოს ხელსახოცზე, რომ ცხიმი გამოჟონოს.ფალაფელი მიირთვით ბოსტნეულთან, სალათებთან ან სასურველ სოუსთან ერთად." },
-        { id: 20, cat: "კერძები", name: "სტეიკი", time: "40 წთ", views: "2.543k",cal: "247",por: "7", img: "https://i.postimg.cc/BvnptHWS/st'.webp", ing: ["½ ჭიქა კარაქი", "4 კბილი ნიორი", "2 ჩ/კ ნივრის ფხვნილი", "8 სტეიკის ნაჭერი", "მარილი და პილპილი"], text: "გააცხელეთ ტაფა ან გრილი მაღალ ცეცხლზე და წაუსვით ზეთი. გაადნეთ კარაქი პატარა ქვაბში საშუალო ან დაბალ ცეცხლზე.კარაქს დაუმატეთ წვრილად დაჭრილი ნიორი და ნივრის ფხვნილი და აურიეთ. სტეიკის თითო ნაჭერს ორივე მხარეს მოაყარეთ მარილი და პილპილი.მოათავსეთ ხორცი ტაფაზე და თითო მხარე შეწვით 4-5 წუთის მანძილზე. შეგიძლიათ გამოიყენოთ სამზარეულოს თერმომეტრი, რომელიც 60 გრადუსს უნდა აჩვენებდეს.სტეიკი გადაიტანეთ თბილ თეფშებზე, ზემოდან წაუსვით კარაქის და ნივრის სოუსი და მირთმევამდე გააჩერეთ 2-3 წუთით." },
-        { id: 19, cat: "კერძები", name: "სუში", time: "1 სთ 10 წთ", views: "1.875k",cal: "247",por: "7", img: "https://i.postimg.cc/6Q89c4rG/sush.webp", ing: ["230 გრ კიბორჩხალას ჩხირი", "⅔ ჭიქა თეთრი ბრინჯი", "3 ს/კ ბრინჯის ძმარი", "3 ს/კ შაქარი", "1 ½ ჩ/კ მარილი", "4 ფურცელი ნორი", "1 ავოკადო", "½ კიტრი", "2 ს/კ ჯანჯაფილის მწნილი"], text: "ღუმელი გააცხელეთ 150 გრადუსზე. ქვაბით აადუღეთ წყალი, ჩაყარეთ ბრინჯი, დააფარეთ თავსახური და ადუღეთ დაბალ ცეცხლზე, 20-25 წთ.როდესაც ბრინჯი მოიხარშება, ერთმანეთში აურიეთ ბრინჯის ძმარი, შაქარი, მარილი და დაამატეთ მოხარშულ ბრინჯს.საცხობ ფირფიტაზე მოათავსეთ ნორის ფურცლები და გაათბეთ, 1-2 წუთის მანძილზე. გაშალეთ ნორის ფურცელი და სველი ხელებით ბრინჯის თხელი ფენა მოასხით.ცენტრის ოდნავ ქვემოთ, ჰორიზონტალურად, ფენებად დაალაგეთ კრაბის ჩხირის 1/4, დაჭრილი ავოკადო და კიტრი და ჯანჯაფილი.ასწიეთ ნორის ერთი ბოლო და გააკეთეთ მჭიდროდ შეკრული რულეტი. გაიმეორეთ იგივე დარჩენილი სამი ფურცლისთვის.სუში დაჭერით სველი და ბასრი დანით. ერთ რულეტიდან გამოვა გამოვა 4-6 ნაჭერი." },
-        { id: 18, cat: "კერძები", name: "ელარჯი", time: "1 სთ 10 წთ", views: "1.754k",cal: "620",por: "6", img: "https://i.postimg.cc/RCknH4zd/e.webp", ing: ["200 გრ ღერღილი", "4 ს/კ სიმინდის ფქვილი", "1 კგ სულგუნი"], text: "ღრმა ქვაბში მოათავსეთ ღერღილი და დაფარეთ წყლით. რაც ზედაპირზე ამოვა, გადაყარეთ. გაიმეორეთ პროცესი სანამ ფქვილ საბოლოოდ არ გაირეცხება.დასრულების შემდეგ გარეცხილ ღერღილს დაუმატეთ 1 ლიტრი წყალი და მიიყვანეთ ადუღებამდე, დროდადრო ურიეთ. როცა ადუღდება, განაგრძეთ ხარშვა დაბალ ცეცხლზე 30-35 წუთის განმავლობაში.დაუმატეთ სიმინდის ფქვილი, განაგრძეთ ხარშვა 15 წუთით დაბალ ცეცხლზე და განუწყვეტლივ ურიეთ. უნდა მიიღოთ ფაფის მსგავსი სქელი მასა.ამასობაში დაჭერით სულგუნი და დაამატეთ ქვაბში. საჭიროა კარგად ამოურიოთ, დაახლოებით 2-3 წუთის განმავლობაში, რომ ერთმანეთში კარგად აიზილოს.საბოლოოდ უნდა მიიღოთ ღომის მსგავსი, თუმცა, ელასტიკური კონსისტენცია. ელარჯი თეფშზე გადმოიტანეთ სველი ჩოგნით და მიირთვით ცხელი.ავიდან აიცილოთ ელარჯი კოვზზე." },
-        { id: 17, cat: "კერძები", name: "ქათმის ფრთები", time: "45 წთ", views: "2.487k",cal: "520",por: "10", img: "https://i.postimg.cc/zBd1KJMH/kat'.webp", ing: ["10 ქათმის ფრთა", "3 ს/კ ზეითუნის ზეთი", "3 კბილი ნიორი", "2 ჩ/კ ჩილის ფხვნილი", "1 ჩ/კ ნივრის ფხვნილი", "მარილი და შავი პილპილი"], text: "გააცხელეთ ღუმელი 190 გრადუსზე. კონტეინერში მოათავსეთ ზეითუნის ზეთი, დაჭრილი ნიორი, ჩილის ფხვნილი, ნივრის ფხვნილი, მარილი და პილპილი.შეანჯღრიეთ, რომ ინგრედიენტები ერთმანეთში აირიოს კარგად. შემდეგ დაამატეთ ქათმის ფრთები და გაიმეორეთ პროცესი.ფრთები დაალაგეთ საცხობ ფირფიტაზე და შედგით ღუმელში, 30-45 წუთით. მიირთვით ცხელი." },
-        { id: 16, cat: "კერძები", name: "ღომი", time: "1 სთ", views: "1.345k",cal: "500",por: "8", img: "https://i.postimg.cc/4NxmDyZM/rom.webp", ing: ["1 კგ ღერღილი", "300 გრ სიმინდის ფქვილი", "წყალი", "სულგუნი ან ყველი"], text: "გარეცხეთ ღერღილი, ჩაყარეთ ქვაბში და დაფარეთ წყლით. მოხარშეთ საშუალო ცეცხლზე. უნდა მიიღოთ სქელი მასა და თუ გამაგრება შეამჩნიეთ, ამატეთ წყალი და მოურიეთ.სქელი მასის მიღების შემდეგ, დაამატეთ სიმინდის ფქვილი და განაგრძეთ ხარშვა. დრო გამოშვებით ურიეთ, რადგან არ მიიკრას ქვაბმა. როდესაც მიიღებთ სქელ კონსისტენციას, გამორთეთ გაზი.ღომი ამოიღეთ თეფშებზე, სასურველია გამოიყენოთ სველი ჩამჩა ან ჩოგანი. მოათავსეთ 3-4 ნაჭერი ყველი ან სულგუნი თითო თეფშში და მიირთვით ცხელი.გარნირად შეგიძლიათ მიირთვათ ლობიო, კიტრის და პომიდვრის სალათა, საცივი და სხვა." },
-        { id: 15, cat: "კერძები", name: "აჯაფსანდალი", time: "1 სთ", views: "1.512k",cal: "110",por: "4", img: "https://i.postimg.cc/Nj87dL4c/aja.webp", ing: ["1 ხახვი", "1 ს/კ ტომატის პასტა", "2 ბადრიჯანი", "3 წითელი ბულგარული წიწაკა", "1 მწვანე ბულგარული წიწაკა", "1 წიწაკა", "1 დიდი პომიდორი", "25 გრ ქინძი", "5 კბილი ნიორი"], text: "გააცხელეთ 1 ს/კ მცენარეული ზეთი დიდ ქვაბში დაბალ ცეცხლზე. დაუმატეთ დაჭრილი ხახვი და მოშუშეთ 5 წუთი. დაუმატეთ ტომატის პასტა და ურიეთ დაახლოებით 1 წუთი.დაამატეთ კუბიკებად დაჭრილი ბადრიჯანი და ცოტა მარილი, მოურიეთ, დააფარეთ თავსახური და ხარშეთ 5-7 წუთი.ჩაყარეთ დაჭრილი პომიდორი, წიწაკები და თავდახურული ხარშეთ 15-20 წუთი. საჭიროების შემთხვევაში დაამატეთ წყალი.ამის შემდეგ, ჩაამატეთ დაჭრილი ნიორი და ქინძის ნახევარი, აურიეთ და მოხარშეთ კიდევ 2-3 წუთის განმავლობაში. გამორთეთ ცეცხლი და ჩაყარეთ დარჩენილი ქინძი.აჯაფსანდალი შეგიძლიათ მიირთვათ ცხელი, ცივი და სხვა კერძთან ან სალათასთან ერთად." },
-        { id: 14, cat: "კერძები", name: "ყველიანი მაკარონი", time: "25 წთ", views: "1.512k",cal: "630",por: "4", img: "https://i.postimg.cc/wx5vyHfc/ma.webp", ing: ["1 შეკვრა მაკარონი", "¼ ჭიქა კარაქი", "¼ ჭიქა უნივერსალური ფქვილი", "½ ჩ/კ მარილი", "2 ჭიქა რძე", "2 ჭიქა გახეხილი ჩედარი", "შავი პილპილი"], text: "დიდი ქვაბით აადუღეთ მარილიანი წყალი. ჩაყარეთ მაკარონი და ხარშეთ 8 წუთი, დროდადრო მოურიეთ.ქვაბში საშუალო ცეცხლზე გაადნეთ კარაქი, დაამატეთ ფქვილი, მარილი, პილპილი და ურიეთ გლუვი მასის მისაღებად, დაახლოებით 5 წუთი.მორევის პროცესში დაამატეთ რძე და განაგრძეთ ხარშვა დამატებით 5 წუთის განმავლობაში. გამუდმებით ურიეთ.ბოლოს, დაამატეთ ჩედარი და აურიეთ კარგად, სანამ ყველი არ გადნება, 2-4 წუთის განმავლობაში.მაკარონი გადაწურეთ და მოასხით მიღებული მასა. ყველიანი მაკარონი მიირთვით ცხელი." },
-        { id: 13, cat: "კერძები", name: "უზბეკური ფლავი", time: "2 სთ", views: "3.542k",cal: "480",por: "8", img: "https://i.postimg.cc/fL445nP0/pl.webp", ing: ["2 ჭიქა ბრინჯი ბასმატი", "4 თავი ნიორი", "½ ჭიქა მცენარეული ზეთი", "900 გრ ცხვრის ხორცი", "2 ხახვი", "5 სტაფილო", "½ ჭიქა კოწახური", "2 ს/კ ძირას თესლი", "2 ს/კ ქინძის თესლი", "1 ჩ/კ შავი პილპილის მარცვლები", "2 ს/კ მარილი"], text: "მოათავსეთ ბასმატის ბრინჯი დიდ თასში, დაფარეთ თბილი წყლით და გადადგით. ამასობაში, გარეცხეთ ინგრედიენტები და აადუღეთ 2 ჭიქა წყალი.ქვაბში გააცხელეთ მცენარეული ზეთი მაღალ ცეცხლზე და დაამატეთ ცხვრის ხორცი. ხარშეთ 10 წუთი, თანაბრად შებრაწვამდე. დაამატეთ ხახვი და განაგრძეთ ხარშვა კიდევ 10 წუთი.დაამატეთ სტაფილო, მოურიეთ და ხარშეთ სტაფილოს დარბილებამდე. დაუმატეთ კოწახური, ძირა, ქინძი და წიწაკის მარცვლები. ჩააგდეთ მთლიანი ნიორი, მოურიეთ, დააფარეთ თავსახური და დაბალ ცეცხლე ხარშეთ ნახევარი საათი.გადაწურეთ ბრინჯი და დაამატეთ ნახარშში, ხორცის ზედაპირზე. ნელ-ნელა დაასხით 2 ჭიქა მდუღარე წყალი და არ მოურიოთ. ბოლოს, მოაყარეთ მარილი.შეამცირეთ სითბო, დააფარეთ თავსახური და ადუღეთ ბრინჯის დარბილებამდე და სითხის შეწოვამდე, დაახლოებით 20 წუთი. ბოლოს კარგად აურიეთ და მიირთვით უზბეკური ფლავი." },
-        { id: 12, cat: "კერძები", name: "ხაშლამა", time: "4 სთ", views: "2.664k",cal: "400",por: "4", img: "https://i.postimg.cc/c43xNhRd/xas.webp", ing: ["1 კგ საქონლის ხორცი", "4 ხახვი", "2-3 დაფნის ფოთოლი", "10 გრ პილპილის მარცვლები", "1 ჩ/კ დაფქული რეჰანი", "1 კონა ქინძი", "1 კონა ნიახური", "4 ღერი მწვანე ხახვი"], text: "საქონლის ხორცი გარეცხეთ, დაჭერით საშუალო ზომის კუბიკებად, ჩაყარეთ ხორცი დიდ ქვაბში, დაასხით იმდენი წყალი, რომ 2/3-ით დაფაროს და მიიყვანეთ დუღილამდე. როგორც კი ადუღდება, მოხადეთ ქაფი და გადაღვარეთ ეს პირველი ნახარში.დაამატეთ გაფცქვნილი და მთლიანი ხახვი, პილპილი, დაფქული რეჰანი და დაფნის ფოთლები, დაფარეთ წყლით და ადუღეთ დაბალ ცეცხლზე დაახლოებით 1 საათის განმავლობაში. პერიოდულად ამოურიეთ და საჭიროების შემთხვევაში დაამატეთ ცოტა წყალი.გარეცხილი ქინძი, ნიახური და მწვანე ხახვი დაამატეთ ქვაბში და განაგრძეთ ხარშვა. ხორცი უნდა გახდეს რბილი და ხარშვა განაგრძეთ 1-2 საათის განმავლობაში. თუ საჭიროა, დაამატეთ ცხელი წყალი, რადგან ხორცი წყლით იყოს დაფარული.როდესაც ხორცი საკმარისად დარბილდება, ამოიღეთ მწვანილები, დაამატეთ მარილი გემოვნებით და კარგად მოურიეთ. დატოვეთ ქვაბი დახურული კიდევ 10-15 წუთი, რომ ხორცმა კიდევ უფრო შეიწოვოს არომატები.ხაშლამა მიირთვით ცხელი, შეგიძლიათ ნახარშთან ერთად. სურვილისამებრ, შეგიძლიათ მოაყაროთ ახლად დაჭრილი მწვანე ხახვი, ქინძი და ნიორი." },
-        { id: 11, cat: "კერძები", name: "ომლეტი", time: "15 წთ", views: "1.724k",cal: "320",por: "1", img: "https://i.postimg.cc/QtgQP1fn/om.webp", ing: ["2 კვერცხი", "1 ს/კ კარაქი", "2 ს/კ გახეხილი ჩედარი", "3 ღერი ბაზილიკი", "4 ჩერი პომიდორი", "ზეითუნის ზეთი", "მარილი და პილპილი"], text: "კვერცხი ათქვიფეთ თასში. დაჭერით ბაზილიკის ფოთლები და პომიდვრები გაჭერით შუაზე.ტაფაზე გაადნეთ კარაქი, დაუმატეთ მარილი, პილპილი და ზეითუნის ზეთი გემოვნებით. მოათავსეთ ჩერი პომიდვრები და შეწვით 1 წუთის განმავლობაში.დაუწიეთ ცეცხლს, მოაყარეთ ბაზილიკის ფოთლები და მოასხით ათქვეფილი კვერცხი, ისე, რომ მთლიან ტაფაზე თანაბრად გადანაწილდეს.მას შემდეგ, რაც კვერცხი გამკვრივდება, თუმცა ზედაპირი ჯერ კიდევ უმია, მოაყარეთ გახეხილი ყველი. თუმცა, ყველის მოყრა შეგიძლიათ მომზადების შემდეგაც.როდესაც ომლეტი ბოლომდე შეიწვება, გადაკეცეთ და გადაიტანეთ თეფშზე." },
-        { id: 10, cat: "კერძები", name: "კიევური კატლეტი", time: "1სთ 50 წთ", views: "1.464k",cal: "790",por: "4", img: "https://i.postimg.cc/nzNyR8wX/ki.webp", ing: ["2 კბილი ნიორი", "2 ს/კ ოხრახუში", "6 ს/კ უმარილო კარაქი", "4 ქათმის მკერდი", "1 ჭიქა უნივერსალური ფქვილი", "2 ჩ/კ მარილი", "2 დიდი კვერცხი", "2 ჭიქა პურის ნამსხვრევები", "1 მწიკვი კაიენის წიწაკა", "2 ჭიქა მცენარეული ზეთი", "პილპილი გემოვნებით"], text: "დანაყეთ ნიორი ერთ მწიკვ მარილთან ერთად, რომ მიიღოთ გლუვი მასა. დაუმატეთ დაჭრილი ოხრახუში, კარაქი და კარგად აურიეთ ერთმანეთში. შეფუთეთ პლასტმასის შესაფუთში და შედგით მაცივარში 15 წუთით.ქათმის მკერდს მოაყარეთ მარილი და პილპილი და ერთ ბოლოში მოათავსეთ კარაქის და ნივრის მიქსის 1/4. შემდეგ კი შეკარით ისე, რომ მიიღოთ ხორცის ბურთი კარაქის და ნივრის შიგთავსით. მჭიდროდ შეფუთეთ ცელოფანში და ნახევარი საათით შედგით საყინულეში.სამ სხვადასხვა თასში მოათავსეთ ფქვილი და 2 ჩ/კ მარილი, ათქვეფილი კვერცხი და პურის ნამცეცები. კიევური კატლეტის თითო ბურთულა ჯერ ამოავლეთ ფქვილში, შემდეგ კვერცხში და ბოლოს პურის ნამცეცებში. მოათავსეთ თეფშზე, გადააფარეთ ცელოფანი და გაყინეთ 15 წუთით.ღრმა ტაფაში გააცხელეთ ზეთი, ღუმელი გააცხელეთ 200 გრადუსზე და საცხობ ფირფიტაზე მოათავსეთ ალუმინის ფოლგა. კატლეტები შეწვით ზეთში (1 წუთი თითო მხარე), გადაიტანეთ საცხობ ფირფიტაზე და მოაყარეთ მარილი და კაიენის პილპილი.გამოაცხვეთ კიევური კატლეტები წინასწარ გაცხელებულ ღუმელში, მანამ, სანამ კარაქი ფოლგაზე არ გადმოვა და შიშხინს არ დაიწყებს (15-17 წთ). თუ გაქვთ სამზარეულოს თერმომეტრი, შეამოწმეთ და კატლეტის ცენტრი უნდა იყოს 75 გრადუსი. მირთმევამდე კატლეტი ოდნავ გააციეთ." },
-        { id: 9, cat: "კერძები", name: "ბოსტნეულის კატლეტი", time: "50 წთ", views: "1.912k",cal: "234",por: "6", img: "https://i.postimg.cc/rFH8Bb07/bost.webp", ing: ["2 დიდი კარტოფილი", "1 სტაფილო გახეხილი", "½ ჭიქა ახალი მწვანე ლობიო", "¼ ჭიქა მწვანე ბარდა", "1 კვერცხი", "1 ½ ჭიქა პურის ნამსხვრევები", "½ ჩ/კ გარამ მასალა", "¼ ჩ/კ კაიენის წიწაკა", "¼ ჭიქა მცენარეული ზეთი", "მარილი გემოვნებით"], text: "კარტოფილი და სტაფილო დაჭერით კუბიკებად, მწვანე ლობიო დატეხეთ ან დაჭერით და ბარდასთან ერთად მოათავსეთ ქვაბში. დაამატეთ წყალი, რომ ინგრედიენტები დაიფაროს.დადგით ქვაბი მაღალ ცეცხლე, ადუღების შემდეგ დააფარეთ თავსახური და ადუღეთ 15 წუთი დაბალ ცეცხლზე. შემდეგ გადაწურეთ, გადაიტანეთ თასში და დაჭყლიტეთ.მიღებულ პიურეს დაუმატეთ კვერცხი, პურის ნამსხვრევების 3/4, გარამ მასალა, კაიენის წიწაკა, მარილი და კარგად აურიეთ. გააკეთეთ ბოსტნეულის კატლეტები და ამოავლეთ დარჩენილ პურის ნამსხვრევებში.ტაფაზე დაასხით ზეთი და საშუალო ცეცხლზე შეწვით ბოსტნეულის კატლეტები, სანამ ოქროსფერ შეფერილობას არ მიიღებს. ზედმეტი ცხიმის მოსაშორებლად გამოიყენეთ სამზარეულოს ხელსახოცი და შემდეგ მიირთვით." },
-        { id: 8, cat: "კერძები", name: "კატლეტი", time: "40 წთ", views: "1.584k",cal: "113",por: "12", img: "https://i.postimg.cc/YqnMBPVK/katletis-recepti.webp", ing: ["700 გრ საქონლის ფარში", "1 ხახვი", "1 კვერცხი", "1 ½ ჩ/კ მარილი", "½ ჩ/კ შავი პილპილი", "½ ჩ/კ წითელი წიწაკა", "2 ნაჭერი პური", "2 ს/კ მცენარეული ზეთი", "1 ს/კ უმარილო კარაქი"], text: "კატლეტის მოსამზადებლად დიდ თასში აურიეთ საქონლის ფარში, დაჭრილი ხახვი, კვერცხი და სანელებლები – მარილი, შავი პილპილი და წითელი წიწაკა.დატეხეთ პურის ნაჭრები წვრილ ნატეხებად და მოათავსეთ ჭიქაში ან პატარა თასში. მიღებული ხორცის მასისგან გააკეთეთ ოვალური ფორმის კატლეტები და ამოურიეთ პურის ნატეხებში ისე, რომ მთლიანად დაიფაროს.წინასწარ გააცხელეთ დიდი ტაფა საშუალო ცეცხლზე, დაამატეთ თითო სუფრის კოვზი მცენარეული ზეთი და კარაქი. კატლეტის თითო მხარე შეწვით დაახლოებით 5 წუთის განმავლობაში, ტაფას დააფარეთ თავსახური.შესამოწმებლად, შეგიძლიათ კატლეტი გაჭრათ დანით და თუ შიგთავსი წვნიანია სისხლის გარეშე, ის მომზადებულია. შეგიძლიათ მიირთვათ გარნირთან ერთად – მოხარშული წიწიბურა, კარტოფილის პიურე." },
-        { id: 1, cat: "კერძები", name: "ქაბაბი", time: "40 წთ", views: "1.342k",cal: "300",por: "8", img: "https://fiber.ge/wp-content/uploads/kababis-recepti.webp", ing: ["1 კგ საქონლის ფარში", "3 ხახვი", "6 კბილი ნიორი", "2 ჩ/კ დაფქული ქინძი", "2 ჩ/კ დაფქული ძირა", "2 ჩ/კ პაპრიკა", "3 ჩ/კ ზღვის მარილი", "1/2 ჩ/კ კაიენის წიწაკა","1/2 ჭიქა დაჭრილი ქინძი","პილპილი"], text: "დიდ თასში მოათავსეთ ფარში, 2 ცალი წვრილად დაჭრილი ხახვი, დაჭყლეტილი ნიორი, დაფქული ქინძი, ძირა, პაპრიკა, მარილი, პილპილი, კაიენის წიწაკა და კარგად აურიეთ.მიღებული ხორცის მასა გაყავით რვა, ან სასურველი რაოდენობის თანაბარ ნაწილად, მიეცით მოგრძო ფორმა და ჩამოაცვით შამფურებზე.გააცხელეთ გრილი საშუალოზე მაღალ ცეცხლზე და ქაბაბი შეწვით დაახლოებით 10-15 წუთის განმავლობაში. პერიოდულად გადააბრუნეთ, რომ ყველა მხარე კარგად შეიწვას.როდესაც მზად იქნება, გადმოიღეთ გრილიდან და ზემოდან მოაყარეთ დაჭრილი ახალი ქინძი, 1 ცალი დაჭრილი წითელი ხახვი და ბროწეულის მარცვლები." },
-        { id: 2, cat: "კერძები", name: "წიწიბურას კატლეტი", time: "30 წთ", views: "1.714k",cal: "150",por: "6", img: "https://fiber.ge/wp-content/uploads/tsitsiburas-katletis-recepti.webp", ing: ["1 ჭიქა წიწიბურა", "1/2 ჭიქა საფანელი", "1 სტაფილო", "1 კარტოფილი", "1 კონა ქინძი", "1 ბულგარული წიწაკა", "მარილი, პილპილი"], text: "ჯერ მოხარშეთ წიწიბურა – დაასხით ადუღებული წყალი, დაუმატეთ მარილი გემოვნებით და თავდახურული მოხარშეთ, დაბალ ცეცხლზე.ამასობაში, გათალეთ კარტოფილი, სტაფილო და დაჭერით ქინძთან და ბულგარულ წიწაკასთან ერთად, პატარა ნაჭრებად.მოხარშვის შემდეგ, წიწიბურა და ბოსტნეული გაატარეთ ხორცსაკეპ მანქანაში და გემოვნებით დაუმატეთ მარილი და პილპილი.გააკეთეთ ექვსი წიწიბურას კატლეტი, ამოავლეთ საფანელში და დაბალ ცეცხლზე შეწვით ზეთში." },
-        { id: 3, cat: "კერძები", name: "მადამ ბოვარი", time: "1 სთ 45 წთ", views: "1.197k",cal: "500",por: "6", img: "https://fiber.ge/wp-content/uploads/madam-bovaris-recepti.webp", ing: ["1 კგ კარტოფილი", "650 გრ შერეული ფარში", "200 გრ ყველი", "200 გრ მაიონეზი", "2 კვერცხი", "1 ხახვი", "1 კბილი ნიორი", "მარილი და პილპილი"], text: "გარეცხეთ და გათალეთ კარტოფილი, დაჭერით მრგვალ ნაჭრებად და შეწვით. ფარში კი წვრილად დაჭრილ ხახვთან, მარილთან და პილპილთან შეაზავეთ და მოშუშეთ.დაჭყლიტეთ ნიორი, დაუმატეთ პილპილი გემოვნებით და აურიეთ მაიონეზს. შესაძლებელია არაჟნის გამოყენება, გემოვნების მიხედვით.ცეცხლგამძლე ჭურჭელში, პირველ ფენად მოათავსეთ კარტოფილის ნაჭრები. ზემოდან მოათავსეთ მოთუშული ფარში და მოაყარეთ წვრილად დაჭრილი მოხარშული კვერცხი. ბოლოს კი გახეხილი ყველი.თუ გაქვთ საშუალება, შეგიძლიათ ფენები გაიმეოროთ. ბოლო ფენას თანაბრად მოასხით მაიონეზის ნაზავი და ბოლოს დაადეთ დაჭრილი პომიდვრის ფენები.მადამ ბოვარი შედგით წინასწარ გაცხელებულ ღუმელში (200 გრადუსი) და მოამზადეთ დაახლოებით 20 წუთის განმავლობაში." },
-        { id: 4, cat: "კერძები", name: "ლაზანია", time: "1 სთ 30წთ", views: "1.227k",cal: "500",por: "7", img: "https://fiber.ge/wp-content/uploads/lazanias-recepti.webp", ing: ["1 პაკეტი ლაზანიას ფირფიტა", "500 გრ საქონლის ფარში", "700 გრ რიკოტას ყველი", "1 ჭიქა რძე", "3 კვერცხი", "50 გრ გახეხილი პარმეზანის ყველი", "2 ჩ/კ ხმელი რეჰანი", "1 ჩ/კ მარილი","1/2 ჩ/კ დაფქვილი შავი პილპილი","700 მლ პომიდვრის სოუსი"], text: "საქონლის ფარში მოათავსეთ ტაფაში და მოთუშეთ დაახლოებით 5-7 წუთის განმავლობაში, სანამ ყავისფერ შეფერილობას არ მიიღებს. ზედმეტი ცხიმი გადაწურეთ და გადაიტანეთ თეფშზე გასაციებლად.დიდ თასში მოათავსეთ რიკოტას ყველი, რძე, კვერცხები, პარმეზანის ყველი, რეჰანი, მარილი და პილპილი. ინგრედიენტები კარგად აურიეთ ერთნამეთში, რადგან მიიღოთ კარგად შერეული, ნაზი მასა.მოთუშული საქონლის ფარშის ნახევარი მოათავსეთ მიღებულ მასაში და კარგად აურიეთ.ქვაბით აადუღეთ მარილიანი წყალი და მოათავსეთ ლაზანიას ფირფიტები და ხარშეთ დაახლოებით 5 წუთის განმავლობაში. ფირფიტები უნდა გახდეს ოდნავ რბილი. შემდეგ გადაწურეთ და გაავლეთ ცივ წყალში.ღუმელი გააცხელეთ 190 გრადუსზე და საცხობ ფირფიტაზე თხლად წაუსვით პომიდვრის სოუსი.დააწყვეთ ლაზანიას ფირფიტების მესამედი საცხობ ფირფიტაზე, ზემოდან მოათავსეთ რიკოტას და ფარშის ნაზავი და წაუსვით პომიდვრის სოუსი. გაიმეორეთ პროცესი რომ გამოვიდეს ორი ფენა.მიღებულ ორ ფენაზე, ზემოდან მოათავსეთ დარჩენილი ფირფიტები და გადაუსვით პომიდვრის სოუსი.შეახვიეთ ფოლგაში და მოათავსეთ ღუმელში 25 წუთის განმავლობაში. შემდეგ მოხსენით ფოლგა და დატოვეთ ღუმელში 25-30 წუთი, სანამ ზედაპირი არ შეიბრაწება. ღუმელიდან გამოღების შემდეგ, ლაზანია დააყოვნეთ 15 წუთით და მიირთვით." },
-        { id: 5, cat: "კერძები", name: "კარბონარა", time: "40 წთ", views: "875",cal: "655",por: "4", img: "https://fiber.ge/wp-content/uploads/karbonaras-recepti.webp", ing: ["100 გრ პანჩეტა", "50 გრ პეკორინოს ყველი", "50 გრ პარმეზანი", "3 დიდი კვერცხი", "350 გრ სპაგეტი", "2 კბილი ნიორი", "50 გრ უმარილო კარაქი", "ზღვის მარილი", "დაფქული შავი პილპილი"], text: "აადუღეთ წყალი დიდი ქვაბით. ამასობაში დაჭერით 100 გრ პანჩეტა, გახეხეთ 50 გრ პეკორინო, 50 გრ პარმეზანი და აურიეთ ერთმანეთში. თასში ათქვიფეთ 3 კვერცხი და მოაყარეთ შავი პილპილი.მდუღარე წყალს დაუმატეთ 1 ჩ/კ მარილი, 350 გრ სპაგეტი და ხარშეთ 10 წუთის განმავლობაში.დაჭყლიტეთ ნიორი, დიდ ტაფაზე გაადნეთ კარაქი და შეწვით პანჩეტა ნიორთან ერთად დაახლოებით 5 წუთის განმავლობაში, სანამ ოქროსფერი და ხრაშუნა არ გახდება. ამის შემდეგ კი, მოაცილეთ ნიორი.როდესაც მაკარონი მზად იქნება, გადაიტანეთ ტაფაზე პანჩეტასთან ერთად. პასტა უმჯობესია იყოს ოდნავ სველი და ასევე, არ გადაასხათ მაკარონის ნახარში.ყველის უმეტესი ნაწილი შეურიეთ ათქვეფილ კვერცხს და მცირე რაოდენობით მოიტოვეთ ზემოდან მოსაყრელად.ტაფა გადმოდგით ცეცხლიდან და სწრაფად დაასხით კვერცხისა და ყველის ნარევი. კარგად აურიეთ ერთმანეთში და საჭიროებისამებრ დაამატეთ მაკარონის ნახარში სისველისთვის. მარილი მოაყარეთ გემოვნებით.კარბონარა გადაიტანეთ თეფშებზე, მოაყარეთ დარჩენილი ყველი და შავი პილპილი. უმჯობესია მიირთვათ ცხელი." },
-        { id: 6, cat: "კერძები", name: "ფახიტასი", time: "40 წთ", views: "2.614k",cal: "334",por: "4", img: "https://fiber.ge/wp-content/uploads/fakhitasis-recepti.webp", ing: ["3 ქათმის მკერდი", "1 საშუალო ხახვი", "1 ლაიმი", "3 ბულგარული წიწაკა", "3 ს/კ ზეითუნის ზეთი", "1 ჩ/კ დაფქული ჩილი", "½ ჩ/კ შებოლილი პაპრიკა", "½ ჩ/კ დაფქული ხახვი", "½ ჩ/კ შავი პილპილი", "½ ჩ/კ ძირა", "მარილი გემოვნებით"], text: "დაჭერით ხახვი თხელ ნაჭრებად, ხოლო ბულგარული წიწაკა საშუალო ზომის, თლილ ნაჭრებად.ცალკე თასში აურიეთ 1 ს/კ ზეითუნის ზეთი, ½ ლაიმის წვენი, დაფქული ჩილი და ხახვი, პაპრიკა, წიწაკა, ძირა და მარილი. ქათამი დაჭერით თხელ ნაჭრებად და მოაყარეთ სანელებლების ნარევი.წინასწარ გააცხელეთ 1 ს/კ ზეითუნის ზეთი, დაუმატეთ ½ ქათმის ხორცი და მოხარშეთ 3-5 წუთის განმავლობაში. ამოიღეთ ტაფიდან, გადადგით გვერდზე და გაიმეორეთ იგივე დანარჩენი ნაჭრებისთვის.ტაფაში ჩაამატეთ 1 ს/კ ზეთი, ხახვი კარგად გადაწურეთ და მოხარშეთ 2 წუთი. დაამატეთ დაჭრილი წიწაკა და მოხარშეთ კიდევ 2 წუთი. შემდეგ, ტაფაში დაამატეთ ქათამი და აურიეთ.გამზადებულ ფახიტასს ზემოდან მოასხით ლაიმის წვენი და მიირთვით. შეგიძლიათ გაახვიოთ ტორტილიაში." },
-        { id: 7, cat: "კერძები", name: "მექსიკური კარტოფილი", time: "55 წთ", views: "850",cal: "249",por: "4", img: "https://fiber.ge/wp-content/uploads/meqsikuri-kartofilis-recepti.webp", ing: ["700 გრ კარტოფილი", "1/8 ჭიქა ზეითუნის ზეთი", "1/4 ჩ/კ პაპრიკა", "1/4 ჩ/კ წიწაკა", "1/4 ჩ/კ ჩილის ფხვნილი", "1/4 ჩ/კ ნივრის ფხვნილი", "1/4 ჩ/კ მარილი", "1/4 ჩ/კ ხახვის ფხვნილი", "1/4 ჩ/კ ძირა", "1/4 ჩ/კ დარიჩინი"], text: "გააცხელეთ ღუმელი 220-230 გრადუსზე და საცხობ ფირფიტაზე მოათავსეთ პერგამენტის ქაღალდი ან საცხობი ფურცელი.დაჭერით კარტოფილი და სანელებლები აურიეთ ერთმანეთში. თასში მოათავსეთ დაჭრილი კარტოფილი, ზეითუნის ზეთი და სანელებლები. ინგრედიენტები კარგად აურიეთ ერთმანეთში.გაანაწილეთ კარტოფილი საცხობ ფირფიტაზე თანაბრად და გამოაცხვეთ 25 წუთი. დროთა განავლობაში კარტოფილი გადაატრიალეთ, რადგან ყველა მხარე თანაბრად შეიწვას. გამოაცხვეთ კიდევ 15-20 წუთის განმავლობაში, სანამ კარტოფილი არ დაიბრაწება.თუ კარტოფილი ხრაშუნა არ გახდა, რამდენიმე წუთით კიდევ შეწვით ისე, რომ არ დაიწვას." },
-        
-    ];
-
-    let currentPage = 1;
-    const itemsPerPage = 16; // გაიზარდა რომ ერთ გვერდზე მეტი გამოჩნდეს
-    let filteredData = [...data];
-
-    function renderCards() {
-        const grid = document.getElementById('grid-container');
-        grid.innerHTML = "";
-        const start = (currentPage - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        const paginatedItems = filteredData.slice(start, end);
-
-        paginatedItems.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.onclick = () => openRecipe(item.id);
-            card.innerHTML = `
-                <div class="img-wrapper">
-                    <div class="watermark">UBISA.GE</div>
-                    <img src="${item.img}" onerror="this.src='https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=400'">
-                </div>
-                <div class="card-content">
-                    <div class="item-name">${item.name}</div>
-                    <div class="item-stats">
-                        <div class="stat-group">
-                            <img src="https://fiber.ge/wp-content/uploads/time-icon.svg" class="stat-icon">
-                            <span>${item.time}</span>
-                        </div>
-                        <div class="stat-group">
-                            <img src="https://fiber.ge/wp-content/uploads/portion-icon.svg" class="stat-icon">
-                            <span>${item.views}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-        renderPagination();
-    }
-
-    function renderPagination() {
-        const paginationContainer = document.getElementById('pagination');
-        paginationContainer.innerHTML = "";
-        const pageCount = Math.ceil(filteredData.length / itemsPerPage);
-        if (pageCount <= 1) return;
-        for (let i = 1; i <= pageCount; i++) {
-            const pageBtn = document.createElement('div');
-            pageBtn.className = `page-num ${i === currentPage ? 'active' : ''}`;
-            pageBtn.innerText = i;
-            pageBtn.onclick = () => {
-                currentPage = i;
-                renderCards();
-                window.scrollTo(0, 0);
-            };
-            paginationContainer.appendChild(pageBtn);
-        }
-    }
-
-    function filterJokes(category, el) {
-        goHome();
-        currentPage = 1;
-        document.querySelectorAll('.nav-links span').forEach(s => s.classList.remove('active'));
-        if(el) el.classList.add('active');
-        document.getElementById('page-title').innerText = category === 'ყველა' ? 'ყველა რეცეპტი' : category;
-        filteredData = category === 'ყველა' ? [...data] : data.filter(item => item.cat === category);
-        renderCards();
-    }
-
-    function openRecipe(id) {
-        const item = data.find(x => x.id === id);
-        if(!item) return;
-
-        let similarItems = data.filter(x => x.cat === item.cat && x.id !== item.id);
-        
-        if(similarItems.length < 3) {
-            let otherItems = data.filter(x => x.id !== item.id && x.cat !== item.cat);
-            similarItems = [...similarItems, ...otherItems];
-        }
-
-        similarItems.sort(() => Math.random() - 0.5);
-        const randomThree = similarItems.slice(0, 3);
-
-        document.getElementById('main-content').style.display = 'none';
-        const page = document.getElementById('recipe-page');
-        const content = document.getElementById('recipe-content');
-        page.style.display = 'block';
-        window.scrollTo(0,0);
-
-        content.innerHTML = `
-            <div>
-                <div class="recipe-img-container">
-                    <div class="watermark" style="font-size:14px; padding:8px 15px;">UBISA.GE</div>
-                    <img src="${item.img}" class="recipe-img" onerror="this.src='https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=800'">
-                </div>
-                
-                <div class="similar-section">
-                    <h4 style="font-size:12px; color:var(--text-gray); text-transform:uppercase; margin:0">ჩვენ გირჩევთ ! ! !</h4>
-                    <div class="similar-grid">
-                        ${randomThree.map(s => `
-                            <div class="similar-card" onclick="openRecipe(${s.id})">
-                                <img src="${s.img}" onerror="this.src='https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=400'">
-                                <span>${s.name}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <div class="comments-section">
-                    <h4 style="font-size:12px; color:var(--text-gray); text-transform:uppercase; margin-bottom:15px">კომენტარები</h4>
-                    <div class="comment-form">
-                        <textarea placeholder="დატოვეთ თქვენი აზრი..."></textarea>
-                        <button class="comment-btn">გაგზავნა</button>
-                    </div>
-                    <div class="comments-list">
-                        <div class="comment-item">
-                            <div class="comment-author">მარიამი</div>
-                            <div class="comment-text">ძალიან გემრიელი გამოვიდა, მადლობა რეცეპტისთვის!</div>
-                            <div class="comment-author">სოფო</div>
-                            <div class="comment-text">მადლობა დიდი :*:*:*</div>
-                            <div class="comment-author">გიორგი</div>
-                            <div class="comment-text">გთხოვთ გაზიარების ღილაკი გაუკეთოთ რეცეპტებს,ამდლობა წინასწარ.</div>
-                        </div>
-                    </div>
-                </div>
+    <!-- ჰედერი საძიებო სისტემით -->
+    <header>
+        <div class="container">
+            <h1>საქართველოს საინფორმაციო გზამკვლევი</h1>
+            <p>სახელმწიფო უწყებების, კლინიკების, ფინანსური, სავაჭრო და გასართობი ობიექტების ერთიანი მონაცემთა ბაზა</p>
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-box" placeholder="ჩაწერეთ სახელი, ნომერი ან მისამართი...">
             </div>
+        </div>
+    </header>
 
-            <div>
-                <h2>${item.name}</h2>
-                <div class="info-bar">
-                    <div class="info-item"><b>${item.time}</b><span>მომზადება</span></div>
-                    <div class="info-item"><b>${item.por}</b><span>პორცია</span></div>
-                    <div class="info-item"><b>${item.cal}</b><span>კალორია</span></div>
-                    <div class="info-item"><b>${item.views}</b><span>ნახვები</span></div>
-                    <div class="info-item"><b>${item.cat}</b><span>კატეგორია</span></div>
-                
-                </div>
-                <h3>ინგრედიენტები</h3>
-                <ul class="ingredients-list">${item.ing.map(i => `<li>${i}</li>`).join('')}</ul>
-                <h3 style="margin-top:40px">მომზადება</h3>
-                <p style="line-height:1.9; color:#4b5563; font-size:16px;">${item.text}</p>
-            </div>
-        `;
-    }
+    <!-- ძირითადი კონტენტი -->
+    <div class="container">
+        <div id="no-results">🔍 სამწუხაროდ, მსგავსი ობიექტი ვერ მოიძებნა...</div>
+        <div id="accordion-container"></div>
+    </div>
 
-    function goHome() {
-        document.getElementById('recipe-page').style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
-    }
+    <!-- მონაცემთა ბაზა და ლოგიკა (ზუსტად უცვლელი შინაარსი) -->
+    <script>
+        const database = [
+            // --- სახელმწიფო ორგანოები და უწყებები ---
+            {
+                id: "state",
+                categoryName: "სახელმწიფო ორგანოები და უწყებები",
+                title: "საქართველოს პარლამენტი",
+                phone: "2 281 742",
+                address: "თბილისი, შოთა რუსთაველის გამზ. 8",
+                website: "https://parliament.ge"
+            },
+            {
+                id: "state",
+                categoryName: "სახელმწიფო ორგანოები და უწყებები",
+                title: "თბილისის მერია",
+                phone: "2 722 222",
+                address: "თბილისი, ჟიული შარტავას ქ. 7",
+                website: "https://tbilisi.gov.ge"
+            },
+            {
+                id: "state",
+                categoryName: "სახელმწიფო ორგანოები და უწყებები",
+                title: "იუსტიციის სახლი",
+                phone: "2 405 405",
+                address: "თბილისი, სანაპიროს ქ. 2",
+                website: "https://psh.gov.ge"
+            },
+            {
+                id: "state",
+                categoryName: "სახელმწიფო ორგანოები და უწყებები",
+                title: "საქართველოს მთავრობის ადმინისტრაცია",
+                phone: "111",
+                address: "თბილისი, ინგოროყვას ქ. 7",
+                website: "https://gov.ge"
+            },
 
-    // Initial load
-    renderCards();
-</script>
-<script>
-    // ველოდებით გვერდის სრულად ჩატვირთვას
-    document.addEventListener("DOMContentLoaded", function () {
-        const searchInput = document.getElementById('recipeSearch');
-        const recipes = document.querySelectorAll('.recipe');
-        const noResultsMessage = document.getElementById('noResultsMessage');
+            // --- კლინიკები და საავადმყოფოები ---
+            {
+                id: "hospitals",
+                categoryName: "კლინიკები და საავადმყოფოები",
+                title: "ნიუ ჰოსპიტალს (New Hospitals)",
+                phone: "2 190 190",
+                address: "თბილისი, კრწანისის ქ. 12",
+                website: "https://newhospitals.ge"
+            },
+            {
+                id: "hospitals",
+                categoryName: "კლინიკები და საავადმყოფოები",
+                title: "ავერსის კლინიკა (ცენტრალური)",
+                phone: "2 500 700",
+                address: "თბილისი, აკაკი წერეთლის გამზ. 141ა",
+                website: "https://aversiclinic.ge"
+            },
+            {
+                id: "hospitals",
+                categoryName: "კლინიკები და საავადმყოფოები",
+                title: "ევექსის კლინიკები",
+                phone: "2 550 505",
+                address: "თბილისი, ქავთარაძის ქ. 16",
+                website: "https://evex.ge"
+            },
 
-        if (searchInput) {
-            searchInput.addEventListener('input', function() {
-                const searchQuery = this.value.toLowerCase().trim();
-                let foundAny = false;
+            // --- აფთიაქები ---
+            {
+                id: "pharmacies",
+                categoryName: "აფთიაქები",
+                title: "ავერსი აფთიაქი (საინფორმაციო)",
+                phone: "2 987 878",
+                address: "ყველა უბანში და რეგიონში (24/7 ფილიალები)",
+                website: "https://aversi.ge"
+            },
+            {
+                id: "pharmacies",
+                categoryName: "აფთიაქები",
+                title: "პსპ აფთიაქი (PSP Pharmacy)",
+                phone: "2 404 040",
+                address: "ფართო ქსელი მთელი საქართველოს მასშტაბით",
+                website: "https://psp.ge"
+            },
+            {
+                id: "pharmacies",
+                categoryName: "აფთიაქები",
+                title: "ჯიპისი (GPC აფთიაქი)",
+                phone: "2 940 700",
+                address: "თბილისი და რეგიონები",
+                website: "https://gpc.ge"
+            },
 
-                recipes.forEach(recipe => {
-                    const recipeTitle = recipe.querySelector('h2').textContent.toLowerCase();
-                    
-                    if (recipeTitle.includes(searchQuery)) {
-                        recipe.style.display = 'block';
-                        foundAny = true;
-                    } else {
-                        recipe.style.display = 'none';
-                    }
-                });
+            // --- რესტორნები და კაფეები ---
+            {
+                id: "restaurants",
+                categoryName: "რესტორნები და კაფეები",
+                title: "რესტორნების ქსელი „წისქვილი ჯგუფი“",
+                phone: "2 530 797",
+                address: "თბილისი: ბელიაშვილის ქც. / წყნეთის გზატკეცილი / ვახუშტი ბაგრატიონის ხიდი",
+                website: "https://tsiskvili.ge"
+            },
+            {
+                id: "restaurants",
+                categoryName: "რესტორნები და კაფეები",
+                title: "შუხმანი ვაინ ბარი (Schuchmann Wine Bar)",
+                phone: "032 2 601 555",
+                address: "თბილისი, სიონის ქ. 8 (კარვასლა)",
+                website: "https://schuchmann-wine.com"
+            },
+            {
+                id: "restaurants",
+                categoryName: "რესტორნები და კაფეები",
+                title: "რესტორანი „ამაყი“ (Tabla/Proud)",
+                phone: "2 601 111",
+                address: "თბილისი, ილია ჭავჭავაძის გამზ. 33",
+                website: "https://tabla.ge"
+            },
 
-                // თუ არაფერი მოიძებნა, გამოაჩენს შეტყობინებას
-                if (noResultsMessage) {
-                    noResultsMessage.style.display = foundAny ? 'none' : 'block';
+            // --- ბანკები და ფინანსები ---
+            {
+                id: "finance",
+                categoryName: "ბანკები და ფინანსები",
+                title: "საქართველოს ბანკი (Bank of Georgia)",
+                phone: "2 444 444",
+                address: "სათაო: თბილისი, ა. ყაზბეგის გამზ. 29ა",
+                website: "https://bog.ge"
+            },
+            {
+                id: "finance",
+                categoryName: "ბანკები და ფინანსები",
+                title: "თიბისი ბანკი (TBC Bank)",
+                phone: "2 272 727",
+                address: "სათაო: თბილისი, კ. მარჯანიშვილის ქ. 7",
+                website: "https://tbcbank.ge"
+            }
+        ];
+
+        // უნიკალური კატეგორიების ამოღება
+        function getUniqueCategories(data) {
+            const categories = {};
+            data.forEach(item => {
+                if (!categories[item.id]) {
+                    categories[item.id] = item.categoryName;
                 }
             });
+            return categories;
         }
-    });
-</script>
+
+        // აკორდეონების გენერირება (უცვლელი ფუნქციონალით)
+        function renderAccordion(filterText = '') {
+            const container = document.getElementById('accordion-container');
+            const categories = getUniqueCategories(database);
+            const query = filterText.toLowerCase().trim();
+            
+            let finalHTML = '';
+            let globalHasResults = false;
+
+            for (let catId in categories) {
+                const filteredItems = database.filter(item => {
+                    if (item.id !== catId) return false;
+                    return (
+                        item.title.toLowerCase().includes(query) ||
+                        item.phone.toLowerCase().includes(query) ||
+                        item.address.toLowerCase().includes(query) ||
+                        item.categoryName.toLowerCase().includes(query)
+                    );
+                });
+
+                if (filteredItems.length > 0) {
+                    globalHasResults = true;
+                    const isExpanded = query.length > 0 ? 'active' : '';
+
+                    let catHTML = `
+                        <div class="category-accordion ${isExpanded}" id="accordion-${catId}">
+                            <div class="category-header" onclick="toggleAccordion('${catId}')">
+                                <div class="category-title">
+                                    <span class="icon">●</span> ${categories[catId]} (${filteredItems.length})
+                                </div>
+                                <div class="toggle-icon">▲</div>
+                            </div>
+                            <div class="category-content">
+                                <div class="grid-container">
+                    `;
+
+                    filteredItems.forEach(item => {
+                        catHTML += `
+                            <div class="card">
+                                <div class="card-content">
+                                    <h3>${item.title}</h3>
+                                    <div class="info-item">
+                                        <span class="info-label">კონტაქტი:</span>
+                                        <span class="info-value"><span class="hotline">${item.phone}</span></span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">მისამართი:</span>
+                                        <span class="info-value">${item.address}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">ვებ-გვერდი:</span>
+                                        <span class="info-value">
+                                            <a href="${item.website}" target="_blank">${item.website.replace('https://', '')}</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    catHTML += `
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    finalHTML += catHTML;
+                }
+            }
+
+            container.innerHTML = finalHTML;
+            document.getElementById('no-results').style.display = globalHasResults ? 'none' : 'block';
+        }
+
+        // ტოგლინგის ფუნქცია
+        function toggleAccordion(catId) {
+            const accordionElement = document.getElementById(`accordion-${catId}`);
+            if (accordionElement) {
+                accordionElement.classList.toggle('active');
+            }
+        }
+
+        // ძებნის ივენთი
+        document.getElementById('searchInput').addEventListener('input', function() {
+            renderAccordion(this.value);
+        });
+
+        // სტარტი
+        renderAccordion();
+    </script>
 </body>
 </html>
