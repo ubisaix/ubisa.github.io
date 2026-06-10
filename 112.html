@@ -5,49 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>საქართველოს საინფორმაციო გზამკვლევი</title>
     <style>
-        /* ზოგადი სტილები */
+        /* --- თანამედროვე CSS ცვლადები და გლობალური სტილები --- */
+        :root {
+            --bg-dark: #090d16;
+            --panel-bg: rgba(30, 41, 59, 0.4);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --primary: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.15);
+            --accent: #818cf8;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             scroll-behavior: smooth;
         }
 
         body {
-            background: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)), 
-                        url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920') no-repeat center center fixed;
-            background-size: cover;
-            color: #f1f5f9;
+            background: radial-gradient(circle at 50% 0%, #1e2640 0%, var(--bg-dark) 70%);
+            background-attachment: fixed;
+            color: var(--text-main);
             min-height: 100vh;
-            padding-bottom: 60px;
+            padding-bottom: 80px;
+            overflow-x: hidden;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
         }
 
-        /* ჰედერი და ძებნა */
+        /* --- დახვეწილი ჰედერი --- */
         header {
             text-align: center;
-            padding: 50px 0 30px;
+            padding: 70px 0 40px;
+            position: relative;
         }
 
         header h1 {
-            font-size: 2.5rem;
-            color: #fff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 10px;
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 40%, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
         }
 
         header p {
-            color: #cbd5e1;
-            font-size: 1.1rem;
-            margin-bottom: 30px;
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin: 0 auto 35px;
+            line-height: 1.6;
         }
 
+        /* --- ფუტურისტული საძიებო ველი --- */
         .search-container {
             max-width: 600px;
             margin: 0 auto;
@@ -56,192 +78,238 @@
 
         .search-box {
             width: 100%;
-            padding: 16px 25px;
+            padding: 18px 28px;
             font-size: 1.1rem;
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             color: #fff;
             outline: none;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .search-box:focus {
-            border-color: #38bdf8;
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
-            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--primary);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            background: rgba(15, 23, 42, 0.8);
         }
 
         .search-box::placeholder {
-            color: #94a3b8;
+            color: #64748b;
         }
 
-        /* აკორდეონის სტილები */
+        /* --- პრემიუმ აკორდეონები (Glassmorphism) --- */
         .category-accordion {
             margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .category-header {
-            background: rgba(255, 255, 255, 0.04);
-            padding: 20px 25px;
+            padding: 22px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
             user-select: none;
-            transition: background 0.2s;
+            transition: var(--transition);
         }
 
         .category-header:hover {
-            background: rgba(56, 189, 248, 0.08);
+            background: rgba(255, 255, 255, 0.02);
         }
 
         .category-title {
-            font-size: 1.4rem;
-            color: #38bdf8;
+            font-size: 1.35rem;
+            color: #fff;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 14px;
+            transition: var(--transition);
+        }
+
+        .category-title span.icon {
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .toggle-icon {
-            font-size: 1.1rem;
-            color: #94a3b8;
-            transition: transform 0.3s ease;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.05);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
         }
 
-        /* შიგთავსის დამალვა/გამოჩენა */
+        /* --- ანიმაციური კონტენტის ჩამოშლა --- */
         .category-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out, padding 0.3s ease;
-            padding: 0 25px;
-            background: rgba(15, 23, 42, 0.4);
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
+            padding: 0 28px;
+            background: rgba(9, 13, 22, 0.4);
         }
 
-        /* როცა აქტიურია (გახსნილია კატეგორია) */
+        /* აქტიური აკორდეონის მდგომარეობა */
+        .category-accordion.active {
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .category-accordion.active .category-title {
+            color: var(--primary);
+        }
+
         .category-accordion.active .category-content {
-            max-height: 2000px; /* საკმარისი სიმაღლე ბარათებისთვის */
-            padding: 25px;
+            max-height: 2500px; /* თავსებადია დიდი კონტენტისთვის */
+            padding: 30px 28px 32px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
         }
 
         .category-accordion.active .toggle-icon {
             transform: rotate(180deg);
-            color: #38bdf8;
+            color: var(--primary);
+            background: rgba(56, 189, 248, 0.1);
+            border-color: rgba(56, 189, 248, 0.2);
         }
 
-        .category-accordion.active {
-            border-color: rgba(56, 189, 248, 0.25);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        /* ბადე (Grid) */
+        /* --- ბარათების ბადე (Grid) --- */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
         }
 
-        /* ბარათები */
+        /* --- სუპერ თანამედროვე ბარათები --- */
         .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            padding: 20px;
-            transition: all 0.25s ease;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            transition: var(--transition);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
         }
 
         .card:hover {
-            transform: translateY(-2px);
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(56, 189, 248, 0.25);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
         }
 
         .card-content h3 {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
+            font-weight: 600;
             color: #fff;
-            margin-bottom: 15px;
-            line-height: 1.4;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
 
-        /* ინფო ელემენტები */
+        /* --- ინფო ველები --- */
         .info-item {
-            margin-bottom: 10px;
-            font-size: 0.9rem;
+            margin-bottom: 14px;
+            font-size: 0.95rem;
             display: flex;
             align-items: flex-start;
-            line-height: 1.4;
+            line-height: 1.5;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
         }
 
         .info-label {
-            font-weight: bold;
-            color: #94a3b8;
-            min-width: 95px;
+            font-weight: 500;
+            color: var(--text-muted);
+            min-width: 100px;
             flex-shrink: 0;
+            font-size: 0.9rem;
         }
 
         .info-value {
             color: #e2e8f0;
         }
 
+        /* კონტაქტის (Hotline) ახალი სტილი */
         .hotline {
-            background: rgba(56, 189, 248, 0.12);
-            padding: 2px 8px;
-            border-radius: 4px;
-            color: #38bdf8;
-            font-weight: bold;
-            border: 1px solid rgba(56, 189, 248, 0.2);
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(129, 140, 242, 0.1));
+            padding: 4px 12px;
+            border-radius: 6px;
+            color: var(--primary);
+            font-weight: 600;
+            border: 1px solid rgba(56, 189, 248, 0.15);
             display: inline-block;
+            letter-spacing: 0.5px;
         }
 
+        /* ლინკები */
         .info-value a {
-            color: #38bdf8;
+            color: var(--primary);
             text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
         }
 
         .info-value a:hover {
-            text-decoration: underline;
+            color: #7dd3fc;
+            text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
         }
 
+        /* --- "შედეგი ვერ მოიძებნა" შეტყობინება --- */
         #no-results {
             text-align: center;
-            font-size: 1.3rem;
-            color: #94a3b8;
-            margin: 60px 0;
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin: 80px 0;
+            padding: 30px;
+            background: var(--panel-bg);
+            border-radius: var(--radius-lg);
+            border: 1px dashed var(--border-color);
             display: none;
         }
     </style>
 </head>
 <body>
 
+    <!-- ჰედერი საძიებო სისტემით -->
     <header>
         <div class="container">
             <h1>საქართველოს საინფორმაციო გზამკვლევი</h1>
-            <p>მოძებნეთ და ჩამოშალეთ სასურველი კატეგორია ინფორმაციის მისაღებად</p>
+            <p>სახელმწიფო უწყებების, კლინიკების, ფინანსური, სავაჭრო და გასართობი ობიექტების ერთიანი მონაცემთა ბაზა</p>
             <div class="search-container">
                 <input type="text" id="searchInput" class="search-box" placeholder="ჩაწერეთ სახელი, ნომერი ან მისამართი...">
             </div>
         </div>
     </header>
 
+    <!-- ძირითადი კონტენტი -->
     <div class="container">
-        <div id="no-results">სამწუხაროდ, მსგავსი ობიექტი ვერ მოიძებნა...</div>
+        <div id="no-results">🔍 სამწუხაროდ, მსგავსი ობიექტი ვერ მოიძებნა...</div>
         <div id="accordion-container"></div>
     </div>
 
+    <!-- მონაცემთა ბაზა და ლოგიკა (ზუსტად უცვლელი შინაარსი) -->
     <script>
-        // 1. მონაცემთა ბაზა განახლებული კატეგორიებით (პარლამენტი, რესტორნები, აფთიაქები...)
         const database = [
             // --- სახელმწიფო ორგანოები და უწყებები ---
             {
@@ -374,7 +442,7 @@
             }
         ];
 
-        // 2. უნიკალური კატეგორიების ამოღება ბაზიდან
+        // უნიკალური კატეგორიების ამოღება
         function getUniqueCategories(data) {
             const categories = {};
             data.forEach(item => {
@@ -385,7 +453,7 @@
             return categories;
         }
 
-        // 3. აკორდეონების გენერირება და ეკრანზე გამოტანა
+        // აკორდეონების გენერირება (უცვლელი ფუნქციონალით)
         function renderAccordion(filterText = '') {
             const container = document.getElementById('accordion-container');
             const categories = getUniqueCategories(database);
@@ -395,7 +463,6 @@
             let globalHasResults = false;
 
             for (let catId in categories) {
-                // ვფილტრავთ ამ კონკრეტული კატეგორიის ობიექტებს
                 const filteredItems = database.filter(item => {
                     if (item.id !== catId) return false;
                     return (
@@ -406,20 +473,17 @@
                     );
                 });
 
-                // თუ ამ კატეგორიაში რამე მოიძებნა, ვაწყობთ აკორდეონს
                 if (filteredItems.length > 0) {
                     globalHasResults = true;
-                    
-                    // თუ მომხმარებელი რამეს ეძებს, კატეგორია ავტომატურად გახსნილი იყოს ('active')
                     const isExpanded = query.length > 0 ? 'active' : '';
 
                     let catHTML = `
                         <div class="category-accordion ${isExpanded}" id="accordion-${catId}">
                             <div class="category-header" onclick="toggleAccordion('${catId}')">
                                 <div class="category-title">
-                                    <span>📁</span> ${categories[catId]} (${filteredItems.length})
+                                    <span class="icon">●</span> ${categories[catId]} (${filteredItems.length})
                                 </div>
-                                <div class="toggle-icon">▼</div>
+                                <div class="toggle-icon">▲</div>
                             </div>
                             <div class="category-content">
                                 <div class="grid-container">
@@ -459,12 +523,10 @@
             }
 
             container.innerHTML = finalHTML;
-
-            // "ვერაფერი მოიძებნა" ბლოკის მართვა
             document.getElementById('no-results').style.display = globalHasResults ? 'none' : 'block';
         }
 
-        // 4. კატეგორიის გახსნა/დაკეტვის ფუნქცია (Toggle)
+        // ტოგლინგის ფუნქცია
         function toggleAccordion(catId) {
             const accordionElement = document.getElementById(`accordion-${catId}`);
             if (accordionElement) {
@@ -472,12 +534,12 @@
             }
         }
 
-        // 5. რეალურ დროში ძებნა
+        // ძებნის ივენთი
         document.getElementById('searchInput').addEventListener('input', function() {
             renderAccordion(this.value);
         });
 
-        // გვერდის პირველადი ჩატვირთვა
+        // სტარტი
         renderAccordion();
     </script>
 </body>
