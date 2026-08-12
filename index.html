@@ -298,8 +298,8 @@
         </div>
         <div class="divider"></div>
         <div class="summary-item">
-            <div class="label" id="sumLabel4">საერთო ღირებულება</div>
-            <div class="value" id="sumVal4">0.0 ₾</div>
+            <div class="label" id="sumLabel4">ცემენტი</div>
+            <div class="value" id="sumVal4">0 ტომარა</div>
         </div>
     </div>
 
@@ -503,8 +503,9 @@
         document.getElementById('sumLabel3').innerText = 'ქვიშა (მ³)';
         document.getElementById('sumVal3').innerText = sandVolume + ' მ³';
 
-        document.getElementById('sumLabel4').innerText = 'საერთო ღირებულება';
-        document.getElementById('sumVal4').innerText = totalCost.toFixed(1) + ' ₾';
+        // ჩასწორდა: ცემენტის ტომრები
+        document.getElementById('sumLabel4').innerText = 'ცემენტი';
+        document.getElementById('sumVal4').innerText = cementBags + ' ტომარა';
 
         document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
 
@@ -561,6 +562,9 @@
             hangersCount = 0;
         }
 
+        // შპაკლის გამოთვლა (შურუპებისა და პირების/ნაკერების ამოსავსებად - საშუალოდ 1 ტომარა 20მ²-ზე)
+        const puttyBags = Math.ceil(area / 20);
+
         const sheetsCost = sheetsCount * sheetPrice;
         const profilesCost = (mainProfilesCount * mainProfilePrice) + (guideProfilesCount * guideProfilePrice);
         const accessoriesCost = (hangersCount * hangerPrice) + (area * fixingsCostPerSqM);
@@ -568,7 +572,7 @@
 
         lastCalculationData = {
             category: 'გიფსოკარდონის გამოთვლა',
-            typeName, area, sheetsCount, mainProfilesCount, guideProfilesCount, hangersCount,
+            typeName, area, sheetsCount, mainProfilesCount, guideProfilesCount, hangersCount, puttyBags,
             sheetsCost, profilesCost, accessoriesCost, totalCost
         };
 
@@ -581,8 +585,9 @@
         document.getElementById('sumLabel3').innerText = type === 'ceiling' ? 'პეპლები' : 'პროფილები';
         document.getElementById('sumVal3').innerText = type === 'ceiling' ? hangersCount + ' ცალი' : (mainProfilesCount + guideProfilesCount) + ' ცალი';
 
-        document.getElementById('sumLabel4').innerText = 'საერთო ღირებულება';
-        document.getElementById('sumVal4').innerText = totalCost.toFixed(1) + ' ₾';
+        // ჩასწორდა: შპაკლი ტომრებში
+        document.getElementById('sumLabel4').innerText = 'შპაკლი';
+        document.getElementById('sumVal4').innerText = puttyBags + ' ტომარა';
 
         document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
 
@@ -648,8 +653,9 @@
         document.getElementById('sumLabel3').innerText = 'სოლები (SVP)';
         document.getElementById('sumVal3').innerText = wedgesCount + ' ცალი';
 
-        document.getElementById('sumLabel4').innerText = 'საერთო ღირებულება';
-        document.getElementById('sumVal4').innerText = totalCost.toFixed(1) + ' ₾';
+        // ჩასწორდა: წებოცემენტის ტომრები
+        document.getElementById('sumLabel4').innerText = 'წებოცემენტი';
+        document.getElementById('sumVal4').innerText = glueBags + ' ტომარა';
 
         document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
 
@@ -678,40 +684,32 @@
         let roofTypeName = '';
         let inclineFactor = 1.0;
 
-        // სავარაუდო გვერდის სიგრძე კვადრატული ფართობისთვის
         const sideLength = Math.sqrt(houseArea);
 
         if (roofType === 'single') {
             roofTypeName = 'ერთფერდა (დახრილი)';
-            // პითაგორა 1 დახრილობაზე: sqrt(side^2 + height^2) / side
             inclineFactor = Math.sqrt(Math.pow(sideLength, 2) + Math.pow(ridgeHeight, 2)) / sideLength;
         } else if (roofType === 'double') {
             roofTypeName = 'ორფერდა (სტანდარტული)';
-            // პითაგორა ნახევარ სიგანეზე: sqrt((side/2)^2 + height^2) / (side/2)
             const halfSide = sideLength / 2;
             inclineFactor = Math.sqrt(Math.pow(halfSide, 2) + Math.pow(ridgeHeight, 2)) / halfSide;
         } else if (roofType === 'quad') {
             roofTypeName = 'ოთხფერდა (კონვერტისებური)';
             const halfSide = sideLength / 2;
-            inclineFactor = (Math.sqrt(Math.pow(halfSide, 2) + Math.pow(ridgeHeight, 2)) / halfSide) * 1.08; // დამატებითი კუთხეები
+            inclineFactor = (Math.sqrt(Math.pow(halfSide, 2) + Math.pow(ridgeHeight, 2)) / halfSide) * 1.08;
         }
 
-        // რეალური დახრილი ფართობი (+10% გადავიდეს გადახურვის ნავებზე/გამოშვებებზე)
         const realRoofArea = houseArea * inclineFactor * 1.10;
 
-        // 1. თუნუქი/ჟესტი (+15% გადაფარვა და ჭრა) ~ 25 ლარი 1 მ²
         const metalArea = Math.ceil(realRoofArea * 1.15);
         const metalPricePerSqM = 25;
         const metalCost = metalArea * metalPricePerSqM;
 
-        // 2. ხის მასალა (კოჭები/რეიკები - საშუალოდ 0.045 მ³ ხე 1 მ²-ზე) ~ 650 ლარი 1 კუბი
         const woodVolume = parseFloat((realRoofArea * 0.045).toFixed(2));
         const woodCubicPrice = 650;
         const woodCost = woodVolume * woodCubicPrice;
 
-        // 3. სამაგრები, ქედები და აქსესუარები (~ 6 ლარი 1 მ²-ზე)
         const accessoriesCost = realRoofArea * 6;
-
         const totalCost = metalCost + woodCost + accessoriesCost;
 
         lastCalculationData = {
@@ -720,7 +718,6 @@
             metalArea, woodVolume, metalCost, woodCost, accessoriesCost, totalCost
         };
 
-        // UI განახლება
         document.getElementById('sumLabel1').innerText = 'რეალური ფართობი';
         document.getElementById('sumVal1').innerText = realRoofArea.toFixed(1) + ' მ²';
 
@@ -730,12 +727,12 @@
         document.getElementById('sumLabel3').innerText = 'ხის მასალა';
         document.getElementById('sumVal3').innerText = woodVolume + ' მ³';
 
-        document.getElementById('sumLabel4').innerText = 'საერთო ღირებულება';
-        document.getElementById('sumVal4').innerText = totalCost.toFixed(1) + ' ₾';
+        // ჩასწორდა: აქსესუარების ხარჯი (შურუპი, ლურსმანი, ქედები და ა.შ.)
+        document.getElementById('sumLabel4').innerText = 'აქსესუარების ხარჯი';
+        document.getElementById('sumVal4').innerText = accessoriesCost.toFixed(1) + ' ₾';
 
         document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
 
-        // დიაგრამა
         let p1 = 0, p2 = 0, p3 = 0;
         if (totalCost > 0) {
             p1 = (metalCost / totalCost) * 100;
@@ -797,7 +794,8 @@
 1. გიფსოს ფილა: ${d.sheetsCount} ცალი -> ${d.sheetsCost.toFixed(2)} ₾
 2. ძირითადი პროფილები: ${d.mainProfilesCount} ცალი
 3. მიმმართველი პროფილები: ${d.guideProfilesCount} ცალი
-${d.hangersCount > 0 ? `4. პეპლები (სამაგრები): ${d.hangersCount} ცალი\n` : ''}5. შურუპები/დუბელები/ლენტი -> ${d.accessoriesCost.toFixed(2)} ₾
+${d.hangersCount > 0 ? `4. პეპლები (სამაგრები): ${d.hangersCount} ცალი\n` : ''}5. შპაკლი: ${d.puttyBags} ტომარა
+6. შურუპები/დუბელები/ლენტი -> ${d.accessoriesCost.toFixed(2)} ₾
 
 -----------------------------------------
 სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
