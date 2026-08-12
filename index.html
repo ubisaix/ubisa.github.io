@@ -462,6 +462,38 @@
             </div>
         </div>
 
+        <!-- 6. არმატურის გამოთვლის ველები -->
+        <div id="rebarInputs" class="hidden">
+            <div class="input-row" style="margin-bottom: 14px;">
+                <label for="rebarArea">მოსაქსოვი ფართობი (მ²)</label>
+                <input type="number" id="rebarArea" class="custom-input" value="50" step="0.1">
+            </div>
+
+            <div class="input-row" style="margin-bottom: 14px;">
+                <label for="rebarStep">ბადის ბიჯი (სმ)</label>
+                <input type="number" id="rebarStep" class="custom-input" value="20" step="1">
+            </div>
+
+            <div class="input-row" style="margin-bottom: 14px;">
+                <label for="rebarDiameter">არმატურის დიამეტრი (მმ)</label>
+                <select id="rebarDiameter" class="custom-select">
+                    <option value="6">6 მმ</option>
+                    <option value="8">8 მმ</option>
+                    <option value="10">10 მმ</option>
+                    <option value="12" selected>12 მმ</option>
+                    <option value="14">14 მმ</option>
+                    <option value="16">16 მმ</option>
+                    <option value="18">18 მმ</option>
+                    <option value="20">20 მმ</option>
+                </select>
+            </div>
+
+            <div class="input-row">
+                <label for="rebarTonPrice">1 ტონა არმატურის ფასი (₾)</label>
+                <input type="number" id="rebarTonPrice" class="custom-input" value="2200" step="10">
+            </div>
+        </div>
+
         <!-- ღილაკები -->
         <div class="btn-container">
             <button class="action-btn calc-btn" onclick="recalculate()">გამოთვლა</button>
@@ -471,7 +503,7 @@
 </div>
 
 <script>
-    const categories = ['კედლის გამოთვლა', 'გიფსოკარდონის გამოთვლა', 'კაფელის გამოთვლა', 'სახურავის გამოთვლა', 'ბეტონის ფილა'];
+    const categories = ['კედლის გამოთვლა', 'გიფსოკარდონის გამოთვლა', 'კაფელის გამოთვლა', 'სახურავის გამოთვლა', 'ბეტონის ფილა', 'არმატურის გამოთვლა'];
     let currentCategoryIndex = 0;
     let lastCalculationData = null;
 
@@ -485,6 +517,7 @@
         document.getElementById('tileInputs').classList.add('hidden');
         document.getElementById('roofInputs').classList.add('hidden');
         document.getElementById('concreteInputs').classList.add('hidden');
+        document.getElementById('rebarInputs').classList.add('hidden');
 
         // აქტიური სექციის გამოჩენა
         if (currentCategoryIndex === 0) {
@@ -497,6 +530,8 @@
             document.getElementById('roofInputs').classList.remove('hidden');
         } else if (currentCategoryIndex === 4) {
             document.getElementById('concreteInputs').classList.remove('hidden');
+        } else if (currentCategoryIndex === 5) {
+            document.getElementById('rebarInputs').classList.remove('hidden');
         }
         recalculate();
     }
@@ -522,6 +557,8 @@
             calculateRoof();
         } else if (currentCategoryIndex === 4) {
             calculateConcrete();
+        } else if (currentCategoryIndex === 5) {
+            calculateRebar();
         }
     }
 
@@ -805,17 +842,15 @@
         const thicknessCm = parseFloat(document.getElementById('concreteThickness').value) || 0;
         
         const thicknessM = thicknessCm / 100;
-        const volumeM3 = area * thicknessM; // ბეტონის მოცულობა კუბებში
+        const volumeM3 = area * thicknessM;
 
-        // სტანდარტული პროპორცია 1 კუბ ბეტონზე (B20 / M250 მარკა):
-        // ცემენტი: ~320 კგ (~6.4 ტომარა 50კგ-იანი), ქვიშა: ~0.45 მ³, ღორღი: ~0.8 მ³
         const cementBags = Math.ceil(volumeM3 * 6.4);
         const sandVolume = parseFloat((volumeM3 * 0.45).toFixed(2));
         const gravelVolume = parseFloat((volumeM3 * 0.8).toFixed(2));
 
-        const sandPrice = 50;      // 1 კუბი ქვიშა = 50 ლარი
-        const gravelPrice = 50;    // 1 კუბი შებენი = 50 ლარი
-        const cementPrice = 17;    // 1 ტომარა ცემენტი = 17 ლარი
+        const sandPrice = 50;
+        const gravelPrice = 50;
+        const cementPrice = 17;
 
         const sandCost = sandVolume * sandPrice;
         const gravelCost = gravelVolume * gravelPrice;
@@ -856,6 +891,70 @@
         document.getElementById('labelPart1').innerText = `ქვიშა (${Math.round(sandCost)}₾)`;
         document.getElementById('labelPart2').innerText = `შებენი (${Math.round(gravelCost)}₾)`;
         document.getElementById('labelPart3').innerText = `ცემენტი (${Math.round(cementCost)}₾)`;
+    }
+
+    // 6. არმატურის გამოთვლა
+    function calculateRebar() {
+        const area = parseFloat(document.getElementById('rebarArea').value) || 0;
+        const stepCm = parseFloat(document.getElementById('rebarStep').value) || 20;
+        const diameterMm = parseInt(document.getElementById('rebarDiameter').value) || 12;
+        const tonPrice = parseFloat(document.getElementById('rebarTonPrice').value) || 0;
+
+        // არმატურის 1 მეტრის წონა (კგ/მ) დიამეტრის მიხედვით
+        const weightsMap = {
+            6: 0.222,
+            8: 0.395,
+            10: 0.617,
+            12: 0.888,
+            14: 1.210,
+            16: 1.580,
+            18: 2.000,
+            20: 2.470
+        };
+
+        const weightPerMeter = weightsMap[diameterMm] || 0.888;
+        const stepM = stepCm / 100;
+
+        // 1 მ²-ზე ორმაგი ბადის ქსოვისას სჭირდება: (2 / stepM) მეტრი არმატურა
+        // დამატებული 10% ცდომილება/გადაბმის (გადაფარვის) ხარჯი
+        const totalMeters = (area * (2 / stepM)) * 1.10;
+        const totalWeightKg = totalMeters * weightPerMeter;
+        const totalTons = totalWeightKg / 1000;
+
+        const totalCost = totalTons * tonPrice;
+
+        // დამხმარე მასალა - სამუშაო მავთული (კავშირები)
+        // 1 ტონა არმატურაზე საშუალოდ 10-15 კგ მოსაქსოვი მავთული
+        const wireKg = Math.ceil(totalTons * 12);
+
+        lastCalculationData = {
+            category: 'არმატურის გამოთვლა',
+            area, stepCm, diameterMm, tonPrice,
+            totalMeters, totalWeightKg, totalTons, wireKg, totalCost
+        };
+
+        document.getElementById('sumLabel1').innerText = 'მოსაქსოვი ფართობი';
+        document.getElementById('sumVal1').innerText = area.toFixed(1) + ' მ²';
+
+        document.getElementById('sumLabel2').innerText = 'სულ სიგრძე';
+        document.getElementById('sumVal2').innerText = Math.round(totalMeters) + ' მ';
+
+        document.getElementById('sumLabel3').innerText = 'საჭირო წონა';
+        document.getElementById('sumVal3').innerText = totalTons.toFixed(3) + ' ტონა';
+
+        document.getElementById('sumLabel4').innerText = 'მოსაქსოვი მავთული';
+        document.getElementById('sumVal4').innerText = wireKg + ' კგ';
+
+        document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
+
+        // დიაგრამაზე არმატურის ხარჯის ჩვენება
+        document.getElementById('barPart1').style.width = '100%';
+        document.getElementById('barPart2').style.width = '0%';
+        document.getElementById('barPart3').style.width = '0%';
+
+        document.getElementById('labelPart1').innerText = `არმატურა (${Math.round(totalCost)}₾)`;
+        document.getElementById('labelPart2').innerText = `-`;
+        document.getElementById('labelPart3').innerText = `-`;
     }
 
     // შედეგის TXT ფაილად ჩამოტვირთვა
@@ -967,6 +1066,28 @@ ${d.hangersCount > 0 ? `4. პეპლები (სამაგრები): 
 1. ქვიშა: ${d.sandVolume} მ³ (1 მ³ = 50 ₾) -> ${d.sandCost.toFixed(2)} ₾
 2. ღორღი (შებენი): ${d.gravelVolume} მ³ (1 მ³ = 50 ₾) -> ${d.gravelCost.toFixed(2)} ₾
 3. ცემენტი: ${d.cementBags} ტომარა (1 ტომარა = 17 ₾) -> ${d.cementCost.toFixed(2)} ₾
+
+-----------------------------------------
+სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
+=========================================`;
+        } else if (d.category === 'არმატურის გამოთვლა') {
+            textContent = 
+`=========================================
+      სამშენებლო მასალების ხარჯთაღრიცხვა
+=========================================
+კატეგორია: არმატურის გამოთვლა
+თარიღი: ${new Date().toLocaleDateString('ka-GE')}
+
+-- პარამეტრები --
+მოსაქსოვი ფართობი: ${d.area} მ²
+ბადის ბიჯი: ${d.stepCm} სმ
+არმატურის დიამეტრი: ${d.diameterMm} მმ
+1 ტონა არმატურის ფასი: ${d.tonPrice} ₾
+
+-- საჭირო მასალები --
+1. არმატურის ჯამური სიგრძე: ~${Math.round(d.totalMeters)} მ
+2. არმატურის ჯამური წონა: ${d.totalWeightKg.toFixed(1)} კგ (${d.totalTons.toFixed(3)} ტონა)
+3. მოსაქსოვი მავთული: ~${d.wireKg} კგ
 
 -----------------------------------------
 სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
