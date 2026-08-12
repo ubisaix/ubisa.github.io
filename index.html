@@ -32,6 +32,37 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
         }
 
+        /* თანამედროვე ნავიგაციის ღილაკები სათაურის ზემოთ */
+        .top-nav-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .nav-link-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .nav-link-btn:hover {
+            background-color: #1155cc;
+            color: #ffffff;
+            border-color: #1155cc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(17, 85, 204, 0.2);
+        }
+
         .main-title {
             font-size: 26px;
             font-weight: 500;
@@ -260,6 +291,12 @@
 <body>
 
 <div class="calculator-container">
+    <!-- ზედა ნავიგაციის ღილაკები -->
+    <div class="top-nav-container">
+        <a href="#" class="nav-link-btn">მთავარი</a>
+        <a href="#" class="nav-link-btn">უბისა</a>
+    </div>
+
     <h1 class="main-title">სამშენებლო მასალების ხარჯთაღრიცხვა</h1>
 
     <h2 class="section-title">ხარჯების გადანაწილება</h2>
@@ -503,7 +540,6 @@
         document.getElementById('sumLabel3').innerText = 'ქვიშა (მ³)';
         document.getElementById('sumVal3').innerText = sandVolume + ' მ³';
 
-        // ჩასწორდა: ცემენტის ტომრები
         document.getElementById('sumLabel4').innerText = 'ცემენტი';
         document.getElementById('sumVal4').innerText = cementBags + ' ტომარა';
 
@@ -562,7 +598,6 @@
             hangersCount = 0;
         }
 
-        // შპაკლის გამოთვლა (შურუპებისა და პირების/ნაკერების ამოსავსებად - საშუალოდ 1 ტომარა 20მ²-ზე)
         const puttyBags = Math.ceil(area / 20);
 
         const sheetsCost = sheetsCount * sheetPrice;
@@ -585,7 +620,6 @@
         document.getElementById('sumLabel3').innerText = type === 'ceiling' ? 'პეპლები' : 'პროფილები';
         document.getElementById('sumVal3').innerText = type === 'ceiling' ? hangersCount + ' ცალი' : (mainProfilesCount + guideProfilesCount) + ' ცალი';
 
-        // ჩასწორდა: შპაკლი ტომრებში
         document.getElementById('sumLabel4').innerText = 'შპაკლი';
         document.getElementById('sumVal4').innerText = puttyBags + ' ტომარა';
 
@@ -653,7 +687,6 @@
         document.getElementById('sumLabel3').innerText = 'სოლები (SVP)';
         document.getElementById('sumVal3').innerText = wedgesCount + ' ცალი';
 
-        // ჩასწორდა: წებოცემენტის ტომრები
         document.getElementById('sumLabel4').innerText = 'წებოცემენტი';
         document.getElementById('sumVal4').innerText = glueBags + ' ტომარა';
 
@@ -727,7 +760,6 @@
         document.getElementById('sumLabel3').innerText = 'ხის მასალა';
         document.getElementById('sumVal3').innerText = woodVolume + ' მ³';
 
-        // ჩასწორდა: აქსესუარების ხარჯი (შურუპი, ლურსმანი, ქედები და ა.შ.)
         document.getElementById('sumLabel4').innerText = 'აქსესუარების ხარჯი';
         document.getElementById('sumVal4').innerText = accessoriesCost.toFixed(1) + ' ₾';
 
