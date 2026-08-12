@@ -254,11 +254,6 @@
             color: #ffffff;
         }
 
-        .pdf-btn {
-            background-color: #d93025;
-            color: #ffffff;
-        }
-
         .action-btn:hover {
             opacity: 0.9;
         }
@@ -267,7 +262,7 @@
             display: none !important;
         }
 
-        /* PDF შაბლონის სტილები (მხოლოდ გენერირებისას ჩანს) */
+        /* PDF შაბლონის სტილები */
         #pdfTemplate {
             display: none;
             padding: 30px;
@@ -539,11 +534,10 @@
             </div>
         </div>
 
-        <!-- ღილაკები (დაემატა PDF) -->
+        <!-- ღილაკები (დარჩა მხოლოდ გამოთვლა და ჩამოტვირთვა) -->
         <div class="btn-container">
             <button class="action-btn calc-btn" onclick="recalculate()">გამოთვლა</button>
-            <button class="action-btn download-btn" onclick="downloadTXT()">TXT ჩამოტვირთვა</button>
-            <button class="action-btn pdf-btn" onclick="downloadPDF()">PDF ჩამოტვირთვა</button>
+            <button class="action-btn download-btn" onclick="downloadPDF()">ჩამოტვირთვა</button>
         </div>
     </div>
 </div>
@@ -973,42 +967,11 @@
         document.getElementById('labelPart3').innerText = `-`;
     }
 
-    // TXT ჩამოტვირთვა
-    function downloadTXT() {
-        if (!lastCalculationData) recalculate();
-        const d = lastCalculationData;
-
-        let textContent = 
-`=========================================
-      სამშენებლო მასალების ხარჯთაღრიცხვა
-=========================================
-კატეგორია: ${d.category}
-თარიღი: ${new Date().toLocaleDateString('ka-GE')}
-
--- საჭირო მასალები --\n`;
-
-        d.items.forEach((item, index) => {
-            textContent += `${index + 1}. ${item.name}: ${item.qty} -> ${item.cost}\n`;
-        });
-
-        textContent += 
-`\n-----------------------------------------
-სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
-=========================================`;
-
-        const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `xarjtagricxva_${new Date().toISOString().slice(0, 10)}.txt`;
-        link.click();
-    }
-
-    // PDF ჩამოტვირთვა (ახალი ფუნქცია)
+    // PDF ჩამოტვირთვის ფუნქცია
     function downloadPDF() {
         if (!lastCalculationData) recalculate();
         const d = lastCalculationData;
 
-        // შევავსოთ ფარული PDF შაბლონი მონაცემებით
         document.getElementById('pdfDate').innerText = 'თარიღი: ' + new Date().toLocaleDateString('ka-GE');
         document.getElementById('pdfCategoryTitle').innerText = 'კატეგორია: ' + d.category;
 
@@ -1027,7 +990,6 @@
 
         document.getElementById('pdfTotalAmount').innerText = 'სულ ჯამი: ' + d.totalCost.toFixed(2) + ' ₾';
 
-        // დროებით გამოვაჩინოთ შაბლონი PDF-ის გენერირებისთვის
         const pdfElement = document.getElementById('pdfTemplate');
         pdfElement.style.display = 'block';
 
@@ -1039,9 +1001,8 @@
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
-        // PDF-ის გენერირება და ჩამოტვირთვა
         html2pdf().set(opt).from(pdfElement).save().then(() => {
-            pdfElement.style.display = 'none'; // კვლავ დავმალოთ შაბლონი
+            pdfElement.style.display = 'none';
         });
     }
 
