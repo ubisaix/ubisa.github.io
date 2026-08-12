@@ -323,15 +323,10 @@
             <input type="number" id="cementPrice" class="custom-input" value="16" step="1">
         </div>
 
-        <div class="input-row">
-            <label for="sandPrice">1 კუბი ქვიშის ფასი (₾)</label>
-            <input type="number" id="sandPrice" class="custom-input" value="50" step="1">
-        </div>
-
         <!-- ღილაკები -->
         <div class="btn-container">
             <button class="action-btn calc-btn" onclick="recalculate()">გამოთვლა</button>
-            <button class="action-btn download-btn" onclick="downloadTXT()">შედეგის ჩამოტვირთვა (.txt)</button>
+            <button class="action-btn download-btn" onclick="downloadTXT()">ჩამოტვირთვა</button>
         </div>
     </div>
 </div>
@@ -345,7 +340,9 @@
         const height = parseFloat(document.getElementById('height').value) || 0;
         const blockPrice = parseFloat(document.getElementById('blockPrice').value) || 0;
         const cementPrice = parseFloat(document.getElementById('cementPrice').value) || 0;
-        const sandPrice = parseFloat(document.getElementById('sandPrice').value) || 0;
+        
+        // 1 კუბი ქვიშის ფასი ფიქსირებულად 50 ლარი (საიტზე არ ჩანს)
+        const sandPrice = 50;
 
         // 1. ფართობი
         const area = length * height;
@@ -420,7 +417,7 @@
 -- საჭირო მასალები --
 1. ბლოკი: ${d.totalBlocks} ცალი (ერთ. ფასი: ${d.blockPrice} ₾) -> ${d.blocksCost.toFixed(2)} ₾
 2. ცემენტი: ${d.cementBags} ტომარა (ერთ. ფასი: ${d.cementPrice} ₾) -> ${d.cementCost.toFixed(2)} ₾
-3. ქვიშა: ${d.sandVolume} მ³ (1 მ³ ფასი: ${d.sandPrice} ₾) -> ${d.sandCost.toFixed(2)} ₾
+3. ქვიშა: ${d.sandVolume} მ³ -> ${d.sandCost.toFixed(2)} ₾
 
 -----------------------------------------
 სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
