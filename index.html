@@ -28,7 +28,6 @@
             padding: 10px;
         }
 
-        /* მთავარი სათაური */
         .main-title {
             font-size: 26px;
             font-weight: 500;
@@ -36,32 +35,34 @@
             margin-bottom: 24px;
         }
 
-        /* ხარჯების გადანაწილების სექცია */
         .section-title {
             text-align: center;
             font-size: 18px;
             font-weight: 700;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             color: #000;
         }
 
-        /* პროპორციული ბარი */
+        /* ბარის ლეიბლები */
         .bar-labels {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
-            color: #555;
+            font-size: 12px;
+            color: #444;
             margin-bottom: 6px;
             padding: 0 2px;
+            font-weight: 600;
         }
 
+        /* 3-ფერიანი პროპორციული ბარი */
         .cost-bar-wrapper {
             display: flex;
             height: 38px;
             width: 100%;
-            border-radius: 0px;
+            background-color: #eee;
             overflow: hidden;
             margin-bottom: 12px;
+            border-radius: 4px;
         }
 
         .bar-blocks {
@@ -76,32 +77,41 @@
             transition: width 0.3s ease;
         }
 
+        .bar-sand {
+            background-color: #e67e22;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
         .total-sum {
             text-align: center;
             font-size: 22px;
             font-weight: 700;
-            margin-bottom: 50px;
+            margin-bottom: 35px;
             color: #000;
         }
 
-        /* 3-სვეტიანი შედეგების ბლოკი */
+        /* 4-სვეტიანი ბარათი შედეგებისთვის */
         .summary-grid {
             display: grid;
-            grid-template-columns: 1fr auto 1fr auto 1fr;
+            grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
             align-items: center;
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 35px;
+            background: #fafafa;
+            padding: 15px 10px;
+            border-radius: 10px;
         }
 
         .summary-item .label {
-            font-size: 13px;
+            font-size: 12px;
             color: #666;
             margin-bottom: 6px;
             font-weight: 500;
         }
 
         .summary-item .value {
-            font-size: 20px;
+            font-size: 17px;
             font-weight: 700;
             color: #000;
         }
@@ -112,7 +122,7 @@
             background-color: #d1d5db;
         }
 
-        /* ინპუტების სექცია */
+        /* ფორმა */
         .inputs-container {
             display: flex;
             flex-direction: column;
@@ -131,7 +141,7 @@
             font-weight: 400;
         }
 
-        /* ტიპის სელექტორი */
+        /* ტიპის არჩევა */
         .type-selector {
             display: flex;
             align-items: center;
@@ -166,11 +176,10 @@
             align-items: center;
             justify-content: center;
             font-size: 15px;
-            font-weight: 500;
+            font-weight: 600;
             color: #222;
         }
 
-        /* რიცხვითი ინპუტები */
         .custom-input {
             width: 100%;
             height: 42px;
@@ -187,17 +196,52 @@
             background-color: #efefef;
         }
 
-        @media (max-width: 550px) {
+        /* ღილაკები */
+        .btn-container {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            height: 46px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .calc-btn {
+            background-color: #1155cc;
+            color: #ffffff;
+        }
+
+        .download-btn {
+            background-color: #107c41;
+            color: #ffffff;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 600px) {
             .input-row {
                 grid-template-columns: 1fr;
                 gap: 6px;
             }
             .summary-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
                 gap: 16px;
             }
             .divider {
                 display: none;
+            }
+            .btn-container {
+                flex-direction: column;
             }
         }
     </style>
@@ -209,116 +253,187 @@
 
     <h2 class="section-title">ხარჯების გადანაწილება</h2>
 
-    <!-- დიაგრამის ლეიბლები -->
+    <!-- დიაგრამის ტექსტები -->
     <div class="bar-labels">
-        <span id="labelBlocks">ბლოკები (938₾)</span>
-        <span id="labelCement">ცემენტი (96₾)</span>
+        <span id="labelBlocks">ბლოკები (0₾)</span>
+        <span id="labelCement">ცემენტი (0₾)</span>
+        <span id="labelSand">ქვიშა (0₾)</span>
     </div>
 
-    <!-- პროპორციული ბარი -->
+    <!-- 3-ფერიანი დიაგრამა -->
     <div class="cost-bar-wrapper">
-        <div class="bar-blocks" id="barBlocks" style="width: 90.7%;"></div>
-        <div class="bar-cement" id="barCement" style="width: 9.3%;"></div>
+        <div class="bar-blocks" id="barBlocks" style="width: 0%;"></div>
+        <div class="bar-cement" id="barCement" style="width: 0%;"></div>
+        <div class="bar-sand" id="barSand" style="width: 0%;"></div>
     </div>
 
-    <div class="total-sum" id="totalSumText">ჯამი: 1033.50 ₾</div>
+    <div class="total-sum" id="totalSumText">ჯამი: 0.00 ₾</div>
 
-    <!-- 3 სვეტიანი შეჯამება -->
+    <!-- შედეგების შეჯამება -->
     <div class="summary-grid">
         <div class="summary-item">
             <div class="label">კედლის ფართობი</div>
-            <div class="value" id="areaValue">30.0 მ²</div>
+            <div class="value" id="areaValue">0.0 მ²</div>
         </div>
         <div class="divider"></div>
         <div class="summary-item">
             <div class="label">ბლოკების რაოდენობა</div>
-            <div class="value" id="blocksValue">375 ცალი</div>
+            <div class="value" id="blocksValue">0 ცალი</div>
+        </div>
+        <div class="divider"></div>
+        <div class="summary-item">
+            <div class="label">ქვიშა (მ³)</div>
+            <div class="value" id="sandVolumeValue">0 მ³</div>
         </div>
         <div class="divider"></div>
         <div class="summary-item">
             <div class="label">საერთო ღირებულება</div>
-            <div class="value" id="totalCostValue">1,033.5 ₾</div>
+            <div class="value" id="totalCostValue">0.0 ₾</div>
         </div>
     </div>
 
-    <!-- ინპუტების ფორმა -->
+    <!-- ველები -->
     <div class="inputs-container">
         <div class="input-row">
             <label>ტიპი</label>
             <div class="type-selector">
                 <button class="nav-btn">&lt;</button>
-                <div class="type-display">კედლის ბლოკები</div>
+                <div class="type-display">კედლის გამოთვლა</div>
                 <button class="nav-btn">&gt;</button>
             </div>
         </div>
 
         <div class="input-row">
             <label for="length">სიგრძე (მ)</label>
-            <input type="number" id="length" class="custom-input" value="10" step="0.1" oninput="recalculate()">
+            <input type="number" id="length" class="custom-input" value="10" step="0.1">
         </div>
 
         <div class="input-row">
-            <label for="height">სიმაღლე/სიგანე (მ)</label>
-            <input type="number" id="height" class="custom-input" value="3" step="0.1" oninput="recalculate()">
+            <label for="height">სიმაღლე (მ)</label>
+            <input type="number" id="height" class="custom-input" value="3" step="0.1">
         </div>
 
         <div class="input-row">
             <label for="blockPrice">ბლოკის ფასი (₾)</label>
-            <input type="number" id="blockPrice" class="custom-input" value="2.5" step="0.1" oninput="recalculate()">
+            <input type="number" id="blockPrice" class="custom-input" value="2.5" step="0.1">
         </div>
 
         <div class="input-row">
             <label for="cementPrice">ცემენტის ფასი (₾)</label>
-            <input type="number" id="cementPrice" class="custom-input" value="16" step="1" oninput="recalculate()">
+            <input type="number" id="cementPrice" class="custom-input" value="16" step="1">
+        </div>
+
+        <div class="input-row">
+            <label for="sandPrice">1 კუბი ქვიშის ფასი (₾)</label>
+            <input type="number" id="sandPrice" class="custom-input" value="50" step="1">
+        </div>
+
+        <!-- ღილაკები -->
+        <div class="btn-container">
+            <button class="action-btn calc-btn" onclick="recalculate()">გამოთვლა</button>
+            <button class="action-btn download-btn" onclick="downloadTXT()">შედეგის ჩამოტვირთვა (.txt)</button>
         </div>
     </div>
 </div>
 
 <script>
+    // გლობალური ცვლადები ფაილის გადმოწერისთვის
+    let lastCalculationData = null;
+
     function recalculate() {
         const length = parseFloat(document.getElementById('length').value) || 0;
         const height = parseFloat(document.getElementById('height').value) || 0;
         const blockPrice = parseFloat(document.getElementById('blockPrice').value) || 0;
         const cementPrice = parseFloat(document.getElementById('cementPrice').value) || 0;
+        const sandPrice = parseFloat(document.getElementById('sandPrice').value) || 0;
 
         // 1. ფართობი
         const area = length * height;
 
-        // 2. ბლოკის რაოდენობა (12.5 ცალი 1 კვ.მ-ზე)
+        // 2. ბლოკი (12.5 ცალი 1 კვ.მ-ზე)
         const totalBlocks = Math.ceil(area * 12.5);
 
-        // 3. ცემენტის ტომრები (1 ტომარა 75 ბლოკზე)
+        // 3. ცემენტი (1 ტომარა 75 ბლოკზე)
         const cementBags = Math.ceil(totalBlocks / 75);
 
-        // 4. ხარჯების დაანგარიშება
+        // 4. ქვიშა (საშუალოდ 0.025 მ³ ქვიშა 1 კვ.მ კედლის წყობაზე)
+        const sandVolume = parseFloat((area * 0.025).toFixed(2));
+
+        // 5. ხარჯები
         const blocksCost = totalBlocks * blockPrice;
         const cementCost = cementBags * cementPrice;
-        const totalCost = blocksCost + cementCost;
+        const sandCost = sandVolume * sandPrice;
+        const totalCost = blocksCost + cementCost + sandCost;
 
-        // შედეგების ჩასმა ტექსტებში
+        // მონაცემების შენახვა ჩამოსატვირთად
+        lastCalculationData = {
+            length, height, area, totalBlocks, cementBags, sandVolume,
+            blockPrice, cementPrice, sandPrice,
+            blocksCost, cementCost, sandCost, totalCost
+        };
+
+        // UI განახლება
         document.getElementById('areaValue').innerText = area.toFixed(1) + ' მ²';
         document.getElementById('blocksValue').innerText = totalBlocks + ' ცალი';
+        document.getElementById('sandVolumeValue').innerText = sandVolume + ' მ³';
         document.getElementById('totalCostValue').innerText = totalCost.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' ₾';
         document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
 
-        // პროპორციული ბარის განახლება
-        let blocksPercent = 0;
-        let cementPercent = 0;
+        // პროპორციული ბარი
+        let blocksPercent = 0, cementPercent = 0, sandPercent = 0;
 
         if (totalCost > 0) {
             blocksPercent = (blocksCost / totalCost) * 100;
             cementPercent = (cementCost / totalCost) * 100;
+            sandPercent = (sandCost / totalCost) * 100;
         }
 
         document.getElementById('barBlocks').style.width = blocksPercent + '%';
         document.getElementById('barCement').style.width = cementPercent + '%';
+        document.getElementById('barSand').style.width = sandPercent + '%';
 
-        // დიაგრამის ზედა ტექსტების განახლება
+        // ბარის ლეიბლები
         document.getElementById('labelBlocks').innerText = `ბლოკები (${Math.round(blocksCost)}₾)`;
         document.getElementById('labelCement').innerText = `ცემენტი (${Math.round(cementCost)}₾)`;
+        document.getElementById('labelSand').innerText = `ქვიშა (${Math.round(sandCost)}₾)`;
     }
 
-    // პირველადი გაანგარიშება ჩატვირთვისას
+    // შედეგის TXT ფაილად გადმოწერა
+    function downloadTXT() {
+        if (!lastCalculationData) {
+            recalculate();
+        }
+
+        const d = lastCalculationData;
+        const textContent = 
+`=========================================
+      სამშენებლო მასალების ხარჯთაღრიცხვა
+=========================================
+კატეგორია: კედლის გამოთვლა
+თარიღი: ${new Date().toLocaleDateString('ka-GE')}
+
+-- პარამეტრები --
+კედლის სიგრძე: ${d.length} მ
+კედლის სიმაღლე: ${d.height} მ
+კედლის ფართობი: ${d.area.toFixed(2)} მ²
+
+-- საჭირო მასალები --
+1. ბლოკი: ${d.totalBlocks} ცალი (ერთ. ფასი: ${d.blockPrice} ₾) -> ${d.blocksCost.toFixed(2)} ₾
+2. ცემენტი: ${d.cementBags} ტომარა (ერთ. ფასი: ${d.cementPrice} ₾) -> ${d.cementCost.toFixed(2)} ₾
+3. ქვიშა: ${d.sandVolume} მ³ (1 მ³ ფასი: ${d.sandPrice} ₾) -> ${d.sandCost.toFixed(2)} ₾
+
+-----------------------------------------
+სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
+=========================================`;
+
+        const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `xarjtagricxva_kedali_${new Date().toISOString().slice(0, 10)}.txt`;
+        link.click();
+    }
+
+    // პირველი ჩატვირთვისას ავტომატურად იანგარიშოს
     recalculate();
 </script>
 
