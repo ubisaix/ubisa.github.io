@@ -449,6 +449,19 @@
             </div>
         </div>
 
+        <!-- 5. ბეტონის ფილის გამოთვლის ველები -->
+        <div id="concreteInputs" class="hidden">
+            <div class="input-row" style="margin-bottom: 14px;">
+                <label for="concreteArea">დასასხმელი ფართობი (მ²)</label>
+                <input type="number" id="concreteArea" class="custom-input" value="50" step="0.1">
+            </div>
+
+            <div class="input-row">
+                <label for="concreteThickness">ფენის სისქე (სმ)</label>
+                <input type="number" id="concreteThickness" class="custom-input" value="10" step="1">
+            </div>
+        </div>
+
         <!-- ღილაკები -->
         <div class="btn-container">
             <button class="action-btn calc-btn" onclick="recalculate()">გამოთვლა</button>
@@ -458,7 +471,7 @@
 </div>
 
 <script>
-    const categories = ['კედლის გამოთვლა', 'გიფსოკარდონის გამოთვლა', 'კაფელის გამოთვლა', 'სახურავის გამოთვლა'];
+    const categories = ['კედლის გამოთვლა', 'გიფსოკარდონის გამოთვლა', 'კაფელის გამოთვლა', 'სახურავის გამოთვლა', 'ბეტონის ფილა'];
     let currentCategoryIndex = 0;
     let lastCalculationData = null;
 
@@ -471,6 +484,7 @@
         document.getElementById('gypsumInputs').classList.add('hidden');
         document.getElementById('tileInputs').classList.add('hidden');
         document.getElementById('roofInputs').classList.add('hidden');
+        document.getElementById('concreteInputs').classList.add('hidden');
 
         // აქტიური სექციის გამოჩენა
         if (currentCategoryIndex === 0) {
@@ -479,8 +493,10 @@
             document.getElementById('gypsumInputs').classList.remove('hidden');
         } else if (currentCategoryIndex === 2) {
             document.getElementById('tileInputs').classList.remove('hidden');
-        } else {
+        } else if (currentCategoryIndex === 3) {
             document.getElementById('roofInputs').classList.remove('hidden');
+        } else if (currentCategoryIndex === 4) {
+            document.getElementById('concreteInputs').classList.remove('hidden');
         }
         recalculate();
     }
@@ -502,8 +518,10 @@
             calculateGypsum();
         } else if (currentCategoryIndex === 2) {
             calculateTile();
-        } else {
+        } else if (currentCategoryIndex === 3) {
             calculateRoof();
+        } else if (currentCategoryIndex === 4) {
+            calculateConcrete();
         }
     }
 
@@ -781,6 +799,65 @@
         document.getElementById('labelPart3').innerText = `აქსესუარები (${Math.round(accessoriesCost)}₾)`;
     }
 
+    // 5. ბეტონის ფილის გამოთვლა
+    function calculateConcrete() {
+        const area = parseFloat(document.getElementById('concreteArea').value) || 0;
+        const thicknessCm = parseFloat(document.getElementById('concreteThickness').value) || 0;
+        
+        const thicknessM = thicknessCm / 100;
+        const volumeM3 = area * thicknessM; // ბეტონის მოცულობა კუბებში
+
+        // სტანდარტული პროპორცია 1 კუბ ბეტონზე (B20 / M250 მარკა):
+        // ცემენტი: ~320 კგ (~6.4 ტომარა 50კგ-იანი), ქვიშა: ~0.45 მ³, ღორღი: ~0.8 მ³
+        const cementBags = Math.ceil(volumeM3 * 6.4);
+        const sandVolume = parseFloat((volumeM3 * 0.45).toFixed(2));
+        const gravelVolume = parseFloat((volumeM3 * 0.8).toFixed(2));
+
+        const sandPrice = 50;      // 1 კუბი ქვიშა = 50 ლარი
+        const gravelPrice = 50;    // 1 კუბი შებენი = 50 ლარი
+        const cementPrice = 17;    // 1 ტომარა ცემენტი = 17 ლარი
+
+        const sandCost = sandVolume * sandPrice;
+        const gravelCost = gravelVolume * gravelPrice;
+        const cementCost = cementBags * cementPrice;
+        const totalCost = sandCost + gravelCost + cementCost;
+
+        lastCalculationData = {
+            category: 'ბეტონის ფილა',
+            area, thicknessCm, volumeM3, sandVolume, gravelVolume, cementBags,
+            sandCost, gravelCost, cementCost, totalCost
+        };
+
+        document.getElementById('sumLabel1').innerText = 'მოცულობა';
+        document.getElementById('sumVal1').innerText = volumeM3.toFixed(2) + ' მ³';
+
+        document.getElementById('sumLabel2').innerText = 'ქვიშა';
+        document.getElementById('sumVal2').innerText = sandVolume + ' მ³';
+
+        document.getElementById('sumLabel3').innerText = 'ღორღი (შებენი)';
+        document.getElementById('sumVal3').innerText = gravelVolume + ' მ³';
+
+        document.getElementById('sumLabel4').innerText = 'ცემენტი';
+        document.getElementById('sumVal4').innerText = cementBags + ' ტომარა';
+
+        document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
+
+        let p1 = 0, p2 = 0, p3 = 0;
+        if (totalCost > 0) {
+            p1 = (sandCost / totalCost) * 100;
+            p2 = (gravelCost / totalCost) * 100;
+            p3 = (cementCost / totalCost) * 100;
+        }
+
+        document.getElementById('barPart1').style.width = p1 + '%';
+        document.getElementById('barPart2').style.width = p2 + '%';
+        document.getElementById('barPart3').style.width = p3 + '%';
+
+        document.getElementById('labelPart1').innerText = `ქვიშა (${Math.round(sandCost)}₾)`;
+        document.getElementById('labelPart2').innerText = `შებენი (${Math.round(gravelCost)}₾)`;
+        document.getElementById('labelPart3').innerText = `ცემენტი (${Math.round(cementCost)}₾)`;
+    }
+
     // შედეგის TXT ფაილად ჩამოტვირთვა
     function downloadTXT() {
         if (!lastCalculationData) {
@@ -869,6 +946,27 @@ ${d.hangersCount > 0 ? `4. პეპლები (სამაგრები): 
 1. სახურავის თუნუქი (ჟესტი): ${d.metalArea} მ² -> ${d.metalCost.toFixed(2)} ₾
 2. ხის მასალა (კოჭები/რეიკები): ${d.woodVolume} მ³ -> ${d.woodCost.toFixed(2)} ₾
 3. ქედები, შურუპები, აქსესუარები -> ${d.accessoriesCost.toFixed(2)} ₾
+
+-----------------------------------------
+სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
+=========================================`;
+        } else if (d.category === 'ბეტონის ფილა') {
+            textContent = 
+`=========================================
+      სამშენებლო მასალების ხარჯთაღრიცხვა
+=========================================
+კატეგორია: ბეტონის ფილა
+თარიღი: ${new Date().toLocaleDateString('ka-GE')}
+
+-- პარამეტრები --
+დასასხმელი ფართობი: ${d.area} მ²
+ფენის სისქე: ${d.thicknessCm} სმ
+ბეტონის ჯამური მოცულობა: ${d.volumeM3.toFixed(2)} მ³
+
+-- საჭირო მასალები --
+1. ქვიშა: ${d.sandVolume} მ³ (1 მ³ = 50 ₾) -> ${d.sandCost.toFixed(2)} ₾
+2. ღორღი (შებენი): ${d.gravelVolume} მ³ (1 მ³ = 50 ₾) -> ${d.gravelCost.toFixed(2)} ₾
+3. ცემენტი: ${d.cementBags} ტომარა (1 ტომარა = 17 ₾) -> ${d.cementCost.toFixed(2)} ₾
 
 -----------------------------------------
 სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
