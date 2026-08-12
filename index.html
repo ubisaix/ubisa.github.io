@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>სამშენებლო მასალების ხარჯთაღრიცხვა</title>
+    <!-- PDF გენერატორის ბიბლიოთეკა -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -32,7 +34,6 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
         }
 
-        /* თანამედროვე ნავიგაციის ღილაკები სათაურის ზემოთ */
         .top-nav-container {
             display: flex;
             gap: 10px;
@@ -78,7 +79,6 @@
             color: #000;
         }
 
-        /* ბარის ლეიბლები */
         .bar-labels {
             display: flex;
             justify-content: space-between;
@@ -89,7 +89,6 @@
             font-weight: 600;
         }
 
-        /* პროპორციული ბარი */
         .cost-bar-wrapper {
             display: flex;
             height: 38px;
@@ -126,7 +125,6 @@
             color: #000;
         }
 
-        /* ბარათი შედეგებისთვის */
         .summary-grid {
             display: grid;
             grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
@@ -157,7 +155,6 @@
             background-color: #d1d5db;
         }
 
-        /* ფორმა */
         .inputs-container {
             display: flex;
             flex-direction: column;
@@ -176,7 +173,6 @@
             font-weight: 400;
         }
 
-        /* ტიპის არჩევა */
         .type-selector {
             display: flex;
             align-items: center;
@@ -231,10 +227,9 @@
             background-color: #efefef;
         }
 
-        /* ღილაკები */
         .btn-container {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             margin-top: 10px;
         }
 
@@ -243,7 +238,7 @@
             height: 46px;
             border: none;
             border-radius: 10px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: opacity 0.2s;
@@ -259,12 +254,81 @@
             color: #ffffff;
         }
 
+        .pdf-btn {
+            background-color: #d93025;
+            color: #ffffff;
+        }
+
         .action-btn:hover {
             opacity: 0.9;
         }
 
         .hidden {
             display: none !important;
+        }
+
+        /* PDF შაბლონის სტილები (მხოლოდ გენერირებისას ჩანს) */
+        #pdfTemplate {
+            display: none;
+            padding: 30px;
+            background: #fff;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+
+        .pdf-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #1155cc;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .pdf-logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1155cc;
+        }
+
+        .pdf-info {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .pdf-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+
+        .pdf-table th, .pdf-table td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .pdf-table th {
+            background-color: #f8fafc;
+            color: #334155;
+        }
+
+        .pdf-total-box {
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+            color: #1155cc;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 2px solid #e2e8f0;
         }
 
         @media (max-width: 600px) {
@@ -291,7 +355,6 @@
 <body>
 
 <div class="calculator-container">
-    <!-- ზედა ნავიგაციის ღილაკები -->
     <div class="top-nav-container">
         <a href="#" class="nav-link-btn">მთავარი</a>
         <a href="#" class="nav-link-btn">უბისა</a>
@@ -301,14 +364,12 @@
 
     <h2 class="section-title">ხარჯების გადანაწილება</h2>
 
-    <!-- დიაგრამის ტექსტები -->
     <div class="bar-labels">
         <span id="labelPart1">-</span>
         <span id="labelPart2">-</span>
         <span id="labelPart3">-</span>
     </div>
 
-    <!-- 3-ფერიანი დიაგრამა -->
     <div class="cost-bar-wrapper">
         <div class="bar-part1" id="barPart1" style="width: 0%;"></div>
         <div class="bar-part2" id="barPart2" style="width: 0%;"></div>
@@ -317,7 +378,6 @@
 
     <div class="total-sum" id="totalSumText">ჯამი: 0.00 ₾</div>
 
-    <!-- შედეგების შეჯამება -->
     <div class="summary-grid">
         <div class="summary-item">
             <div class="label" id="sumLabel1">ფართობი</div>
@@ -340,9 +400,7 @@
         </div>
     </div>
 
-    <!-- ფორმის ველები -->
     <div class="inputs-container">
-        <!-- ტიპის სელექტორი -->
         <div class="input-row">
             <label>ტიპი</label>
             <div class="type-selector">
@@ -352,36 +410,32 @@
             </div>
         </div>
 
-        <!-- 1. კედლის გამოთვლის ველები -->
+        <!-- 1. კედლის გამოთვლა -->
         <div id="wallInputs">
             <div class="input-row" style="margin-bottom: 14px;">
                 <label for="length">სიგრძე (მ)</label>
                 <input type="number" id="length" class="custom-input" value="10" step="0.1">
             </div>
-
             <div class="input-row" style="margin-bottom: 14px;">
                 <label for="height">სიმაღლე (მ)</label>
                 <input type="number" id="height" class="custom-input" value="3" step="0.1">
             </div>
-
             <div class="input-row" style="margin-bottom: 14px;">
                 <label for="blockPrice">ბლოკის ფასი (₾)</label>
                 <input type="number" id="blockPrice" class="custom-input" value="2.5" step="0.1">
             </div>
-
             <div class="input-row">
                 <label for="cementPrice">ცემენტის ფასი (₾)</label>
                 <input type="number" id="cementPrice" class="custom-input" value="16" step="1">
             </div>
         </div>
 
-        <!-- 2. გიფსოს გამოთვლის ველები -->
+        <!-- 2. გიფსოს გამოთვლა -->
         <div id="gypsumInputs" class="hidden">
             <div class="input-row" style="margin-bottom: 14px;">
                 <label for="gypsumArea">ფართობი (მ²)</label>
                 <input type="number" id="gypsumArea" class="custom-input" value="30" step="0.1">
             </div>
-
             <div class="input-row">
                 <label for="gypsumType">კონსტრუქციის ტიპი</label>
                 <select id="gypsumType" class="custom-select">
@@ -392,13 +446,12 @@
             </div>
         </div>
 
-        <!-- 3. კაფელის გამოთვლის ველები -->
+        <!-- 3. კაფელის გამოთვლა -->
         <div id="tileInputs" class="hidden">
             <div class="input-row" style="margin-bottom: 14px;">
                 <label for="tileArea">ფართობი (მ²)</label>
                 <input type="number" id="tileArea" class="custom-input" value="20" step="0.1">
             </div>
-
             <div class="input-row" style="margin-bottom: 14px;">
                 <label for="tileSize">ფილის ზომა</label>
                 <select id="tileSize" class="custom-select" onchange="toggleCustomTileSize()">
@@ -409,7 +462,6 @@
                     <option value="custom">სხვა</option>
                 </select>
             </div>
-
             <div id="customTileDimensions" class="hidden">
                 <div class="input-row" style="margin-bottom: 14px;">
                     <label for="customTileWidth">კაფელის სიგრძე (სმ)</label>
@@ -420,25 +472,22 @@
                     <input type="number" id="customTileHeight" class="custom-input" value="50" step="1">
                 </div>
             </div>
-
             <div class="input-row">
                 <label for="tilePrice">ფასი 1 კვადრატის (₾)</label>
                 <input type="number" id="tilePrice" class="custom-input" value="35" step="1">
             </div>
         </div>
 
-        <!-- 4. სახურავის გამოთვლის ველები -->
+        <!-- 4. სახურავის გამოთვლა -->
         <div id="roofInputs" class="hidden">
             <div class="input-row" style="margin-bottom: 14px;">
                 <label for="houseArea">სახლის ფართობი (მ²)</label>
                 <input type="number" id="houseArea" class="custom-input" value="100" step="1">
             </div>
-
             <div class="input-row" style="margin-bottom: 14px;">
                 <label for="ridgeHeight">ქედის სიმაღლე (მ)</label>
                 <input type="number" id="ridgeHeight" class="custom-input" value="2" step="0.1">
             </div>
-
             <div class="input-row">
                 <label for="roofType">სახურავის ტიპი</label>
                 <select id="roofType" class="custom-select">
@@ -449,31 +498,28 @@
             </div>
         </div>
 
-        <!-- 5. ბეტონის ფილის გამოთვლის ველები -->
+        <!-- 5. ბეტონის ფილის გამოთვლა -->
         <div id="concreteInputs" class="hidden">
             <div class="input-row" style="margin-bottom: 14px;">
                 <label for="concreteArea">დასასხმელი ფართობი (მ²)</label>
                 <input type="number" id="concreteArea" class="custom-input" value="50" step="0.1">
             </div>
-
             <div class="input-row">
                 <label for="concreteThickness">ფენის სისქე (სმ)</label>
                 <input type="number" id="concreteThickness" class="custom-input" value="10" step="1">
             </div>
         </div>
 
-        <!-- 6. არმატურის გამოთვლის ველები -->
+        <!-- 6. არმატურის გამოთვლა -->
         <div id="rebarInputs" class="hidden">
             <div class="input-row" style="margin-bottom: 14px;">
                 <label for="rebarArea">მოსაქსოვი ფართობი (მ²)</label>
                 <input type="number" id="rebarArea" class="custom-input" value="50" step="0.1">
             </div>
-
             <div class="input-row" style="margin-bottom: 14px;">
                 <label for="rebarStep">ბადის ბიჯი (სმ)</label>
                 <input type="number" id="rebarStep" class="custom-input" value="20" step="1">
             </div>
-
             <div class="input-row" style="margin-bottom: 14px;">
                 <label for="rebarDiameter">არმატურის დიამეტრი (მმ)</label>
                 <select id="rebarDiameter" class="custom-select">
@@ -487,18 +533,45 @@
                     <option value="20">20 მმ</option>
                 </select>
             </div>
-
             <div class="input-row">
                 <label for="rebarTonPrice">1 ტონა არმატურის ფასი (₾)</label>
                 <input type="number" id="rebarTonPrice" class="custom-input" value="2200" step="10">
             </div>
         </div>
 
-        <!-- ღილაკები -->
+        <!-- ღილაკები (დაემატა PDF) -->
         <div class="btn-container">
             <button class="action-btn calc-btn" onclick="recalculate()">გამოთვლა</button>
-            <button class="action-btn download-btn" onclick="downloadTXT()">ჩამოტვირთვა</button>
+            <button class="action-btn download-btn" onclick="downloadTXT()">TXT ჩამოტვირთვა</button>
+            <button class="action-btn pdf-btn" onclick="downloadPDF()">PDF ჩამოტვირთვა</button>
         </div>
+    </div>
+</div>
+
+<!-- ფარული შაბლონი PDF-ის დასაგენერირებლად -->
+<div id="pdfTemplate">
+    <div class="pdf-header">
+        <div class="pdf-logo">UBISA.GE</div>
+        <div class="pdf-info">
+            <div><strong>სამშენებლო ხარჯთაღრიცხვა</strong></div>
+            <div id="pdfDate">თარიღი: </div>
+        </div>
+    </div>
+    <h3 class="pdf-title" id="pdfCategoryTitle">კატეგორია</h3>
+    <table class="pdf-table">
+        <thead>
+            <tr>
+                <th>დასახელება / მასალა</th>
+                <th>რაოდენობა</th>
+                <th>სავარაუდო ფასი</th>
+            </tr>
+        </thead>
+        <tbody id="pdfTableBody">
+            <!-- დინამიურად შეივსება -->
+        </tbody>
+    </table>
+    <div class="pdf-total-box" id="pdfTotalAmount">
+        სულ ჯამი: 0.00 ₾
     </div>
 </div>
 
@@ -511,7 +584,6 @@
         currentCategoryIndex = (currentCategoryIndex + direction + categories.length) % categories.length;
         document.getElementById('currentCategoryText').innerText = categories[currentCategoryIndex];
 
-        // ყველა სექციის დამალვა
         document.getElementById('wallInputs').classList.add('hidden');
         document.getElementById('gypsumInputs').classList.add('hidden');
         document.getElementById('tileInputs').classList.add('hidden');
@@ -519,20 +591,13 @@
         document.getElementById('concreteInputs').classList.add('hidden');
         document.getElementById('rebarInputs').classList.add('hidden');
 
-        // აქტიური სექციის გამოჩენა
-        if (currentCategoryIndex === 0) {
-            document.getElementById('wallInputs').classList.remove('hidden');
-        } else if (currentCategoryIndex === 1) {
-            document.getElementById('gypsumInputs').classList.remove('hidden');
-        } else if (currentCategoryIndex === 2) {
-            document.getElementById('tileInputs').classList.remove('hidden');
-        } else if (currentCategoryIndex === 3) {
-            document.getElementById('roofInputs').classList.remove('hidden');
-        } else if (currentCategoryIndex === 4) {
-            document.getElementById('concreteInputs').classList.remove('hidden');
-        } else if (currentCategoryIndex === 5) {
-            document.getElementById('rebarInputs').classList.remove('hidden');
-        }
+        if (currentCategoryIndex === 0) document.getElementById('wallInputs').classList.remove('hidden');
+        else if (currentCategoryIndex === 1) document.getElementById('gypsumInputs').classList.remove('hidden');
+        else if (currentCategoryIndex === 2) document.getElementById('tileInputs').classList.remove('hidden');
+        else if (currentCategoryIndex === 3) document.getElementById('roofInputs').classList.remove('hidden');
+        else if (currentCategoryIndex === 4) document.getElementById('concreteInputs').classList.remove('hidden');
+        else if (currentCategoryIndex === 5) document.getElementById('rebarInputs').classList.remove('hidden');
+
         recalculate();
     }
 
@@ -547,22 +612,15 @@
     }
 
     function recalculate() {
-        if (currentCategoryIndex === 0) {
-            calculateWall();
-        } else if (currentCategoryIndex === 1) {
-            calculateGypsum();
-        } else if (currentCategoryIndex === 2) {
-            calculateTile();
-        } else if (currentCategoryIndex === 3) {
-            calculateRoof();
-        } else if (currentCategoryIndex === 4) {
-            calculateConcrete();
-        } else if (currentCategoryIndex === 5) {
-            calculateRebar();
-        }
+        if (currentCategoryIndex === 0) calculateWall();
+        else if (currentCategoryIndex === 1) calculateGypsum();
+        else if (currentCategoryIndex === 2) calculateTile();
+        else if (currentCategoryIndex === 3) calculateRoof();
+        else if (currentCategoryIndex === 4) calculateConcrete();
+        else if (currentCategoryIndex === 5) calculateRebar();
     }
 
-    // 1. კედლის გამოთვლა
+    // 1. კედელი
     function calculateWall() {
         const length = parseFloat(document.getElementById('length').value) || 0;
         const height = parseFloat(document.getElementById('height').value) || 0;
@@ -583,21 +641,22 @@
         lastCalculationData = {
             category: 'კედლის გამოთვლა',
             length, height, area, totalBlocks, cementBags, sandVolume,
-            blockPrice, cementPrice, blocksCost, cementCost, sandCost, totalCost
+            blockPrice, cementPrice, blocksCost, cementCost, sandCost, totalCost,
+            items: [
+                { name: 'ბლოკი', qty: totalBlocks + ' ცალი', cost: blocksCost.toFixed(2) + ' ₾' },
+                { name: 'ცემენტი', qty: cementBags + ' ტომარა', cost: cementCost.toFixed(2) + ' ₾' },
+                { name: 'ქვიშა', qty: sandVolume + ' მ³', cost: sandCost.toFixed(2) + ' ₾' }
+            ]
         };
 
         document.getElementById('sumLabel1').innerText = 'კედლის ფართობი';
         document.getElementById('sumVal1').innerText = area.toFixed(1) + ' მ²';
-
         document.getElementById('sumLabel2').innerText = 'ბლოკები';
         document.getElementById('sumVal2').innerText = totalBlocks + ' ცალი';
-
         document.getElementById('sumLabel3').innerText = 'ქვიშა (მ³)';
         document.getElementById('sumVal3').innerText = sandVolume + ' მ³';
-
         document.getElementById('sumLabel4').innerText = 'ცემენტი';
         document.getElementById('sumVal4').innerText = cementBags + ' ტომარა';
-
         document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
 
         let p1 = 0, p2 = 0, p3 = 0;
@@ -610,13 +669,12 @@
         document.getElementById('barPart1').style.width = p1 + '%';
         document.getElementById('barPart2').style.width = p2 + '%';
         document.getElementById('barPart3').style.width = p3 + '%';
-
         document.getElementById('labelPart1').innerText = `ბლოკები (${Math.round(blocksCost)}₾)`;
         document.getElementById('labelPart2').innerText = `ცემენტი (${Math.round(cementCost)}₾)`;
         document.getElementById('labelPart3').innerText = `ქვიშა (${Math.round(sandCost)}₾)`;
     }
 
-    // 2. გიფსოკარდონის გამოთვლა
+    // 2. გიფსოკარდონი
     function calculateGypsum() {
         const area = parseFloat(document.getElementById('gypsumArea').value) || 0;
         const type = document.getElementById('gypsumType').value;
@@ -627,11 +685,7 @@
         const hangerPrice = 0.60;
         const fixingsCostPerSqM = 2.50;
 
-        let sheetsCount = 0;
-        let mainProfilesCount = 0;
-        let guideProfilesCount = 0;
-        let hangersCount = 0;
-        let typeName = '';
+        let sheetsCount = 0, mainProfilesCount = 0, guideProfilesCount = 0, hangersCount = 0, typeName = '';
 
         if (type === 'ceiling') {
             typeName = 'ჭერი';
@@ -644,40 +698,38 @@
             sheetsCount = Math.ceil((area * 1.05) / 2.88);
             mainProfilesCount = Math.ceil(area * 0.7);
             guideProfilesCount = Math.ceil(area * 0.3);
-            hangersCount = 0;
         } else if (type === 'partition_double') {
             typeName = 'ტიხარი (ორმხრივი)';
             sheetsCount = Math.ceil((area * 2.1) / 2.88);
             mainProfilesCount = Math.ceil(area * 0.7);
             guideProfilesCount = Math.ceil(area * 0.3);
-            hangersCount = 0;
         }
 
         const puttyBags = Math.ceil(area / 20);
-
         const sheetsCost = sheetsCount * sheetPrice;
         const profilesCost = (mainProfilesCount * mainProfilePrice) + (guideProfilesCount * guideProfilePrice);
         const accessoriesCost = (hangersCount * hangerPrice) + (area * fixingsCostPerSqM);
         const totalCost = sheetsCost + profilesCost + accessoriesCost;
 
         lastCalculationData = {
-            category: 'გიფსოკარდონის გამოთვლა',
-            typeName, area, sheetsCount, mainProfilesCount, guideProfilesCount, hangersCount, puttyBags,
-            sheetsCost, profilesCost, accessoriesCost, totalCost
+            category: `გიფსოკარდონის გამოთვლა (${typeName})`,
+            area, sheetsCount, totalCost,
+            items: [
+                { name: 'გიფსოს ფილა (Knauf)', qty: sheetsCount + ' ცალი', cost: sheetsCost.toFixed(2) + ' ₾' },
+                { name: 'პროფილები (ძირითადი/მიმმართველი)', qty: (mainProfilesCount + guideProfilesCount) + ' ცალი', cost: profilesCost.toFixed(2) + ' ₾' },
+                { name: 'სამაგრები / შურუპები / პეპლები', qty: hangersCount > 0 ? hangersCount + ' ცალი' : 'სტანდარტული', cost: accessoriesCost.toFixed(2) + ' ₾' },
+                { name: 'შპაკლი', qty: puttyBags + ' ტომარა', cost: '-' }
+            ]
         };
 
         document.getElementById('sumLabel1').innerText = 'ფართობი';
         document.getElementById('sumVal1').innerText = area.toFixed(1) + ' მ²';
-
         document.getElementById('sumLabel2').innerText = 'ფილები (Knauf)';
         document.getElementById('sumVal2').innerText = sheetsCount + ' ცალი';
-
         document.getElementById('sumLabel3').innerText = type === 'ceiling' ? 'პეპლები' : 'პროფილები';
         document.getElementById('sumVal3').innerText = type === 'ceiling' ? hangersCount + ' ცალი' : (mainProfilesCount + guideProfilesCount) + ' ცალი';
-
         document.getElementById('sumLabel4').innerText = 'შპაკლი';
         document.getElementById('sumVal4').innerText = puttyBags + ' ტომარა';
-
         document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
 
         let p1 = 0, p2 = 0, p3 = 0;
@@ -690,20 +742,18 @@
         document.getElementById('barPart1').style.width = p1 + '%';
         document.getElementById('barPart2').style.width = p2 + '%';
         document.getElementById('barPart3').style.width = p3 + '%';
-
         document.getElementById('labelPart1').innerText = `ფილები (${Math.round(sheetsCost)}₾)`;
         document.getElementById('labelPart2').innerText = `პროფილები (${Math.round(profilesCost)}₾)`;
         document.getElementById('labelPart3').innerText = `სამაგრები (${Math.round(accessoriesCost)}₾)`;
     }
 
-    // 3. კაფელის გამოთვლა
+    // 3. კაფელი
     function calculateTile() {
         const area = parseFloat(document.getElementById('tileArea').value) || 0;
         const sizeOption = document.getElementById('tileSize').value;
         const tileSquarePrice = parseFloat(document.getElementById('tilePrice').value) || 0;
 
         let widthCm = 60, heightCm = 60;
-
         if (sizeOption === '30x30') { widthCm = 30; heightCm = 30; }
         else if (sizeOption === '40x60') { widthCm = 40; heightCm = 60; }
         else if (sizeOption === '60x60') { widthCm = 60; heightCm = 60; }
@@ -715,10 +765,8 @@
 
         const singleTileAreaM2 = (widthCm / 100) * (heightCm / 100);
         const totalTiles = Math.ceil((area * 1.1) / singleTileAreaM2);
-
         const glueBags = Math.ceil((area * 4) / 25);
         const glueBagPrice = 22;
-
         const wedgesCount = Math.ceil(area * 16);
         const wedgePrice = 0.10;
 
@@ -729,22 +777,22 @@
 
         lastCalculationData = {
             category: 'კაფელის გამოთვლა',
-            area, sizeText: `${widthCm}x${heightCm} სმ`, totalTiles, glueBags, wedgesCount,
-            tileSquarePrice, tileCost, glueCost, wedgesCost, totalCost
+            area, totalCost,
+            items: [
+                { name: `კაფელი/მეთლახი (${widthCm}x${heightCm}სმ)`, qty: totalTiles + ' ცალი', cost: tileCost.toFixed(2) + ' ₾' },
+                { name: 'წებოცემენტი (25კგ)', qty: glueBags + ' ტომარა', cost: glueCost.toFixed(2) + ' ₾' },
+                { name: 'სოლები (SVP)', qty: wedgesCount + ' ცალი', cost: wedgesCost.toFixed(2) + ' ₾' }
+            ]
         };
 
         document.getElementById('sumLabel1').innerText = 'ფართობი';
         document.getElementById('sumVal1').innerText = area.toFixed(1) + ' მ²';
-
         document.getElementById('sumLabel2').innerText = 'კაფელი';
         document.getElementById('sumVal2').innerText = totalTiles + ' ცალი';
-
         document.getElementById('sumLabel3').innerText = 'სოლები (SVP)';
         document.getElementById('sumVal3').innerText = wedgesCount + ' ცალი';
-
         document.getElementById('sumLabel4').innerText = 'წებოცემენტი';
         document.getElementById('sumVal4').innerText = glueBags + ' ტომარა';
-
         document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
 
         let p1 = 0, p2 = 0, p3 = 0;
@@ -757,21 +805,18 @@
         document.getElementById('barPart1').style.width = p1 + '%';
         document.getElementById('barPart2').style.width = p2 + '%';
         document.getElementById('barPart3').style.width = p3 + '%';
-
         document.getElementById('labelPart1').innerText = `კაფელი (${Math.round(tileCost)}₾)`;
         document.getElementById('labelPart2').innerText = `წებოცემენტი (${Math.round(glueCost)}₾)`;
         document.getElementById('labelPart3').innerText = `სოლები (${Math.round(wedgesCost)}₾)`;
     }
 
-    // 4. სახურავის გამოთვლა
+    // 4. სახურავი
     function calculateRoof() {
         const houseArea = parseFloat(document.getElementById('houseArea').value) || 0;
         const ridgeHeight = parseFloat(document.getElementById('ridgeHeight').value) || 0;
         const roofType = document.getElementById('roofType').value;
 
-        let roofTypeName = '';
-        let inclineFactor = 1.0;
-
+        let roofTypeName = '', inclineFactor = 1.0;
         const sideLength = Math.sqrt(houseArea);
 
         if (roofType === 'single') {
@@ -788,7 +833,6 @@
         }
 
         const realRoofArea = houseArea * inclineFactor * 1.10;
-
         const metalArea = Math.ceil(realRoofArea * 1.15);
         const metalPricePerSqM = 25;
         const metalCost = metalArea * metalPricePerSqM;
@@ -801,23 +845,23 @@
         const totalCost = metalCost + woodCost + accessoriesCost;
 
         lastCalculationData = {
-            category: 'სახურავის გამოთვლა',
-            roofTypeName, houseArea, ridgeHeight, realRoofArea,
-            metalArea, woodVolume, metalCost, woodCost, accessoriesCost, totalCost
+            category: `სახურავის გამოთვლა (${roofTypeName})`,
+            area: realRoofArea, totalCost,
+            items: [
+                { name: 'თუნუქი (ჟესტი)', qty: metalArea + ' მ²', cost: metalCost.toFixed(2) + ' ₾' },
+                { name: 'ხის მასალა (კოჭები/რეიკები)', qty: woodVolume + ' მ³', cost: woodCost.toFixed(2) + ' ₾' },
+                { name: 'ქედები / შურუპები / აქსესუარები', qty: 'სტანდარტული', cost: accessoriesCost.toFixed(2) + ' ₾' }
+            ]
         };
 
         document.getElementById('sumLabel1').innerText = 'რეალური ფართობი';
         document.getElementById('sumVal1').innerText = realRoofArea.toFixed(1) + ' მ²';
-
         document.getElementById('sumLabel2').innerText = 'თუნუქი (ჟესტი)';
         document.getElementById('sumVal2').innerText = metalArea + ' მ²';
-
         document.getElementById('sumLabel3').innerText = 'ხის მასალა';
         document.getElementById('sumVal3').innerText = woodVolume + ' მ³';
-
         document.getElementById('sumLabel4').innerText = 'აქსესუარების ხარჯი';
         document.getElementById('sumVal4').innerText = accessoriesCost.toFixed(1) + ' ₾';
-
         document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
 
         let p1 = 0, p2 = 0, p3 = 0;
@@ -830,51 +874,44 @@
         document.getElementById('barPart1').style.width = p1 + '%';
         document.getElementById('barPart2').style.width = p2 + '%';
         document.getElementById('barPart3').style.width = p3 + '%';
-
         document.getElementById('labelPart1').innerText = `თუნუქი (${Math.round(metalCost)}₾)`;
         document.getElementById('labelPart2').innerText = `ხის მასალა (${Math.round(woodCost)}₾)`;
         document.getElementById('labelPart3').innerText = `აქსესუარები (${Math.round(accessoriesCost)}₾)`;
     }
 
-    // 5. ბეტონის ფილის გამოთვლა
+    // 5. ბეტონის ფილა
     function calculateConcrete() {
         const area = parseFloat(document.getElementById('concreteArea').value) || 0;
         const thicknessCm = parseFloat(document.getElementById('concreteThickness').value) || 0;
-        
-        const thicknessM = thicknessCm / 100;
-        const volumeM3 = area * thicknessM;
+        const volumeM3 = area * (thicknessCm / 100);
 
         const cementBags = Math.ceil(volumeM3 * 6.4);
         const sandVolume = parseFloat((volumeM3 * 0.45).toFixed(2));
         const gravelVolume = parseFloat((volumeM3 * 0.8).toFixed(2));
 
-        const sandPrice = 50;
-        const gravelPrice = 50;
-        const cementPrice = 17;
-
-        const sandCost = sandVolume * sandPrice;
-        const gravelCost = gravelVolume * gravelPrice;
-        const cementCost = cementBags * cementPrice;
+        const sandCost = sandVolume * 50;
+        const gravelCost = gravelVolume * 50;
+        const cementCost = cementBags * 17;
         const totalCost = sandCost + gravelCost + cementCost;
 
         lastCalculationData = {
             category: 'ბეტონის ფილა',
-            area, thicknessCm, volumeM3, sandVolume, gravelVolume, cementBags,
-            sandCost, gravelCost, cementCost, totalCost
+            area, totalCost,
+            items: [
+                { name: 'ქვიშა', qty: sandVolume + ' მ³', cost: sandCost.toFixed(2) + ' ₾' },
+                { name: 'ღორღი (შებენი)', qty: gravelVolume + ' მ³', cost: gravelCost.toFixed(2) + ' ₾' },
+                { name: 'ცემენტი', qty: cementBags + ' ტომარა', cost: cementCost.toFixed(2) + ' ₾' }
+            ]
         };
 
         document.getElementById('sumLabel1').innerText = 'მოცულობა';
         document.getElementById('sumVal1').innerText = volumeM3.toFixed(2) + ' მ³';
-
         document.getElementById('sumLabel2').innerText = 'ქვიშა';
         document.getElementById('sumVal2').innerText = sandVolume + ' მ³';
-
         document.getElementById('sumLabel3').innerText = 'ღორღი (შებენი)';
         document.getElementById('sumVal3').innerText = gravelVolume + ' მ³';
-
         document.getElementById('sumLabel4').innerText = 'ცემენტი';
         document.getElementById('sumVal4').innerText = cementBags + ' ტომარა';
-
         document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
 
         let p1 = 0, p2 = 0, p3 = 0;
@@ -887,211 +924,77 @@
         document.getElementById('barPart1').style.width = p1 + '%';
         document.getElementById('barPart2').style.width = p2 + '%';
         document.getElementById('barPart3').style.width = p3 + '%';
-
         document.getElementById('labelPart1').innerText = `ქვიშა (${Math.round(sandCost)}₾)`;
         document.getElementById('labelPart2').innerText = `შებენი (${Math.round(gravelCost)}₾)`;
         document.getElementById('labelPart3').innerText = `ცემენტი (${Math.round(cementCost)}₾)`;
     }
 
-    // 6. არმატურის გამოთვლა
+    // 6. არმატურა
     function calculateRebar() {
         const area = parseFloat(document.getElementById('rebarArea').value) || 0;
         const stepCm = parseFloat(document.getElementById('rebarStep').value) || 20;
         const diameterMm = parseInt(document.getElementById('rebarDiameter').value) || 12;
         const tonPrice = parseFloat(document.getElementById('rebarTonPrice').value) || 0;
 
-        // არმატურის 1 მეტრის წონა (კგ/მ) დიამეტრის მიხედვით
-        const weightsMap = {
-            6: 0.222,
-            8: 0.395,
-            10: 0.617,
-            12: 0.888,
-            14: 1.210,
-            16: 1.580,
-            18: 2.000,
-            20: 2.470
-        };
-
+        const weightsMap = { 6: 0.222, 8: 0.395, 10: 0.617, 12: 0.888, 14: 1.210, 16: 1.580, 18: 2.000, 20: 2.470 };
         const weightPerMeter = weightsMap[diameterMm] || 0.888;
         const stepM = stepCm / 100;
 
-        // 1 მ²-ზე ორმაგი ბადის ქსოვისას სჭირდება: (2 / stepM) მეტრი არმატურა
-        // დამატებული 10% ცდომილება/გადაბმის (გადაფარვის) ხარჯი
         const totalMeters = (area * (2 / stepM)) * 1.10;
         const totalWeightKg = totalMeters * weightPerMeter;
         const totalTons = totalWeightKg / 1000;
-
         const totalCost = totalTons * tonPrice;
-
-        // დამხმარე მასალა - სამუშაო მავთული (კავშირები)
         const wireKg = Math.ceil(totalTons * 12);
 
         lastCalculationData = {
             category: 'არმატურის გამოთვლა',
-            area, stepCm, diameterMm, tonPrice,
-            totalMeters, totalWeightKg, totalTons, wireKg, totalCost
+            area, totalCost,
+            items: [
+                { name: `არმატურა (Ø ${diameterMm} მმ)`, qty: `${Math.round(totalMeters)} მ (~${totalTons.toFixed(3)} ტონა)`, cost: totalCost.toFixed(2) + ' ₾' },
+                { name: 'მოსაქსოვი მავთული', qty: wireKg + ' კგ', cost: '-' }
+            ]
         };
 
         document.getElementById('sumLabel1').innerText = 'მოსაქსოვი ფართობი';
         document.getElementById('sumVal1').innerText = area.toFixed(1) + ' მ²';
-
         document.getElementById('sumLabel2').innerText = 'სულ სიგრძე';
         document.getElementById('sumVal2').innerText = Math.round(totalMeters) + ' მ';
-
         document.getElementById('sumLabel3').innerText = 'საჭირო წონა';
         document.getElementById('sumVal3').innerText = totalTons.toFixed(3) + ' ტონა';
-
         document.getElementById('sumLabel4').innerText = 'მოსაქსოვი მავთული';
         document.getElementById('sumVal4').innerText = wireKg + ' კგ';
-
         document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
 
-        // დიაგრამაზე არმატურის ხარჯის ჩვენება
         document.getElementById('barPart1').style.width = '100%';
         document.getElementById('barPart2').style.width = '0%';
         document.getElementById('barPart3').style.width = '0%';
-
         document.getElementById('labelPart1').innerText = `არმატურა (${Math.round(totalCost)}₾)`;
         document.getElementById('labelPart2').innerText = `-`;
         document.getElementById('labelPart3').innerText = `-`;
     }
 
-    // შედეგის TXT ფაილად ჩამოტვირთვა
+    // TXT ჩამოტვირთვა
     function downloadTXT() {
-        if (!lastCalculationData) {
-            recalculate();
-        }
-
+        if (!lastCalculationData) recalculate();
         const d = lastCalculationData;
-        let textContent = '';
 
-        if (d.category === 'კედლის გამოთვლა') {
-            textContent = 
+        let textContent = 
 `=========================================
       სამშენებლო მასალების ხარჯთაღრიცხვა
 =========================================
-კატეგორია: კედლის გამოთვლა
+კატეგორია: ${d.category}
 თარიღი: ${new Date().toLocaleDateString('ka-GE')}
 
--- პარამეტრები --
-კედლის სიგრძე: ${d.length} მ
-კედლის სიმაღლე: ${d.height} მ
-კედლის ფართობი: ${d.area.toFixed(2)} მ²
+-- საჭირო მასალები --\n`;
 
--- საჭირო მასალები --
-1. ბლოკი: ${d.totalBlocks} ცალი (ერთ. ფასი: ${d.blockPrice} ₾) -> ${d.blocksCost.toFixed(2)} ₾
-2. ცემენტი: ${d.cementBags} ტომარა (ერთ. ფასი: ${d.cementPrice} ₾) -> ${d.cementCost.toFixed(2)} ₾
-3. ქვიშა: ${d.sandVolume} მ³ -> ${d.sandCost.toFixed(2)} ₾
+        d.items.forEach((item, index) => {
+            textContent += `${index + 1}. ${item.name}: ${item.qty} -> ${item.cost}\n`;
+        });
 
------------------------------------------
+        textContent += 
+`\n-----------------------------------------
 სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
 =========================================`;
-        } else if (d.category === 'გიფსოკარდონის გამოთვლა') {
-            textContent = 
-`=========================================
-      სამშენებლო მასალების ხარჯთაღრიცხვა
-=========================================
-კატეგორია: გიფსოკარდონის გამოთვლა (${d.typeName})
-თარიღი: ${new Date().toLocaleDateString('ka-GE')}
-
--- პარამეტრები --
-ფართობი: ${d.area.toFixed(2)} მ²
-
--- საჭირო მასალები (Knauf) --
-1. გიფსოს ფილა: ${d.sheetsCount} ცალი -> ${d.sheetsCost.toFixed(2)} ₾
-2. ძირითადი პროფილები: ${d.mainProfilesCount} ცალი
-3. მიმმართველი პროფილები: ${d.guideProfilesCount} ცალი
-${d.hangersCount > 0 ? `4. პეპლები (სამაგრები): ${d.hangersCount} ცალი\n` : ''}5. შპაკლი: ${d.puttyBags} ტომარა
-6. შურუპები/დუბელები/ლენტი -> ${d.accessoriesCost.toFixed(2)} ₾
-
------------------------------------------
-სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
-=========================================`;
-        } else if (d.category === 'კაფელის გამოთვლა') {
-            textContent = 
-`=========================================
-      სამშენებლო მასალების ხარჯთაღრიცხვა
-=========================================
-კატეგორია: კაფელის გამოთვლა
-თარიღი: ${new Date().toLocaleDateString('ka-GE')}
-
--- პარამეტრები --
-ფართობი: ${d.area.toFixed(2)} მ²
-ფილის ზომა: ${d.sizeText}
-
--- საჭირო მასალები --
-1. კაფელი/მეთლახი: ${d.totalTiles} ცალი (${d.area} მ² x ${d.tileSquarePrice} ₾) -> ${d.tileCost.toFixed(2)} ₾
-2. წებოცემენტი (Knauf 25კგ): ${d.glueBags} ტომარა -> ${d.glueCost.toFixed(2)} ₾
-3. სოლები / SVP სამაგრები: ${d.wedgesCount} ცალი -> ${d.wedgesCost.toFixed(2)} ₾
-
------------------------------------------
-სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
-=========================================`;
-        } else if (d.category === 'სახურავის გამოთვლა') {
-            textContent = 
-`=========================================
-      სამშენებლო მასალების ხარჯთაღრიცხვა
-=========================================
-კატეგორია: სახურავის გამოთვლა (${d.roofTypeName})
-თარიღი: ${new Date().toLocaleDateString('ka-GE')}
-
--- პარამეტრები --
-სახლის ფართობი: ${d.houseArea} მ²
-ქედის სიმაღლე: ${d.ridgeHeight} მ
-სახურავის რეალური დახრილი ფართობი: ${d.realRoofArea.toFixed(2)} მ²
-
--- საჭირო მასალები --
-1. სახურავის თუნუქი (ჟესტი): ${d.metalArea} მ² -> ${d.metalCost.toFixed(2)} ₾
-2. ხის მასალა (კოჭები/რეიკები): ${d.woodVolume} მ³ -> ${d.woodCost.toFixed(2)} ₾
-3. ქედები, შურუპები, აქსესუარები -> ${d.accessoriesCost.toFixed(2)} ₾
-
------------------------------------------
-სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
-=========================================`;
-        } else if (d.category === 'ბეტონის ფილა') {
-            textContent = 
-`=========================================
-      სამშენებლო მასალების ხარჯთაღრიცხვა
-=========================================
-კატეგორია: ბეტონის ფილა
-თარიღი: ${new Date().toLocaleDateString('ka-GE')}
-
--- პარამეტრები --
-დასასხმელი ფართობი: ${d.area} მ²
-ფენის სისქე: ${d.thicknessCm} სმ
-ბეტონის ჯამური მოცულობა: ${d.volumeM3.toFixed(2)} მ³
-
--- საჭირო მასალები --
-1. ქვიშა: ${d.sandVolume} მ³ (1 მ³ = 50 ₾) -> ${d.sandCost.toFixed(2)} ₾
-2. ღორღი (შებენი): ${d.gravelVolume} მ³ (1 მ³ = 50 ₾) -> ${d.gravelCost.toFixed(2)} ₾
-3. ცემენტი: ${d.cementBags} ტომარა (1 ტომარა = 17 ₾) -> ${d.cementCost.toFixed(2)} ₾
-
------------------------------------------
-სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
-=========================================`;
-        } else if (d.category === 'არმატურის გამოთვლა') {
-            textContent = 
-`=========================================
-      სამშენებლო მასალების ხარჯთაღრიცხვა
-=========================================
-კატეგორია: არმატურის გამოთვლა
-თარიღი: ${new Date().toLocaleDateString('ka-GE')}
-
--- პარამეტრები --
-მოსაქსოვი ფართობი: ${d.area} მ²
-ბადის ბიჯი: ${d.stepCm} სმ
-არმატურის დიამეტრი: ${d.diameterMm} მმ
-1 ტონა არმატურის ფასი: ${d.tonPrice} ₾
-
--- საჭირო მასალები --
-1. არმატურის ჯამური სიგრძე: ~${Math.round(d.totalMeters)} მ
-2. არმატურის ჯამური წონა: ${d.totalWeightKg.toFixed(1)} კგ (${d.totalTons.toFixed(3)} ტონა)
-3. მოსაქსოვი მავთული: ~${d.wireKg} კგ
-
------------------------------------------
-სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
-=========================================`;
-        }
 
         const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8' });
         const link = document.createElement('a');
@@ -1100,7 +1003,48 @@ ${d.hangersCount > 0 ? `4. პეპლები (სამაგრები): 
         link.click();
     }
 
-    // პირველი ჩატვირთვისას ავტომატურად იანგარიშოს
+    // PDF ჩამოტვირთვა (ახალი ფუნქცია)
+    function downloadPDF() {
+        if (!lastCalculationData) recalculate();
+        const d = lastCalculationData;
+
+        // შევავსოთ ფარული PDF შაბლონი მონაცემებით
+        document.getElementById('pdfDate').innerText = 'თარიღი: ' + new Date().toLocaleDateString('ka-GE');
+        document.getElementById('pdfCategoryTitle').innerText = 'კატეგორია: ' + d.category;
+
+        const tableBody = document.getElementById('pdfTableBody');
+        tableBody.innerHTML = '';
+
+        d.items.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${item.name}</td>
+                <td>${item.qty}</td>
+                <td>${item.cost}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+
+        document.getElementById('pdfTotalAmount').innerText = 'სულ ჯამი: ' + d.totalCost.toFixed(2) + ' ₾';
+
+        // დროებით გამოვაჩინოთ შაბლონი PDF-ის გენერირებისთვის
+        const pdfElement = document.getElementById('pdfTemplate');
+        pdfElement.style.display = 'block';
+
+        const opt = {
+            margin:       10,
+            filename:     `xarjtagricxva_${new Date().toISOString().slice(0, 10)}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        // PDF-ის გენერირება და ჩამოტვირთვა
+        html2pdf().set(opt).from(pdfElement).save().then(() => {
+            pdfElement.style.display = 'none'; // კვლავ დავმალოთ შაბლონი
+        });
+    }
+
     recalculate();
 </script>
 
