@@ -373,7 +373,6 @@
                 </select>
             </div>
 
-            <!-- ინდივიდუალური ზომები (მხოლოდ "სხვა"-ს არჩევისას) -->
             <div id="customTileDimensions" class="hidden">
                 <div class="input-row" style="margin-bottom: 14px;">
                     <label for="customTileWidth">კაფელის სიგრძე (სმ)</label>
@@ -391,6 +390,28 @@
             </div>
         </div>
 
+        <!-- 4. სახურავის გამოთვლის ველები -->
+        <div id="roofInputs" class="hidden">
+            <div class="input-row" style="margin-bottom: 14px;">
+                <label for="houseArea">სახლის ფართობი (მ²)</label>
+                <input type="number" id="houseArea" class="custom-input" value="100" step="1">
+            </div>
+
+            <div class="input-row" style="margin-bottom: 14px;">
+                <label for="ridgeHeight">ქედის სიმაღლე (მ)</label>
+                <input type="number" id="ridgeHeight" class="custom-input" value="2" step="0.1">
+            </div>
+
+            <div class="input-row">
+                <label for="roofType">სახურავის ტიპი</label>
+                <select id="roofType" class="custom-select">
+                    <option value="single">ერთფერდა (დახრილი)</option>
+                    <option value="double" selected>ორფერდა (სტანდარტული)</option>
+                    <option value="quad">ოთხფერდა (კონვერტისებური)</option>
+                </select>
+            </div>
+        </div>
+
         <!-- ღილაკები -->
         <div class="btn-container">
             <button class="action-btn calc-btn" onclick="recalculate()">გამოთვლა</button>
@@ -400,7 +421,7 @@
 </div>
 
 <script>
-    const categories = ['კედლის გამოთვლა', 'გიფსოკარდონის გამოთვლა', 'კაფელის გამოთვლა'];
+    const categories = ['კედლის გამოთვლა', 'გიფსოკარდონის გამოთვლა', 'კაფელის გამოთვლა', 'სახურავის გამოთვლა'];
     let currentCategoryIndex = 0;
     let lastCalculationData = null;
 
@@ -412,14 +433,17 @@
         document.getElementById('wallInputs').classList.add('hidden');
         document.getElementById('gypsumInputs').classList.add('hidden');
         document.getElementById('tileInputs').classList.add('hidden');
+        document.getElementById('roofInputs').classList.add('hidden');
 
         // აქტიური სექციის გამოჩენა
         if (currentCategoryIndex === 0) {
             document.getElementById('wallInputs').classList.remove('hidden');
         } else if (currentCategoryIndex === 1) {
             document.getElementById('gypsumInputs').classList.remove('hidden');
-        } else {
+        } else if (currentCategoryIndex === 2) {
             document.getElementById('tileInputs').classList.remove('hidden');
+        } else {
+            document.getElementById('roofInputs').classList.remove('hidden');
         }
         recalculate();
     }
@@ -439,8 +463,10 @@
             calculateWall();
         } else if (currentCategoryIndex === 1) {
             calculateGypsum();
-        } else {
+        } else if (currentCategoryIndex === 2) {
             calculateTile();
+        } else {
+            calculateRoof();
         }
     }
 
@@ -468,7 +494,6 @@
             blockPrice, cementPrice, blocksCost, cementCost, sandCost, totalCost
         };
 
-        // UI განახლება
         document.getElementById('sumLabel1').innerText = 'კედლის ფართობი';
         document.getElementById('sumVal1').innerText = area.toFixed(1) + ' მ²';
 
@@ -483,7 +508,6 @@
 
         document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
 
-        // დიაგრამა
         let p1 = 0, p2 = 0, p3 = 0;
         if (totalCost > 0) {
             p1 = (blocksCost / totalCost) * 100;
@@ -500,7 +524,7 @@
         document.getElementById('labelPart3').innerText = `ქვიშა (${Math.round(sandCost)}₾)`;
     }
 
-    // 2. გიფსოკარდონის გამოთვლა (Knauf)
+    // 2. გიფსოკარდონის გამოთვლა
     function calculateGypsum() {
         const area = parseFloat(document.getElementById('gypsumArea').value) || 0;
         const type = document.getElementById('gypsumType').value;
@@ -548,7 +572,6 @@
             sheetsCost, profilesCost, accessoriesCost, totalCost
         };
 
-        // UI განახლება
         document.getElementById('sumLabel1').innerText = 'ფართობი';
         document.getElementById('sumVal1').innerText = area.toFixed(1) + ' მ²';
 
@@ -563,7 +586,6 @@
 
         document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
 
-        // დიაგრამა
         let p1 = 0, p2 = 0, p3 = 0;
         if (totalCost > 0) {
             p1 = (sheetsCost / totalCost) * 100;
@@ -597,21 +619,15 @@
             heightCm = parseFloat(document.getElementById('customTileHeight').value) || 50;
         }
 
-        // 1 ფილის ფართობი $m^2$-ში
         const singleTileAreaM2 = (widthCm / 100) * (heightCm / 100);
-
-        // კაფელის რაოდენობა (+10% ჭრის/დანაკარგის რეზერვი)
         const totalTiles = Math.ceil((area * 1.1) / singleTileAreaM2);
 
-        // წებოცემენტი (Knauf Fliesen/K4 - 4 კგ 1 კვ.მ-ზე, 25 კგ-იანი ტომარა ~ 22 ლარი)
         const glueBags = Math.ceil((area * 4) / 25);
         const glueBagPrice = 22;
 
-        // სოლები (SVP სამაგრები: საშუალოდ 16 ცალი 1 კვ.მ-ზე, 1 ცალი ~ 0.10 ლარი)
         const wedgesCount = Math.ceil(area * 16);
         const wedgePrice = 0.10;
 
-        // ხარჯები
         const tileCost = area * tileSquarePrice;
         const glueCost = glueBags * glueBagPrice;
         const wedgesCost = wedgesCount * wedgePrice;
@@ -623,7 +639,6 @@
             tileSquarePrice, tileCost, glueCost, wedgesCost, totalCost
         };
 
-        // UI განახლება
         document.getElementById('sumLabel1').innerText = 'ფართობი';
         document.getElementById('sumVal1').innerText = area.toFixed(1) + ' მ²';
 
@@ -638,7 +653,6 @@
 
         document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
 
-        // დიაგრამა
         let p1 = 0, p2 = 0, p3 = 0;
         if (totalCost > 0) {
             p1 = (tileCost / totalCost) * 100;
@@ -653,6 +667,89 @@
         document.getElementById('labelPart1').innerText = `კაფელი (${Math.round(tileCost)}₾)`;
         document.getElementById('labelPart2').innerText = `წებოცემენტი (${Math.round(glueCost)}₾)`;
         document.getElementById('labelPart3').innerText = `სოლები (${Math.round(wedgesCost)}₾)`;
+    }
+
+    // 4. სახურავის გამოთვლა
+    function calculateRoof() {
+        const houseArea = parseFloat(document.getElementById('houseArea').value) || 0;
+        const ridgeHeight = parseFloat(document.getElementById('ridgeHeight').value) || 0;
+        const roofType = document.getElementById('roofType').value;
+
+        let roofTypeName = '';
+        let inclineFactor = 1.0;
+
+        // სავარაუდო გვერდის სიგრძე კვადრატული ფართობისთვის
+        const sideLength = Math.sqrt(houseArea);
+
+        if (roofType === 'single') {
+            roofTypeName = 'ერთფერდა (დახრილი)';
+            // პითაგორა 1 დახრილობაზე: sqrt(side^2 + height^2) / side
+            inclineFactor = Math.sqrt(Math.pow(sideLength, 2) + Math.pow(ridgeHeight, 2)) / sideLength;
+        } else if (roofType === 'double') {
+            roofTypeName = 'ორფერდა (სტანდარტული)';
+            // პითაგორა ნახევარ სიგანეზე: sqrt((side/2)^2 + height^2) / (side/2)
+            const halfSide = sideLength / 2;
+            inclineFactor = Math.sqrt(Math.pow(halfSide, 2) + Math.pow(ridgeHeight, 2)) / halfSide;
+        } else if (roofType === 'quad') {
+            roofTypeName = 'ოთხფერდა (კონვერტისებური)';
+            const halfSide = sideLength / 2;
+            inclineFactor = (Math.sqrt(Math.pow(halfSide, 2) + Math.pow(ridgeHeight, 2)) / halfSide) * 1.08; // დამატებითი კუთხეები
+        }
+
+        // რეალური დახრილი ფართობი (+10% გადავიდეს გადახურვის ნავებზე/გამოშვებებზე)
+        const realRoofArea = houseArea * inclineFactor * 1.10;
+
+        // 1. თუნუქი/ჟესტი (+15% გადაფარვა და ჭრა) ~ 25 ლარი 1 მ²
+        const metalArea = Math.ceil(realRoofArea * 1.15);
+        const metalPricePerSqM = 25;
+        const metalCost = metalArea * metalPricePerSqM;
+
+        // 2. ხის მასალა (კოჭები/რეიკები - საშუალოდ 0.045 მ³ ხე 1 მ²-ზე) ~ 650 ლარი 1 კუბი
+        const woodVolume = parseFloat((realRoofArea * 0.045).toFixed(2));
+        const woodCubicPrice = 650;
+        const woodCost = woodVolume * woodCubicPrice;
+
+        // 3. სამაგრები, ქედები და აქსესუარები (~ 6 ლარი 1 მ²-ზე)
+        const accessoriesCost = realRoofArea * 6;
+
+        const totalCost = metalCost + woodCost + accessoriesCost;
+
+        lastCalculationData = {
+            category: 'სახურავის გამოთვლა',
+            roofTypeName, houseArea, ridgeHeight, realRoofArea,
+            metalArea, woodVolume, metalCost, woodCost, accessoriesCost, totalCost
+        };
+
+        // UI განახლება
+        document.getElementById('sumLabel1').innerText = 'რეალური ფართობი';
+        document.getElementById('sumVal1').innerText = realRoofArea.toFixed(1) + ' მ²';
+
+        document.getElementById('sumLabel2').innerText = 'თუნუქი (ჟესტი)';
+        document.getElementById('sumVal2').innerText = metalArea + ' მ²';
+
+        document.getElementById('sumLabel3').innerText = 'ხის მასალა';
+        document.getElementById('sumVal3').innerText = woodVolume + ' მ³';
+
+        document.getElementById('sumLabel4').innerText = 'საერთო ღირებულება';
+        document.getElementById('sumVal4').innerText = totalCost.toFixed(1) + ' ₾';
+
+        document.getElementById('totalSumText').innerText = 'ჯამი: ' + totalCost.toFixed(2) + ' ₾';
+
+        // დიაგრამა
+        let p1 = 0, p2 = 0, p3 = 0;
+        if (totalCost > 0) {
+            p1 = (metalCost / totalCost) * 100;
+            p2 = (woodCost / totalCost) * 100;
+            p3 = (accessoriesCost / totalCost) * 100;
+        }
+
+        document.getElementById('barPart1').style.width = p1 + '%';
+        document.getElementById('barPart2').style.width = p2 + '%';
+        document.getElementById('barPart3').style.width = p3 + '%';
+
+        document.getElementById('labelPart1').innerText = `თუნუქი (${Math.round(metalCost)}₾)`;
+        document.getElementById('labelPart2').innerText = `ხის მასალა (${Math.round(woodCost)}₾)`;
+        document.getElementById('labelPart3').innerText = `აქსესუარები (${Math.round(accessoriesCost)}₾)`;
     }
 
     // შედეგის TXT ფაილად ჩამოტვირთვა
@@ -721,6 +818,27 @@ ${d.hangersCount > 0 ? `4. პეპლები (სამაგრები): 
 1. კაფელი/მეთლახი: ${d.totalTiles} ცალი (${d.area} მ² x ${d.tileSquarePrice} ₾) -> ${d.tileCost.toFixed(2)} ₾
 2. წებოცემენტი (Knauf 25კგ): ${d.glueBags} ტომარა -> ${d.glueCost.toFixed(2)} ₾
 3. სოლები / SVP სამაგრები: ${d.wedgesCount} ცალი -> ${d.wedgesCost.toFixed(2)} ₾
+
+-----------------------------------------
+სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
+=========================================`;
+        } else if (d.category === 'სახურავის გამოთვლა') {
+            textContent = 
+`=========================================
+      სამშენებლო მასალების ხარჯთაღრიცხვა
+=========================================
+კატეგორია: სახურავის გამოთვლა (${d.roofTypeName})
+თარიღი: ${new Date().toLocaleDateString('ka-GE')}
+
+-- პარამეტრები --
+სახლის ფართობი: ${d.houseArea} მ²
+ქედის სიმაღლე: ${d.ridgeHeight} მ
+სახურავის რეალური დახრილი ფართობი: ${d.realRoofArea.toFixed(2)} მ²
+
+-- საჭირო მასალები --
+1. სახურავის თუნუქი (ჟესტი): ${d.metalArea} მ² -> ${d.metalCost.toFixed(2)} ₾
+2. ხის მასალა (კოჭები/რეიკები): ${d.woodVolume} მ³ -> ${d.woodCost.toFixed(2)} ₾
+3. ქედები, შურუპები, აქსესუარები -> ${d.accessoriesCost.toFixed(2)} ₾
 
 -----------------------------------------
 სავარაუდო ჯამური ღირებულება: ${d.totalCost.toFixed(2)} ₾
