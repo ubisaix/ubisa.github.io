@@ -26,7 +26,7 @@
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            max-width: 700px;
+            max-width: 800px;
             width: 100%;
         }
 
@@ -51,6 +51,7 @@
             font-size: 14px;
             outline: none;
             flex: 1;
+            cursor: pointer;
         }
 
         .swap-btn {
@@ -74,16 +75,22 @@
             gap: 15px;
         }
 
-        @media (min-width: 600px) {
+        @media (min-width: 650px) {
             .text-areas {
                 flex-direction: row;
             }
         }
 
+        .input-box, .output-box {
+            position: relative;
+            width: 100%;
+        }
+
         textarea {
             width: 100%;
-            height: 150px;
+            height: 180px;
             padding: 12px;
+            padding-bottom: 40px;
             border: 1px solid #ccc;
             border-radius: 8px;
             resize: none;
@@ -93,6 +100,41 @@
 
         textarea:focus {
             border-color: #007bff;
+        }
+
+        /* ინსტრუმენტების ზოლი (ხმა, კოპირება, გასუფთავება) */
+        .actions {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 5px;
+        }
+
+        .icon-btn {
+            background: #e9ecef;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: #dee2e6;
+        }
+
+        .char-count {
+            font-size: 12px;
+            color: #777;
         }
 
         .translate-btn {
@@ -121,29 +163,115 @@
     
     <div class="controls">
         <select id="fromLanguage">
-            <option value="ka">ქართული</option>
-            <option value="en" selected>ინგლისური</option>
-            <option value="ru">რუსული</option>
-            <option value="de">გერმანული</option>
-            <option value="fr">ფრანგული</option>
-            <option value="es">ესპანური</option>
+            <option value="ka">ქართული (Georgian)</option>
+            <option value="en" selected>ინგლისური (English)</option>
+            <option value="ru">რუსული (Russian)</option>
+            <option value="de">გერმანული (German)</option>
+            <option value="fr">ფრანგული (French)</option>
+            <option value="es">ესპანური (Spanish)</option>
+            <option value="it">იტალიური (Italian)</option>
+            <option value="tr">თურქული (Turkish)</option>
+            <option value="uk">უკრაინული (Ukrainian)</option>
+            <option value="zh">ჩინური (Chinese)</option>
+            <option value="ja">იაპონური (Japanese)</option>
+            <option value="ko">კორეული (Korean)</option>
+            <option value="ar">არაბული (Arabic)</option>
+            <option value="el">ბერძნული (Greek)</option>
+            <option value="hy">სომხური (Armenian)</option>
+            <option value="az">აზერბაიჯანული (Azerbaijani)</option>
+            <option value="pl">პოლონური (Polish)</option>
+            <option value="pt">პორტუგალიური (Portuguese)</option>
+            <option value="nl">ჰოლანდიური (Dutch)</option>
+            <option value="sv">შვედური (Swedish)</option>
+            <option value="no">ნორვეგიული (Norwegian)</option>
+            <option value="fi">ფინური (Finnish)</option>
+            <option value="cs">ჩეხური (Czech)</option>
+            <option value="hu">უნგრული (Hungarian)</option>
+            <option value="ro">რუმინული (Romanian)</option>
+            <option value="bg">ბულგარული (Bulgarian)</option>
+            <option value="he">ებრაული (Hebrew)</option>
+            <option value="hi">ინდური/ჰინდი (Hindi)</option>
+            <option value="th">ტაილანდური (Thai)</option>
+            <option value="vi">ვიეტნამური (Vietnamese)</option>
+            <option value="id">ინდონეზიური (Indonesian)</option>
+            <option value="fa">სპარსული (Persian)</option>
+            <option value="da">დანიური (Danish)</option>
+            <option value="sk">სლოვაკური (Slovak)</option>
+            <option value="hr">ხორვატიული (Croatian)</option>
+            <option value="sr">სერბული (Serbian)</option>
+            <option value="lt">ლიეტუვური (Lithuanian)</option>
+            <option value="lv">ლატვიური (Latvian)</option>
+            <option value="et">ესტონური (Estonian)</option>
+            <option value="la">ლათინური (Latin)</option>
         </select>
 
-        <button class="swap-btn" onclick="swapLanguages()">⇄</button>
+        <button class="swap-btn" onclick="swapLanguages()" title="ენების გაცვლა">⇄</button>
 
         <select id="toLanguage">
-            <option value="ka" selected>ქართული</option>
-            <option value="en">ინგლისური</option>
-            <option value="ru">რუსული</option>
-            <option value="de">გერმანული</option>
-            <option value="fr">ფრანგული</option>
-            <option value="es">ესპანური</option>
+            <option value="ka" selected>ქართული (Georgian)</option>
+            <option value="en">ინგლისური (English)</option>
+            <option value="ru">რუსული (Russian)</option>
+            <option value="de">გერმანული (German)</option>
+            <option value="fr">ფრანგული (French)</option>
+            <option value="es">ესპანური (Spanish)</option>
+            <option value="it">იტალიური (Italian)</option>
+            <option value="tr">თურქული (Turkish)</option>
+            <option value="uk">უკრაინული (Ukrainian)</option>
+            <option value="zh">ჩინური (Chinese)</option>
+            <option value="ja">იაპონური (Japanese)</option>
+            <option value="ko">კორეული (Korean)</option>
+            <option value="ar">არაბული (Arabic)</option>
+            <option value="el">ბერძნული (Greek)</option>
+            <option value="hy">სომხური (Armenian)</option>
+            <option value="az">აზერბაიჯანული (Azerbaijani)</option>
+            <option value="pl">პოლონური (Polish)</option>
+            <option value="pt">პორტუგალიური (Portuguese)</option>
+            <option value="nl">ჰოლანდიური (Dutch)</option>
+            <option value="sv">შვედური (Swedish)</option>
+            <option value="no">ნორვეგიული (Norwegian)</option>
+            <option value="fi">ფინური (Finnish)</option>
+            <option value="cs">ჩეხური (Czech)</option>
+            <option value="hu">უნგრული (Hungarian)</option>
+            <option value="ro">რუმინული (Romanian)</option>
+            <option value="bg">ბულგარული (Bulgarian)</option>
+            <option value="he">ებრაული (Hebrew)</option>
+            <option value="hi">ინდური/ჰინდი (Hindi)</option>
+            <option value="th">ტაილანდური (Thai)</option>
+            <option value="vi">ვიეტნამური (Vietnamese)</option>
+            <option value="id">ინდონეზიური (Indonesian)</option>
+            <option value="fa">სპარსული (Persian)</option>
+            <option value="da">დანიური (Danish)</option>
+            <option value="sk">სლოვაკური (Slovak)</option>
+            <option value="hr">ხორვატიული (Croatian)</option>
+            <option value="sr">სერბული (Serbian)</option>
+            <option value="lt">ლიეტუვური (Lithuanian)</option>
+            <option value="lv">ლატვიური (Latvian)</option>
+            <option value="et">ესტონური (Estonian)</option>
+            <option value="la">ლათინური (Latin)</option>
         </select>
     </div>
 
     <div class="text-areas">
-        <textarea id="inputText" placeholder="ჩაწერეთ ტექსტი..."></textarea>
-        <textarea id="outputText" placeholder="თარგმანი გამოჩნდება აქ..." readonly></textarea>
+        <div class="input-box">
+            <textarea id="inputText" placeholder="ჩაწერეთ ტექსტი..." oninput="updateCharCount()"></textarea>
+            <div class="actions">
+                <div class="btn-group">
+                    <button class="icon-btn" onclick="speakText('inputText', 'fromLanguage')" title="მოსმენა">🔊</button>
+                    <button class="icon-btn" onclick="clearInput()" title="წაშლა">✕</button>
+                </div>
+                <span class="char-count" id="charCount">0/5000</span>
+            </div>
+        </div>
+
+        <div class="output-box">
+            <textarea id="outputText" placeholder="თარგმანი გამოჩნდება აქ..." readonly></textarea>
+            <div class="actions">
+                <div class="btn-group">
+                    <button class="icon-btn" onclick="speakText('outputText', 'toLanguage')" title="მოსმენა">🔊</button>
+                    <button class="icon-btn" onclick="copyToClipboard()" title="კოპირება">📋</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <button class="translate-btn" onclick="translateText()">თარგმნა</button>
@@ -192,6 +320,43 @@
         const tempText = inputText.value;
         inputText.value = outputText.value;
         outputText.value = tempText;
+
+        updateCharCount();
+    }
+
+    // ტექსტის გაჟღერება (Text to Speech)
+    function speakText(textareaId, langSelectId) {
+        const text = document.getElementById(textareaId).value;
+        const lang = document.getElementById(langSelectId).value;
+
+        if (!text) return;
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // ტექსტის დაკოპირება
+    function copyToClipboard() {
+        const outputText = document.getElementById('outputText').value;
+        if (outputText) {
+            navigator.clipboard.writeText(outputText).then(() => {
+                alert("თარგმანი დაკოპირდა!");
+            });
+        }
+    }
+
+    // ტექსტის წაშლა
+    function clearInput() {
+        document.getElementById('inputText').value = '';
+        document.getElementById('outputText').value = '';
+        updateCharCount();
+    }
+
+    // სიმბოლოების დათვლა
+    function updateCharCount() {
+        const text = document.getElementById('inputText').value;
+        document.getElementById('charCount').textContent = `${text.length}/5000`;
     }
 </script>
 
