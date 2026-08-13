@@ -5,15 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ტექსტის მთარგმნელი</title>
     <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #cccccd;
+            --subtext-color: #777777;
+            --btn-bg: #e9ecef;
+            --btn-hover: #dee2e6;
+        }
+
+        body.dark-mode {
+            --bg-color: #18191a;
+            --card-bg: #242526;
+            --text-color: #e4e6eb;
+            --border-color: #3e4042;
+            --subtext-color: #b0b3b8;
+            --btn-bg: #3a3b3c;
+            --btn-hover: #4e4f50;
+        }
+
         * {
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         body {
-            background-color: #f4f7f6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,18 +44,39 @@
         }
 
         .translator-container {
-            background: #ffffff;
+            background: var(--card-bg);
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             max-width: 800px;
             width: 100%;
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
         h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
+            color: var(--text-color);
+            margin: 0;
+        }
+
+        .theme-toggle {
+            background: var(--btn-bg);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--text-color);
+        }
+
+        .theme-toggle:hover {
+            background: var(--btn-hover);
         }
 
         .controls {
@@ -46,7 +89,9 @@
 
         select {
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
             border-radius: 6px;
             font-size: 14px;
             outline: none;
@@ -91,7 +136,9 @@
             height: 180px;
             padding: 12px;
             padding-bottom: 40px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
             border-radius: 8px;
             resize: none;
             font-size: 15px;
@@ -102,7 +149,6 @@
             border-color: #007bff;
         }
 
-        /* ინსტრუმენტების ზოლი (ხმა, კოპირება, გასუფთავება) */
         .actions {
             position: absolute;
             bottom: 10px;
@@ -119,7 +165,8 @@
         }
 
         .icon-btn {
-            background: #e9ecef;
+            background: var(--btn-bg);
+            color: var(--text-color);
             border: none;
             padding: 6px 10px;
             border-radius: 4px;
@@ -129,12 +176,24 @@
         }
 
         .icon-btn:hover {
-            background: #dee2e6;
+            background: var(--btn-hover);
+        }
+
+        .icon-btn.recording {
+            background: #dc3545;
+            color: white;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
         }
 
         .char-count {
             font-size: 12px;
-            color: #777;
+            color: var(--subtext-color);
         }
 
         .translate-btn {
@@ -154,12 +213,78 @@
         .translate-btn:hover {
             background-color: #218838;
         }
+
+        /* ისტორიის სექცია */
+        .history-section {
+            margin-top: 25px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .history-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .clear-history-btn {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .history-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: var(--btn-bg);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-item:hover {
+            background: var(--btn-hover);
+        }
+
+        .history-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 90%;
+        }
+
+        /* დამალული File Input */
+        #fileInput {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <div class="translator-container">
-    <h2>ტექსტის მთარგმნელი</h2>
+    <div class="header">
+        <h2>ტექსტის მთარგმნელი</h2>
+        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" title="თემის შეცვლა">🌙</button>
+    </div>
     
     <div class="controls">
         <select id="fromLanguage">
@@ -257,10 +382,13 @@
             <div class="actions">
                 <div class="btn-group">
                     <button class="icon-btn" onclick="speakText('inputText', 'fromLanguage')" title="მოსმენა">🔊</button>
+                    <button class="icon-btn" id="micBtn" onclick="startSpeechRecognition()" title="ხმოვანი შეყვანა">🎤</button>
+                    <button class="icon-btn" onclick="document.getElementById('fileInput').click()" title="ფაილის ატვირთვა (.txt)">📁</button>
                     <button class="icon-btn" onclick="clearInput()" title="წაშლა">✕</button>
                 </div>
                 <span class="char-count" id="charCount">0/5000</span>
             </div>
+            <input type="file" id="fileInput" accept=".txt" onchange="uploadFile(event)">
         </div>
 
         <div class="output-box">
@@ -275,9 +403,29 @@
     </div>
 
     <button class="translate-btn" onclick="translateText()">თარგმნა</button>
+
+    <!-- ისტორიის სექცია -->
+    <div class="history-section">
+        <div class="history-header">
+            <span class="history-title">📜 თარგმანების ისტორია</span>
+            <button class="clear-history-btn" onclick="clearHistory()">ისტორიის გასუფთავება</button>
+        </div>
+        <ul class="history-list" id="historyList"></ul>
+    </div>
 </div>
 
 <script>
+    let recognition;
+
+    // ინიციალიზაცია ჩატვირთვისას
+    window.onload = function() {
+        loadHistory();
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('themeBtn').textContent = '☀️';
+        }
+    };
+
     async function translateText() {
         const text = document.getElementById('inputText').value.trim();
         const fromLang = document.getElementById('fromLanguage').value;
@@ -296,7 +444,9 @@
             const data = await response.json();
             
             if (data.responseData) {
-                outputArea.value = data.responseData.translatedText;
+                const translated = data.responseData.translatedText;
+                outputArea.value = translated;
+                saveToHistory(text, translated, fromLang, toLang);
             } else {
                 outputArea.value = "თარგმნა ვერ მოხერხდა.";
             }
@@ -336,6 +486,69 @@
         window.speechSynthesis.speak(utterance);
     }
 
+    // ხმოვანი შეყვანა (Speech to Text)
+    function startSpeechRecognition() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        if (!SpeechRecognition) {
+            alert("თქვენს ბრაუზერს ხმოვანი შეყვანის მხარდაჭერა არ აქვს.");
+            return;
+        }
+
+        const micBtn = document.getElementById('micBtn');
+        const fromLang = document.getElementById('fromLanguage').value;
+
+        if (recognition && micBtn.classList.contains('recording')) {
+            recognition.stop();
+            return;
+        }
+
+        recognition = new SpeechRecognition();
+        recognition.lang = fromLang;
+        recognition.interimResults = false;
+
+        recognition.onstart = function() {
+            micBtn.classList.add('recording');
+        };
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            document.getElementById('inputText').value = transcript;
+            updateCharCount();
+        };
+
+        recognition.onerror = function(event) {
+            console.error("Speech Recognition Error:", event.error);
+        };
+
+        recognition.onend = function() {
+            micBtn.classList.remove('recording');
+        };
+
+        recognition.start();
+    }
+
+    // ფაილის ატვირთვა (.txt)
+    function uploadFile(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('inputText').value = e.target.result;
+            updateCharCount();
+        };
+        reader.readAsText(file);
+    }
+
+    // თემის გადართვა (Dark/Light Mode)
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+
     // ტექსტის დაკოპირება
     function copyToClipboard() {
         const outputText = document.getElementById('outputText').value;
@@ -357,6 +570,50 @@
     function updateCharCount() {
         const text = document.getElementById('inputText').value;
         document.getElementById('charCount').textContent = `${text.length}/5000`;
+    }
+
+    // ისტორიის მართვა (localStorage)
+    function saveToHistory(fromText, toText, fromLang, toLang) {
+        let history = JSON.parse(localStorage.getItem('transHistory')) || [];
+        
+        // დუბლიკატების თავიდან აცილება
+        history = history.filter(item => item.fromText !== fromText);
+
+        history.unshift({ fromText, toText, fromLang, toLang });
+        if (history.length > 5) history.pop(); // მაქსიმუმ 5 ელემენტი
+
+        localStorage.setItem('transHistory', JSON.stringify(history));
+        loadHistory();
+    }
+
+    function loadHistory() {
+        const historyList = document.getElementById('historyList');
+        const history = JSON.parse(localStorage.getItem('transHistory')) || [];
+        
+        historyList.innerHTML = '';
+        if (history.length === 0) {
+            historyList.innerHTML = '<li style="font-size:12px; opacity:0.7;">ისტორია ცარიელია</li>';
+            return;
+        }
+
+        history.forEach((item) => {
+            const li = document.createElement('li');
+            li.className = 'history-item';
+            li.innerHTML = `<span class="history-text"><b>${item.fromText}</b> → ${item.toText}</span> ➔`;
+            li.onclick = () => {
+                document.getElementById('fromLanguage').value = item.fromLang;
+                document.getElementById('toLanguage').value = item.toLang;
+                document.getElementById('inputText').value = item.fromText;
+                document.getElementById('outputText').value = item.toText;
+                updateCharCount();
+            };
+            historyList.appendChild(li);
+        });
+    }
+
+    function clearHistory() {
+        localStorage.removeItem('transHistory');
+        loadHistory();
     }
 </script>
 
