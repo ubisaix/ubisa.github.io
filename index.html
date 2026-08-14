@@ -4,255 +4,339 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI საძიებო სისტემა</title>
-    <!-- Tailwind CSS პირდაპირ CDN-დან -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter & Noto Sans Georgian -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Georgian:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* სრულიად შიდა CSS - ინტერნეტი არ სჭირდება */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
         body {
-            font-family: 'Noto Sans Georgian', 'Inter', sans-serif;
-            background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #0f172a 100%);
+            background-color: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
         }
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+
+        header {
+            text-align: center;
+            max-width: 600px;
+            margin-bottom: 30px;
         }
-        .search-glow:focus-within {
-            box-shadow: 0 0 25px rgba(99, 102, 241, 0.35);
+
+        .badge {
+            background-color: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: inline-block;
+            margin-bottom: 12px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: #94a3b8;
+            font-size: 15px;
+        }
+
+        main {
+            width: 100%;
+            max-width: 700px;
+        }
+
+        /* საძიებო ველის სტილი */
+        .search-box {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 16px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: #6366f1;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
+        }
+
+        .search-icon {
+            font-size: 18px;
+            margin-right: 12px;
+            color: #94a3b8;
+        }
+
+        input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        input::placeholder {
+            color: #64748b;
+        }
+
+        /* ფილტრის ღილაკები */
+        .categories {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cat-btn {
+            background: #1e293b;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .cat-btn:hover {
+            background: #334155;
+        }
+
+        .cat-btn.active {
+            background: #6366f1;
+            color: #ffffff;
+            border-color: #6366f1;
+        }
+
+        /* მეტრიკა */
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+
+        /* შედეგების ბარათები */
+        .results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 18px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: #6366f1;
+            transform: translateY(-2px);
+        }
+
+        .card-category {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #818cf8;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: inline-block;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .card-desc {
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: #0f172a;
+            color: #64748b;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            background: #1e293b;
+            border-radius: 12px;
+            color: #94a3b8;
+            display: none;
         }
     </style>
 </head>
-<body class="text-slate-200 min-h-screen flex flex-col items-center justify-start p-4 sm:p-8">
+<body>
 
-    <!-- Header / Logo -->
-    <header class="w-full max-w-3xl text-center mt-12 mb-8">
-        <div class="inline-flex items-center space-x-2 bg-indigo-500/10 border border-indigo-500/20 px-4 py-1.5 rounded-full text-indigo-400 text-sm font-medium mb-4">
-            <span>✨ ჭკვიანი საძიებო სისტემა</span>
-        </div>
-        <h1 class="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-indigo-300 tracking-tight">
-            რისი პოვნა გსურთ?
-        </h1>
-        <p class="text-slate-400 mt-2 text-sm sm:text-base">
-            იპოვეთ ინფორმაცია ტექნოლოგიების, კულტურისა და მეცნიერების შესახებ
-        </p>
+    <header>
+        <span class="badge">✨ ჭკვიანი საძიებო სისტემა</span>
+        <h1>რისი პოვნა გსურთ?</h1>
+        <p class="subtitle">ჩაწერთ სიტყვა ქვემოთ მოცემულ ველში</p>
     </header>
 
-    <!-- Search Section -->
-    <main class="w-full max-w-3xl">
-        <div class="glass-card rounded-2xl p-2 sm:p-3 search-glow transition-all duration-300 mb-6">
-            <div class="relative flex items-center">
-                <svg class="w-6 h-6 text-slate-400 ml-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-                <input 
-                    type="text" 
-                    id="searchInput"
-                    placeholder="ჩაწერთ საძიებო სიტყვა (მაგ: თბილისი, პითონი, კერძები)..." 
-                    class="w-full bg-transparent border-none text-white placeholder-slate-500 focus:outline-none px-4 py-3 text-base sm:text-lg"
-                    autocomplete="off"
-                >
-                <button 
-                    id="clearBtn"
-                    onclick="clearSearch()"
-                    class="hidden text-slate-400 hover:text-white px-3 py-1 text-sm font-medium transition"
-                >
-                    ✕
-                </button>
-            </div>
+    <main>
+        <!-- საძიებო ველი -->
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="მაგალითად: თბილისი, პითონი, ხინკალი..." autocomplete="off">
         </div>
 
-        <!-- Filter Chips -->
-        <div class="flex flex-wrap gap-2 mb-8 justify-center sm:justify-start" id="categoriesContainer">
-            <button onclick="filterCategory('all')" class="category-btn active bg-indigo-600 text-white px-4 py-1.5 rounded-xl text-sm font-medium transition hover:bg-indigo-500">ყველა</button>
-            <button onclick="filterCategory('geography')" class="category-btn bg-slate-800 text-slate-300 border border-slate-700/50 px-4 py-1.5 rounded-xl text-sm font-medium transition hover:bg-slate-700">გეოგრაფია</button>
-            <button onclick="filterCategory('tech')" class="category-btn bg-slate-800 text-slate-300 border border-slate-700/50 px-4 py-1.5 rounded-xl text-sm font-medium transition hover:bg-slate-700">ტექნოლოგიები</button>
-            <button onclick="filterCategory('food')" class="category-btn bg-slate-800 text-slate-300 border border-slate-700/50 px-4 py-1.5 rounded-xl text-sm font-medium transition hover:bg-slate-700">კულინარია</button>
-            <button onclick="filterCategory('science')" class="category-btn bg-slate-800 text-slate-300 border border-slate-700/50 px-4 py-1.5 rounded-xl text-sm font-medium transition hover:bg-slate-700">მეცნიერება</button>
+        <!-- ფილტრები -->
+        <div class="categories">
+            <button class="cat-btn active" onclick="setCategory('all', this)">ყველა</button>
+            <button class="cat-btn" onclick="setCategory('geography', this)">გეოგრაფია</button>
+            <button class="cat-btn" onclick="setCategory('tech', this)">ტექნოლოგიები</button>
+            <button class="cat-btn" onclick="setCategory('food', this)">კულინარია</button>
         </div>
 
-        <!-- Meta info & Count -->
-        <div class="flex justify-between items-center mb-4 px-2 text-xs text-slate-400">
-            <span id="resultsCount">მოიძებნა: 0 შედეგი</span>
-            <span>საძიებო დრო: <strong class="text-indigo-400" id="searchTime">0ms</strong></span>
+        <!-- სტატისტიკა -->
+        <div class="stats">
+            <span id="countText">მოიძებნა: 0</span>
+            <span id="timeText">0ms</span>
         </div>
 
-        <!-- Results Container -->
-        <div id="resultsContainer" class="space-y-4">
-            <!-- შედეგები ჩაიტვირთება დინამიურად JS-ით -->
-        </div>
+        <!-- შედეგები -->
+        <div id="resultsList" class="results-list"></div>
 
-        <!-- Empty State -->
-        <div id="noResults" class="hidden text-center py-12 glass-card rounded-2xl">
-            <p class="text-4xl mb-3">🔍</p>
-            <h3 class="text-lg font-semibold text-slate-300">შედეგი ვერ მოიძებნა</h3>
-            <p class="text-slate-500 text-sm mt-1">სცადეთ სხვა საძიებო სიტყვა ან შეცვალეთ ფილტრი</p>
+        <!-- ცარიელი მდგომარეობა -->
+        <div id="noResults" class="no-results">
+            <h3>❌ შედეგი ვერ მოიძებნა</h3>
+            <p style="font-size: 13px; margin-top: 5px;">სცადეთ სხვა საძიებო სიტყვა</p>
         </div>
     </main>
 
-    <!-- JavaScript - საძიებო ლოგიკა -->
     <script>
-        // მონაცემთა ბაზა (Mock Data)
+        // მონაცემთა ბაზა
         const database = [
             {
-                id: 1,
                 title: "თბილისი - საქართველოს დედაქალაქი",
                 category: "geography",
                 categoryName: "გეოგრაფია",
-                description: "თბილისი საქართველოს უდიდესი ქალაქი და დედაქალაქია. იგი მდებარეობს მტკვრის ხეობაში და გამოირჩევა მდიდარი ისტორიითა და არქიტექტურით.",
-                tags: ["თბილისი", "საქართველო", "ქალაქი", "დედაქალაქი", "მტკვარი"],
-                url: "#"
+                desc: "თბილისი საქართველოს უდიდესი ქალაქი და დედაქალაქია. იგი მდებარეობს მტკვრის ხეობაში.",
+                tags: ["თბილისი", "საქართველო", "ქალაქი"]
             },
             {
-                id: 2,
                 title: "Python პროგრამირების ენა",
                 category: "tech",
                 categoryName: "ტექნოლოგიები",
-                description: "პითონი არის მაღალი დონის, ზოგადი დანიშნულების პროგრამირების ენა, რომელიც ფართოდ გამოიყენება ხელოვნურ ინტელექტში, მონაცემთა ანალიზსა და ვებ-დეველოპმენტში.",
-                tags: ["პითონი", "python", "პროგრამირება", "ai", "კოდი"],
-                url: "#"
+                desc: "პითონი არის პოპულარული პროგრამირების ენა, რომელიც გამოიყენება AI-სა და ვებ-დეველოპმენტში.",
+                tags: ["პითონი", "python", "კოდი"]
             },
             {
-                id: 3,
-                title: "ქართული ტრადიციული სამზარეულო",
+                title: "ქართული ხინკალი და ხაჭაპური",
                 category: "food",
                 categoryName: "კულინარია",
-                description: "ხინკალი, ხაჭაპური და მწვადი ქართული კულინარიის სავიზიტო ბარათებია. თითოეულ რეგიონს თავისი უნიკალური კერძები გააჩნია.",
-                tags: ["ხინკალი", "ხაჭაპური", "სამზარეულო", "ჭამა", "კერძები"],
-                url: "#"
+                desc: "ხინკალი და ხაჭაპური ტრადიციული ქართული კერძებია, რომლებიც ცნობილია მთელ მსოფლიოში.",
+                tags: ["ხინკალი", "ხაჭაპური", "ჭამა"]
             },
             {
-                id: 4,
-                title: "მზის სისტემა და პლანეტები",
-                category: "science",
-                categoryName: "მეცნიერება",
-                description: "მზის სისტემა შედგება რვა პლანეტისგან, რომლებიც გარს უვლიან ცენტრალურ ვარსკვლავს - მზეს. დედამიწა მზიდან მესამე პლანეტაა.",
-                tags: ["მზე", "კოსმოსი", "პლანეტები", "დედამიწა", "ასტრონომია"],
-                url: "#"
+                title: "ბათუმი - ზღვისპირა ქალაქი",
+                category: "geography",
+                categoryName: "გეოგრაფია",
+                desc: "ბათუმი აჭარის ავტონომიური რესპუბლიკის დედაქალაქია და შავი ზღვის სანაპიროზე მდებარეობს.",
+                tags: ["ბათუმი", "ზღვა", "აჭარა"]
             },
             {
-                id: 5,
                 title: "ხელოვნური ინტელექტი (AI)",
                 category: "tech",
                 categoryName: "ტექნოლოგიები",
-                description: "ხელოვნური ინტელექტი სწრაფად ვითარდება და იცვლის თანამედროვე სამყაროს. მანქანური სწავლება და ნეირონული ქსელები AI-ს მთავარი ბაზისია.",
-                tags: ["ai", "ხელოვნური ინტელექტი", "ტექნოლოგია", "ნეიროქსელი"],
-                url: "#"
-            },
-            {
-                id: 6,
-                title: "ბათუმი - შავი ზღვის მარგალიტი",
-                category: "geography",
-                categoryName: "გეოგრაფია",
-                description: "ბათუმი აჭარის ავტონომიური რესპუბლიკის დედაქალაქია. იგი ცნობილია თანამედროვე არქიტექტურით, ბულვარითა და ზღვის სანაპიროთი.",
-                tags: ["ბათუმი", "აჭარა", "ზღვა", "შავი ზღვა", "ტურიზმი"],
-                url: "#"
+                desc: "ხელოვნური ინტელექტი სწრაფად ვითარდება და იცვლის თანამედროვე ტექნოლოგიურ სამყაროს.",
+                tags: ["ai", "ტექნოლოგია", "ინტელექტი"]
             }
         ];
 
         let currentCategory = 'all';
 
-        // DOM ელემენტები
-        const searchInput = document.getElementById('searchInput');
-        const resultsContainer = document.getElementById('resultsContainer');
-        const resultsCount = document.getElementById('resultsCount');
-        const searchTime = document.getElementById('searchTime');
-        const noResults = document.getElementById('noResults');
-        const clearBtn = document.getElementById('clearBtn');
+        function search() {
+            const start = performance.now();
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const resultsList = document.getElementById('resultsList');
+            const noResults = document.getElementById('noResults');
 
-        // ძებნის ფუნქცია
-        function performSearch() {
-            const startTime = performance.now();
-            const query = searchInput.value.toLowerCase().trim();
-
-            // Clear ღილაკის გამოჩენა
-            clearBtn.classList.toggle('hidden', query === '');
-
-            // ფილტრაცია
-            const filteredResults = database.filter(item => {
-                const matchesCategory = currentCategory === 'all' || item.category === currentCategory;
-                
-                if (!matchesCategory) return false;
+            const filtered = database.filter(item => {
+                const matchCat = currentCategory === 'all' || item.category === currentCategory;
+                if (!matchCat) return false;
                 if (!query) return true;
 
-                // ტექსტური დამთხვევა
-                const inTitle = item.title.toLowerCase().includes(query);
-                const inDescription = item.description.toLowerCase().includes(query);
-                const inTags = item.tags.some(tag => tag.toLowerCase().includes(query));
-
-                return inTitle || inDescription || inTags;
+                return item.title.toLowerCase().includes(query) ||
+                       item.desc.toLowerCase().includes(query) ||
+                       item.tags.some(t => t.toLowerCase().includes(query));
             });
 
-            const endTime = performance.now();
-            searchTime.textContent = `${(endTime - startTime).toFixed(1)}ms`;
+            const end = performance.now();
+            document.getElementById('timeText').textContent = `${(end - start).toFixed(1)}ms`;
+            document.getElementById('countText').textContent = `მოიძებნა: ${filtered.length}`;
 
-            renderResults(filteredResults);
-        }
+            resultsList.innerHTML = '';
 
-        // შედეგების რენდერი
-        function renderResults(results) {
-            resultsContainer.innerHTML = '';
-            resultsCount.textContent = `მოიძებნა: ${results.length} შედეგი`;
-
-            if (results.length === 0) {
-                noResults.classList.remove('hidden');
+            if (filtered.length === 0) {
+                noResults.style.display = 'block';
                 return;
             }
 
-            noResults.classList.add('hidden');
+            noResults.style.display = 'none';
 
-            results.forEach(item => {
+            filtered.forEach(item => {
                 const card = document.createElement('div');
-                card.className = 'glass-card rounded-xl p-5 hover:border-indigo-500/40 transition duration-200 group';
-                
+                card.className = 'card';
                 card.innerHTML = `
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-2.5 py-1 rounded-md border border-indigo-500/20">
-                            ${item.categoryName}
-                        </span>
-                    </div>
-                    <h3 class="text-xl font-bold text-white group-hover:text-indigo-300 transition mb-2">
-                        <a href="${item.url}">${item.title}</a>
-                    </h3>
-                    <p class="text-slate-400 text-sm leading-relaxed mb-4">
-                        ${item.description}
-                    </p>
-                    <div class="flex flex-wrap gap-1.5">
-                        ${item.tags.map(tag => `<span class="text-xs text-slate-500 bg-slate-800/80 px-2 py-0.5 rounded">#${tag}</span>`).join('')}
+                    <span class="card-category">${item.categoryName}</span>
+                    <div class="card-title">${item.title}</div>
+                    <div class="card-desc">${item.desc}</div>
+                    <div class="card-tags">
+                        ${item.tags.map(t => `<span class="tag">#${t}</span>`).join('')}
                     </div>
                 `;
-                resultsContainer.appendChild(card);
+                resultsList.appendChild(card);
             });
         }
 
-        // კატეგორიის შეცვლა
-        function filterCategory(category) {
-            currentCategory = category;
-            
-            // ღილაკების აქტიური სტილები
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-indigo-600', 'text-white');
-                btn.classList.add('bg-slate-800', 'text-slate-300');
-            });
-
-            event.target.classList.remove('bg-slate-800', 'text-slate-300');
-            event.target.classList.add('active', 'bg-indigo-600', 'text-white');
-
-            performSearch();
+        function setCategory(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            search();
         }
 
-        // გასუფთავება
-        function clearSearch() {
-            searchInput.value = '';
-            performSearch();
-            searchInput.focus();
-        }
-
-        // Event Listeners
-        searchInput.addEventListener('input', performSearch);
-
-        // საწყისი ჩატვირთვა
-        performSearch();
+        document.getElementById('searchInput').addEventListener('input', search);
+        
+        // პირველადი გაშვება
+        search();
     </script>
 </body>
 </html>
