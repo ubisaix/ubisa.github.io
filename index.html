@@ -58,6 +58,7 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       display: flex;
       flex-direction: column;
+      height: 100%;
     }
 
     .news-card:hover {
@@ -102,3 +103,155 @@
       margin-top: auto;
       padding-top: 15px;
       border-top: 1px solid #eee;
+    }
+
+    .news-link {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ჩატვირთვის და შეცდომის სტატუსი */
+    .loading-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px;
+      font-size: 1.2rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>🔥 ბოლო ამბები საქართველოდან</h1>
+    <p>ინფორმაცია ახლდება ავტომატურად RSS Feed-ის საშუალებით</p>
+  </div>
+
+  <div id="news-container" class="news-grid">
+    <div class="loading-state">სიახლეები იტვირთება...</div>
+  </div>
+
+  <script>
+    const RSS_FEEDS = [
+      { name: 'Interpressnews', url: 'https://www.interpressnews.ge/rss' },
+      { name: 'რადიო თავისუფლება', url: 'https://www.radiotavisupleba.ge/api/z$gpeemio_' }
+    ];
+
+    const container = document.getElementById('news-container');
+
+    async function fetchRSS(feed) {
+      // Corsproxy.io - უფრო სტაბილური პროქსი
+      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(feed.url)}`;
+      
+      const response = await fetch(proxyUrl);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
+      const xmlText = await response.text();
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+      
+      const items = xmlDoc.querySelectorAll("item");
+      const articles = [];
+
+      items.forEach(item => {
+        const title = item.querySelector("title")?.textContent || "უსათაურო";
+        const link = item.querySelector("link")?.textContent || "#";
+        const pubDateStr = item.querySelector("pubDate")?.textContent;
+        const description = item.querySelector("description")?.textContent || "";
+        
+        // სურათის მოძებნა სხვადასხვა თეგებში
+        let image = item.querySelector("enclosure")?.getAttribute("url") || null;
+        if (!image) {
+          const mediaContent = item.getElementsByTagNameNS("http://search.yahoo.com/mrss/", "content")[0];
+          if (mediaContent) image = mediaContent.getAttribute("url");
+        }
+        if (!image) {
+          image = extractImageFromHTML(description);
+        }
+
+        articles.push({
+          source: feed.name,
+          title: title,
+          link: link,
+          pubDate: pubDateStr ? new Date(pubDateStr) : new Date(),
+          image: image
+        });
+      });
+
+      return articles;
+    }
+
+    async function loadNews() {
+      let allArticles = [];
+
+      for (const feed of RSS_FEEDS) {
+        try {
+          const articles = await fetchRSS(feed);
+          allArticles = allArticles.concat(articles);
+        } catch (error) {
+          console.error(`შეცდომა ${feed.name}-ის წამოღებისას:`, error);
+        }
+      }
+
+      // სიახლეების დალაგება თარიღით (ახლები თავში)
+      allArticles.sort((a, b) => b.pubDate - a.pubDate);
+
+      // გამოტანა
+      renderNews(allArticles.slice(0, 18));
+    }
+
+    function extractImageFromHTML(htmlContent) {
+      if (!htmlContent) return null;
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlContent, 'text/html');
+      const img = doc.querySelector('img');
+      return img ? img.src : null;
+    }
+
+    function renderNews(articles) {
+      if (articles.length === 0) {
+        container.innerHTML = '<div class="loading-state">სიახლეები ვერ მოიძებნა. გახსენით Console (F12) შეცდომის სანახავად.</div>';
+        return;
+      }
+
+      container.innerHTML = '';
+
+      articles.forEach(article => {
+        const defaultImg = 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=500&q=80';
+        const imageUrl = article.image || defaultImg;
+        
+        const formattedDate = isNaN(article.pubDate) 
+          ? 'ახლახან' 
+          : article.pubDate.toLocaleString('ka-GE', {
+              day: 'numeric',
+              month: 'long',
+              hour: '2-digit',
+              minute: '2-digit'
+            });
+
+        const card = document.createElement('a');
+        card.className = 'news-link';
+        card.href = article.link;
+        card.target = '_blank';
+
+        card.innerHTML = `
+          <div class="news-card">
+            <img src="${imageUrl}" alt="${article.title}" onerror="this.src='${defaultImg}'">
+            <div class="news-content">
+              <span class="news-source">${article.source}</span>
+              <h2 class="news-title">${article.title}</h2>
+              <span class="news-date">🕒 ${formattedDate}</span>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    loadNews();
+    setInterval(loadNews, 300000); // 5 წუთში ერთხელ განახლება
+  </script>
+
+</body>
+</html>
