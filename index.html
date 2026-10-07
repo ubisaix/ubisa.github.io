@@ -110,7 +110,7 @@
       color: inherit;
     }
 
-    /* ჩატვირთვის და შეცდომის სტატუსი */
+    /* ჩატვირთვის სტატუსი */
     .loading-state {
       grid-column: 1 / -1;
       text-align: center;
@@ -140,8 +140,8 @@
     const container = document.getElementById('news-container');
 
     async function fetchRSS(feed) {
-      // Corsproxy.io - უფრო სტაბილური პროქსი
-      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(feed.url)}`;
+      // CodeTabs Proxy — მუშაობს GitHub Pages-ზე შეზღუდვების გარეშე
+      const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(feed.url)}`;
       
       const response = await fetch(proxyUrl);
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -159,7 +159,6 @@
         const pubDateStr = item.querySelector("pubDate")?.textContent;
         const description = item.querySelector("description")?.textContent || "";
         
-        // სურათის მოძებნა სხვადასხვა თეგებში
         let image = item.querySelector("enclosure")?.getAttribute("url") || null;
         if (!image) {
           const mediaContent = item.getElementsByTagNameNS("http://search.yahoo.com/mrss/", "content")[0];
@@ -193,10 +192,7 @@
         }
       }
 
-      // სიახლეების დალაგება თარიღით (ახლები თავში)
       allArticles.sort((a, b) => b.pubDate - a.pubDate);
-
-      // გამოტანა
       renderNews(allArticles.slice(0, 18));
     }
 
@@ -210,7 +206,7 @@
 
     function renderNews(articles) {
       if (articles.length === 0) {
-        container.innerHTML = '<div class="loading-state">სიახლეები ვერ მოიძებნა. გახსენით Console (F12) შეცდომის სანახავად.</div>';
+        container.innerHTML = '<div class="loading-state">სიახლეები ვერ მოიძებნა.</div>';
         return;
       }
 
@@ -250,7 +246,7 @@
     }
 
     loadNews();
-    setInterval(loadNews, 300000); // 5 წუთში ერთხელ განახლება
+    setInterval(loadNews, 300000);
   </script>
 
 </body>
