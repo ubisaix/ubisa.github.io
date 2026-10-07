@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>📱 Random Shorts Feed — Auto Play/Pause</title>
+  <title>📱 TikTok / Shorts Feed</title>
   <style>
     * {
       box-sizing: border-box;
@@ -64,7 +64,6 @@
       width: 100%;
       height: 100%;
       border: none;
-      pointer-events: none; /* უზრუნველყოფს სქროლვის სიმარტივეს */
     }
 
     .side-bar {
@@ -152,7 +151,6 @@
     </div>
   </div>
 
-  <!-- YouTube Iframe API -->
   <script src="https://www.youtube.com/iframe_api"></script>
 
   <script>
@@ -180,9 +178,23 @@
       return array;
     }
 
-    // YouTube API მზადყოფნისას გაიშვება ავტომატურად
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const index = entry.target.dataset.index;
+        const player = players[index];
+
+        if (player && typeof player.playVideo === 'function') {
+          if (entry.isIntersecting) {
+            player.playVideo();
+          } else {
+            player.pauseVideo();
+          }
+        }
+      });
+    }, { threshold: 0.6 });
+
     function onYouTubeIframeAPIReady() {
-      loadingMsg.remove();
+      if (loadingMsg) loadingMsg.remove();
       const shuffledVideos = shuffleArray([...RANDOM_SHORTS]);
 
       shuffledVideos.forEach((video, index) => {
@@ -211,7 +223,6 @@
 
         videoFeed.appendChild(card);
 
-        // YouTube პლეერის ინიციალიზაცია
         players[index] = new YT.Player(iframeId, {
           height: '100%',
           width: '100%',
@@ -220,6 +231,7 @@
             autoplay: 0,
             controls: 0,
             loop: 1,
+            mute: 1, // აუცილებელია ავტომატური დაკვრისთვის!
             playlist: video.id,
             rel: 0,
             modestbranding: 1,
@@ -227,28 +239,9 @@
           }
         });
 
-        // Intersection Observer თითოეული ბარათისთვის
         observer.observe(card);
       });
     }
-
-    // ჩასქროლვის კონტროლერი
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const index = entry.target.dataset.index;
-        const player = players[index];
-
-        if (player && typeof player.playVideo === 'function') {
-          if (entry.isIntersecting) {
-            // როცა ვიდეო ეკრანზე ჩნდება -> ირთვება
-            player.playVideo();
-          } else {
-            // როცა სცდება ეკრანს -> პაუზდება
-            player.pauseVideo();
-          }
-        }
-      });
-    }, { threshold: 0.7 });
 
     function toggleLike(btn) {
       btn.classList.toggle('liked');
