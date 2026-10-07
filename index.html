@@ -222,23 +222,23 @@
       <div class="controls-grid">
         <div class="control-group">
           <label>აირჩიეთ თარიღი:</label>
-          <input type="date" id="datePicker" value="2008-08-08">
+          <input type="date" id="datePicker">
         </div>
         
         <div class="control-group">
           <label>სწრაფი გადასვლა:</label>
           <div class="quick-buttons">
-            <button class="btn-quick" onclick="setDate('1991-04-09')">9 აპრილი</button>
-            <button class="btn-quick" onclick="setDate('2008-08-08')">8 აგვისტო</button>
-            <button class="btn-quick" onclick="setDate('1921-02-25')">25 თებერვალი</button>
-            <button class="btn-quick" onclick="setDate('1918-05-26')">26 მაისი</button>
+            <button class="btn-quick" onclick="jumpYears(1)">1 წლის წინ</button>
+            <button class="btn-quick" onclick="jumpYears(2)">2 წლის წინ</button>
+            <button class="btn-quick" onclick="jumpYears(3)">3 წლის წინ</button>
+            <button class="btn-quick" onclick="jumpYears(5)">5 წლის წინ</button>
           </div>
         </div>
       </div>
     </div>
 
     <div class="current-date-banner" id="currentDateDisplay">
-      📅 8 აგვისტოს ისტორიული მოვლენები
+      📅 ისტორიული არქივი
     </div>
 
     <div class="tabs">
@@ -248,129 +248,3 @@
     </div>
 
     <div id="eventsContainer" class="events-list">
-      <div class="status-msg">მონაცემები იტვირთება ქართული ვიკიპედიიდან...</div>
-    </div>
-  </div>
-
-  <script>
-    let parsedData = {
-      events: [],
-      births: [],
-      deaths: []
-    };
-    let currentTab = 'events';
-
-    const datePicker = document.getElementById('datePicker');
-    const currentDateDisplay = document.getElementById('currentDateDisplay');
-    const eventsContainer = document.getElementById('eventsContainer');
-
-    const MONTHS_KA = [
-      "იანვარი", "თებერვალი", "მარტი", "აპრილი", "მაისი", "ივნისი",
-      "ივლისი", "აგვისტო", "სექტემბერი", "ოქტომბერი", "ნოემბერი", "დეკემბერი"
-    ];
-
-    function init() {
-      fetchGeorgianWiki();
-      datePicker.addEventListener('change', fetchGeorgianWiki);
-    }
-
-    async function fetchGeorgianWiki() {
-      const selectedDate = new Date(datePicker.value);
-      if (isNaN(selectedDate)) return;
-
-      const day = selectedDate.getDate();
-      const monthName = MONTHS_KA[selectedDate.getMonth()];
-      const pageTitle = `${day}_${monthName}`;
-
-      currentDateDisplay.textContent = `📅 ${day} ${monthName} — ქართული ვიკიპედიის არქივი`;
-      eventsContainer.innerHTML = '<div class="status-msg">მონაცემები იტვირთება ქართული ვიკიპედიიდან...</div>';
-
-      try {
-        // Wikitext ფორმატში წამოღება (უფრო საიმედოა)
-        const apiUrl = `https://ka.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&titles=${encodeURIComponent(pageTitle)}&format=json&origin=*`;
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-
-        const pages = data.query.pages;
-        const pageId = Object.keys(pages)[0];
-
-        if (pageId === "-1" || !pages[pageId].revisions) {
-          throw new Error("გვერდი ვერ მოიძებნა");
-        }
-
-        const rawText = pages[pageId].revisions[0]['*'];
-        parseWikitext(rawText);
-        renderTabContent();
-
-      } catch (error) {
-        console.error("შეცდომა:", error);
-        eventsContainer.innerHTML = '<div class="status-msg">❌ ამ თარიღის მონაცემების წამოღება ვერ მოხერხდა.</div>';
-      }
-    }
-
-    // Wikitext-ის დაპარსვა
-    function parseWikitext(text) {
-      parsedData = { events: [], births: [], deaths: [] };
-
-      let currentSection = null;
-      const lines = text.split('\n');
-
-      lines.forEach(line => {
-        const trimmed = line.trim();
-
-        // სექციის დასახელების პოვნა == ან === სიმბოლოებით
-        if (trimmed.startsWith('==') && trimmed.endsWith('==')) {
-          const sectionTitle = trimmed.replace(/=/g, '').trim().toLowerCase();
-          
-          if (sectionTitle.includes('მოვლენები')) currentSection = 'events';
-          else if (sectionTitle.includes('დაიბადნენ')) currentSection = 'births';
-          else if (sectionTitle.includes('გარდაიცვალნენ')) currentSection = 'deaths';
-          else currentSection = null;
-        } 
-        // სიის ელემენტის პოვნა (*)
-        else if (currentSection && trimmed.startsWith('*')) {
-          let cleanItem = trimmed.substring(1).trim();
-          
-          // ვიკიპედიის სინტაქსის წაშლა/გარდაქმნა
-          cleanItem = cleanItem.replace(/\[\[([^\]\vert{}]+)\Vert{}([^\]]+)\]\]/g, '<a href="https://ka.wikipedia.org/wiki/$1" target="_blank">$2</a>');
-          cleanItem = cleanItem.replace(/\[\[([^\]]+)\]\]/g, '<a href="https://ka.wikipedia.org/wiki/$1" target="_blank">$1</a>');
-          cleanItem = cleanItem.replace(/\{\{([^\}]+)\}\}/g, ''); // თარგების წაშლა
-
-          if (cleanItem.length > 3) {
-            parsedData[currentSection].push(cleanItem);
-          }
-        }
-      });
-    }
-
-    function switchTab(tabName, btn) {
-      currentTab = tabName;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      renderTabContent();
-    }
-
-    function renderTabContent() {
-      const items = parsedData[currentTab] || [];
-
-      if (items.length === 0) {
-        eventsContainer.innerHTML = '<div class="status-msg">ამ კატეგორიაში ჩანაწერები ვერ მოიძებნა.</div>';
-        return;
-      }
-
-      eventsContainer.innerHTML = items.map(itemHTML => `
-        <div class="event-card">
-          <div class="event-content">${itemHTML}</div>
-        </div>
-      `).join('');
-    }
-
-    function setDate(dateStr) {
-      datePicker.value = dateStr;
-      fetchGeorgianWiki();
-    }
-
-    init();
-  </script>
-</body>
-</html>
