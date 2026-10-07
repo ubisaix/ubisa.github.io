@@ -3,17 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🌟 ცნობილი ადამიანების კალენდარი — დაბადება და გარდაცვალება</title>
+  <title>📱 TikTok Style Feed</title>
   <style>
-    :root {
-      --bg-color: #0f172a;
-      --card-bg: #1e293b;
-      --accent: #f59e0b;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border-color: #334155;
-    }
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -21,482 +12,243 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Georgia, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      line-height: 1.6;
-      padding: 20px;
+      background-color: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       min-height: 100vh;
     }
 
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    header h1 {
-      font-size: 2.3rem;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-
-    header p {
-      color: var(--text-muted);
-      font-size: 1rem;
-    }
-
-    .time-machine {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 25px;
-      margin-bottom: 30px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    }
-
-    .controls-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-
-    @media (max-width: 650px) {
-      .controls-grid { grid-template-columns: 1fr; }
-    }
-
-    .control-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .control-group label {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    input[type="date"] {
-      background: var(--bg-color);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 1rem;
-      outline: none;
-    }
-
-    input[type="date"]:focus {
-      border-color: var(--accent);
-    }
-
-    .quick-buttons {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .btn-quick {
-      background: var(--bg-color);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.2s;
-      flex: 1;
-      min-width: 90px;
-      text-align: center;
-    }
-
-    .btn-quick:hover {
-      background: var(--accent);
-      color: #000;
-      border-color: var(--accent);
-      font-weight: 600;
-    }
-
-    .current-date-banner {
-      text-align: center;
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 25px;
-      padding: 12px;
-      background: rgba(245, 158, 11, 0.1);
-      border-radius: 8px;
-      border: 1px dashed var(--accent);
-    }
-
-    .tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 25px;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 10px;
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      font-weight: 600;
-      padding: 10px 20px;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-
-    .tab-btn.active {
-      background: var(--accent);
-      color: #000;
-    }
-
-    .people-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 25px;
-    }
-
-    .person-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .person-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--accent);
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
-    }
-
-    .person-img-container {
+    /* ტიკტოკის კონტეინერი */
+    .app-container {
       width: 100%;
-      height: 240px;
-      background-color: #0f172a;
-      overflow: hidden;
+      max-width: 420px;
+      height: 100vh;
+      background: #111;
       position: relative;
+      overflow: hidden;
+      border-radius: 0;
     }
 
-    .person-img {
+    @media (min-width: 600px) {
+      .app-container {
+        height: 92vh;
+        border-radius: 20px;
+        border: 2px solid #333;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+      }
+    }
+
+    /* ვერტიკალური სქროლი Snap ეფექტით */
+    .video-feed {
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scrollbar-width: none; /* Firefox */
+    }
+
+    .video-feed::-webkit-scrollbar {
+      display: none; /* Chrome, Safari */
+    }
+
+    /* თითოეული ვიდეოს ბლოკი */
+    .video-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+    }
+
+    .video-card video {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: top center;
     }
 
-    .person-badge {
+    /* მარჯვენა ინტერაქტიული ღილაკები */
+    .side-bar {
       position: absolute;
-      top: 12px;
-      right: 12px;
-      background: rgba(15, 23, 42, 0.85);
-      color: var(--accent);
-      border: 1px solid var(--accent);
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      backdrop-filter: blur(4px);
-    }
-
-    .person-body {
-      padding: 20px;
+      right: 15px;
+      bottom: 100px;
       display: flex;
       flex-direction: column;
-      flex-grow: 1;
+      gap: 20px;
+      align-items: center;
+      z-index: 10;
     }
 
-    .person-name {
-      font-size: 1.25rem;
+    .action-btn {
+      background: rgba(0, 0, 0, 0.4);
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+      transition: transform 0.2s;
+    }
+
+    .action-btn:active {
+      transform: scale(0.9);
+    }
+
+    .action-btn span {
+      font-size: 0.75rem;
+      margin-top: 2px;
+    }
+
+    .action-btn.liked {
+      color: #fe2c55;
+    }
+
+    /* ვიდეოს ქვედა ინფო (ავტორი და აღწერა) */
+    .video-info {
+      position: absolute;
+      bottom: 20px;
+      left: 15px;
+      right: 80px;
+      z-index: 10;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    }
+
+    .video-info .username {
       font-weight: 700;
-      color: var(--text-main);
-      margin-bottom: 8px;
-      line-height: 1.3;
-    }
-
-    .person-desc {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.5;
-      margin-bottom: 15px;
-      flex-grow: 1;
-    }
-
-    .person-link {
-      display: inline-block;
-      margin-top: auto;
-      color: #60a5fa;
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
-    .person-link:hover {
-      text-decoration: underline;
-    }
-
-    .status-msg {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 50px;
-      background: var(--card-bg);
-      border-radius: 12px;
-      color: var(--text-muted);
       font-size: 1.1rem;
-      border: 1px solid var(--border-color);
+      margin-bottom: 6px;
+    }
+
+    .video-info .description {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: #eee;
+    }
+
+    /* Mute / Unmute ინდიკატორი */
+    .sound-notice {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.6);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      z-index: 10;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <header>
-      <h1>🌟 ცნობილი ადამიანების კალენდარი</h1>
-      <p>ვინ დაიბადა ან გარდაიცვალა ამ დღეს? (ქართველები და უცხოელი ვარსკვლავები)</p>
-    </header>
+  <div class="app-container">
+    <div class="sound-notice">🔊 დააჭირეთ ვიდეოს ხმის ჩასართავად</div>
 
-    <div class="time-machine">
-      <div class="controls-grid">
-        <div class="control-group">
-          <label>აირჩიეთ თარიღი:</label>
-          <input type="date" id="datePicker">
-        </div>
+    <div class="video-feed" id="videoFeed">
+      
+      <!-- ვიდეო 1 -->
+      <div class="video-card">
+        <video loop playsinline src="https://assets.mixkit.co/videos/preview/mixkit-tokyo-street-with-neon-lights-at-night-42232-large.mp4"></video>
         
-        <div class="control-group">
-          <label>სწრაფი გადასვლა:</label>
-          <div class="quick-buttons">
-            <button class="btn-quick" onclick="jumpYears(1)">1 წლის წინ</button>
-            <button class="btn-quick" onclick="jumpYears(5)">5 წლის წინ</button>
-            <button class="btn-quick" onclick="jumpYears(10)">10 წლის წინ</button>
-            <button class="btn-quick" onclick="jumpYears(25)">25 წლის წინ</button>
-          </div>
+        <div class="side-bar">
+          <button class="action-btn" onclick="toggleLike(this)">❤️ <span>12.5K</span></button>
+          <button class="action-btn">💬 <span>432</span></button>
+          <button class="action-btn">🔗 <span>გაზიარება</span></button>
+        </div>
+
+        <div class="video-info">
+          <div class="username">@tokyo_vibes</div>
+          <div class="description">ტაციური ღამე ტოკიოში 🏮✨ #tokyo #nightlife #japan</div>
         </div>
       </div>
-    </div>
 
-    <div class="current-date-banner" id="currentDateDisplay">
-      📅 იტვირთება თარიღი...
-    </div>
+      <!-- ვიდეო 2 -->
+      <div class="video-card">
+        <video loop playsinline src="https://assets.mixkit.co/videos/preview/mixkit-vertical-shot-of-a-waterfall-in-a-forest-42898-large.mp4"></video>
+        
+        <div class="side-bar">
+          <button class="action-btn" onclick="toggleLike(this)">❤️ <span>8.9K</span></button>
+          <button class="action-btn">💬 <span>120</span></button>
+          <button class="action-btn">🔗 <span>გაზიარება</span></button>
+        </div>
 
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('births', this)">👶 დაიბადნენ ამ დღეს</button>
-      <button class="tab-btn" onclick="switchTab('deaths', this)">🕊️ გარდაიცვალნენ ამ დღეს</button>
-    </div>
+        <div class="video-info">
+          <div class="username">@nature_geo</div>
+          <div class="description">ბუნების სიმშვიდე 🌿💧 #nature #waterfall #peace</div>
+        </div>
+      </div>
 
-    <div id="peopleContainer" class="people-grid">
-      <div class="status-msg">მონაცემები იტვირთება ქართული ვიკიპედიიდან...</div>
+      <!-- ვიდეო 3 -->
+      <div class="video-card">
+        <video loop playsinline src="https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4"></video>
+        
+        <div class="side-bar">
+          <button class="action-btn" onclick="toggleLike(this)">❤️ <span>24.1K</span></button>
+          <button class="action-btn">💬 <span>890</span></button>
+          <button class="action-btn">🔗 <span>გაზიარება</span></button>
+        </div>
+
+        <div class="video-info">
+          <div class="username">@ocean_life</div>
+          <div class="description">ზღვის ტალღები 🌊 #ocean #relax #blue</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <script>
-    let parsedPeople = { births: [], deaths: [] };
-    let currentTab = 'births';
+    const videos = document.querySelectorAll('video');
+    const feed = document.getElementById('videoFeed');
 
-    const datePicker = document.getElementById('datePicker');
-    const currentDateDisplay = document.getElementById('currentDateDisplay');
-    const peopleContainer = document.getElementById('peopleContainer');
-
-    const MONTHS_KA = [
-      "იანვარი", "თებერვალი", "მარტი", "აპრილი", "მაისი", "ივნისი",
-      "ივლისი", "აგვისტო", "სექტემბერი", "ოქტომბერი", "ნოემბერი", "დეკემბერი"
-    ];
-
-    const DEFAULT_AVATAR = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&q=80';
-
-    function init() {
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, '0');
-      const day = String(today.getDate()).padStart(2, '0');
-      
-      datePicker.value = `${year}-${month}-${day}`;
-
-      fetchGeorgianWiki();
-      datePicker.addEventListener('change', fetchGeorgianWiki);
-    }
-
-    async function fetchGeorgianWiki() {
-      const dateVal = datePicker.value;
-      if (!dateVal) return;
-
-      const parts = dateVal.split('-');
-      const year = parseInt(parts[0], 10);
-      const monthIndex = parseInt(parts[1], 10) - 1;
-      const day = parseInt(parts[2], 10);
-
-      const monthName = MONTHS_KA[monthIndex];
-      const pageTitle = `${day}_${monthName}`;
-
-      currentDateDisplay.textContent = `📅 ${day} ${monthName} (${year} წელი) — ცნობილი ადამიანები`;
-      peopleContainer.innerHTML = '<div class="status-msg">მონაცემები იტვირთება ქართული ვიკიპედიიდან...</div>';
-
-      try {
-        const apiUrl = `https://ka.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&titles=${encodeURIComponent(pageTitle)}&format=json&origin=*`;
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-
-        const pages = data.query.pages;
-        const pageId = Object.keys(pages)[0];
-
-        if (pageId === "-1" || !pages[pageId].revisions) {
-          throw new Error("გვერდი ვერ მოიძებნა");
-        }
-
-        const rawText = pages[pageId].revisions[0]['*'];
-        parseWikitext(rawText);
-        await renderTabContent();
-
-      } catch (error) {
-        console.error("შეცდომა:", error);
-        peopleContainer.innerHTML = '<div class="status-msg">❌ ამ თარიღის მონაცემების წამოღება ვერ მოხერხდა.</div>';
-      }
-    }
-
-    function parseWikitext(text) {
-      parsedPeople = { births: [], deaths: [] };
-      let currentSection = null;
-      const lines = text.split('\n');
-
-      lines.forEach(line => {
-        const trimmed = line.trim();
-        const headerMatch = trimmed.match(/^=+\s*([^=]+)\s*=+$/);
-        
-        if (headerMatch) {
-          const title = headerMatch[1].toLowerCase();
-          if (title.includes('დაიბადნენ') || title.includes('დაბადებულები')) {
-            currentSection = 'births';
-          } else if (title.includes('გარდაიცვალნენ') || title.includes('გარდაცვლილები')) {
-            currentSection = 'deaths';
-          } else {
-            currentSection = null;
-          }
-        } 
-        else if (currentSection && /^[\*#:]/.test(trimmed)) {
-          let cleanItem = trimmed.replace(/^[\*#:]+/, '').trim();
-          const linkMatch = cleanItem.match(/\[\[([^\]\vert{}]+)(?:\Vert{}([^\]]+))?\]\]/);
-          
-          if (linkMatch) {
-            const wikiTitle = linkMatch[1].trim();
-            const displayName = linkMatch[2] ? linkMatch[2].trim() : wikiTitle;
-
-            let description = cleanItem
-              .replace(/\[\[([^\]\vert{}]+)\Vert{}([^\]]+)\]\]/g, '$2')
-              .replace(/\[\[([^\]]+)\]\]/g, '$1')
-              .replace(/\{\{[^\}]+\}\}/g, '')
-              .replace(/<!--[^\>]+-->/g, '')
-              .trim();
-
-            const yearMatch = description.match(/^(\d+|\b[IVXLCDM]+\b)\s*:\s*(.*)/);
-            let personYear = "ცნობილი წელი";
-            if (yearMatch) {
-              personYear = yearMatch[1] + " წელი";
-              description = yearMatch[2];
-            }
-
-            parsedPeople[currentSection].push({
-              wikiTitle: wikiTitle,
-              name: displayName,
-              year: personYear,
-              rawDesc: description
-            });
-          }
+    // ავტომატური დაკვრა/პაუზა სქროლვისას (Intersection Observer)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const video = entry.target;
+        if (entry.isIntersecting) {
+          video.play().catch(() => {
+            // ბრაუზერები კრძალავენ ხმიან ავტო-Play-ს პირველი კლიკის გარეშე
+            video.muted = true;
+            video.play();
+          });
+        } else {
+          video.pause();
+          video.currentTime = 0;
         }
       });
-    }
+    }, { threshold: 0.6 });
 
-    function switchTab(tabName, btn) {
-      currentTab = tabName;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      renderTabContent();
-    }
+    videos.forEach(video => {
+      observer.observe(video);
 
-    // სწრაფი და უსაფრთხო ჩატვირთვა
-    async function fetchPersonDetails(person) {
-      try {
-        const url = `https://ka.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(person.wikiTitle)}`;
-        const res = await fetch(url);
-        if (!res.ok) return { person, image: null, extract: null };
-        const data = await res.json();
-        return {
-          person,
-          image: data.thumbnail ? data.thumbnail.source : null,
-          extract: data.extract || null,
-          pageUrl: data.content_urls ? data.content_urls.desktop.page : `https://ka.wikipedia.org/wiki/${encodeURIComponent(person.wikiTitle)}`
-        };
-      } catch (e) {
-        return { person, image: null, extract: null };
-      }
-    }
-
-    async function renderTabContent() {
-      const list = parsedPeople[currentTab] || [];
-
-      if (list.length === 0) {
-        peopleContainer.innerHTML = '<div class="status-msg">ამ კატეგორიაში ჩანაწერები ვერ მოიძებნა.</div>';
-        return;
-      }
-
-      peopleContainer.innerHTML = '<div class="status-msg">🔎 ადამიანების ფოტოები და ინფორმაცია იტვირთება...</div>';
-
-      const topPeople = list.slice(0, 15);
-      
-      // Promise.all — ყველა ადამიანის დეტალების ერთდროულად ჩატვირთვა (სწრაფი)
-      const results = await Promise.all(topPeople.map(p => fetchPersonDetails(p)));
-
-      const cardsHTML = results.map(res => {
-        const p = res.person;
-        const imgUrl = res.image ? res.image : DEFAULT_AVATAR;
-        const bioText = res.extract ? res.extract : p.rawDesc;
-        const wikiLink = res.pageUrl ? res.pageUrl : `https://ka.wikipedia.org/wiki/${encodeURIComponent(p.wikiTitle)}`;
-
-        return `
-          <div class="person-card">
-            <div class="person-img-container">
-              <img src="${imgUrl}" alt="${p.name}" class="person-img" onerror="this.src='${DEFAULT_AVATAR}'">
-              <span class="person-badge">🗓️ ${p.year}</span>
-            </div>
-            <div class="person-body">
-              <h2 class="person-name">${p.name}</h2>
-              <p class="person-desc">${bioText}</p>
-              <a href="${wikiLink}" target="_blank" class="person-link">სრული ბიოგრაფია Wikipedia-ზე →</a>
-            </div>
-          </div>
-        `;
+      // ვიდეოზე დაჭერით ხმის ჩართვა/გამორთვა ან პაუზა
+      video.addEventListener('click', () => {
+        if (video.muted) {
+          video.muted = false;
+        } else {
+          if (video.paused) video.play();
+          else video.pause();
+        }
       });
+    });
 
-      peopleContainer.innerHTML = cardsHTML.join('');
+    // Like ღილაკის ფუნქცია
+    function toggleLike(btn) {
+      btn.classList.toggle('liked');
     }
-
-    function jumpYears(yearsAgo) {
-      const dateVal = datePicker.value;
-      if (!dateVal) return;
-
-      const parts = dateVal.split('-');
-      let year = parseInt(parts[0], 10) - yearsAgo;
-      const month = parts[1];
-      const day = parts[2];
-
-      datePicker.value = `${year}-${month}-${day}`;
-      fetchGeorgianWiki();
-    }
-
-    window.addEventListener('DOMContentLoaded', init);
   </script>
+
 </body>
 </html>
