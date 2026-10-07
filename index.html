@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>📱 TikTok / Shorts Feed</title>
+  <title>📱 Random Shorts & Video Feed</title>
   <style>
     * {
       box-sizing: border-box;
@@ -40,7 +40,7 @@
       }
     }
 
-    /* ვერტიკალური სქროლი Snap ეფექტით */
+    /* ვერტიკალური Snap სქროლი */
     .video-feed {
       width: 100%;
       height: 100%;
@@ -53,7 +53,6 @@
       display: none;
     }
 
-    /* თითოეული ვიდეოს ბარათი */
     .video-card {
       position: relative;
       width: 100%;
@@ -67,14 +66,13 @@
       width: 100%;
       height: 100%;
       border: none;
-      pointer-events: auto;
     }
 
-    /* ინტერაქტიული ღილაკები მარჯვენა მხარეს */
+    /* მარჯვენა ღილაკები */
     .side-bar {
       position: absolute;
       right: 12px;
-      bottom: 80px;
+      bottom: 90px;
       display: flex;
       flex-direction: column;
       gap: 18px;
@@ -83,7 +81,7 @@
     }
 
     .action-btn {
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
       font-size: 1.3rem;
@@ -126,78 +124,97 @@
 
     .video-info .username {
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 1rem;
       margin-bottom: 4px;
       color: #fff;
     }
 
     .video-info .description {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       line-height: 1.3;
       color: #ddd;
+    }
+
+    .loading-msg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.1rem;
+      color: #888;
+      text-align: center;
+      width: 80%;
     }
   </style>
 </head>
 <body>
 
   <div class="app-container">
-    <div class="video-feed">
-      
-      <!-- რეალური ვიდეო 1 -->
-      <div class="video-card">
-        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&loop=1&rel=0&controls=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        
-        <div class="side-bar">
-          <button class="action-btn" onclick="toggleLike(this)">❤️ <span>150K</span></button>
-          <button class="action-btn">💬 <span>2.1K</span></button>
-          <button class="action-btn">🔗 <span>გაზიარება</span></button>
-        </div>
-
-        <div class="video-info">
-          <div class="username">@music_legend</div>
-          <div class="description">ლეგენდარული ჰიტი 🔥 #classic #music #shorts</div>
-        </div>
-      </div>
-
-      <!-- რეალური ვიდეო 2 -->
-      <div class="video-card">
-        <iframe src="https://www.youtube.com/embed/L_LUpnjgPso?autoplay=0&loop=1&rel=0&controls=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        
-        <div class="side-bar">
-          <button class="action-btn" onclick="toggleLike(this)">❤️ <span>89K</span></button>
-          <button class="action-btn">💬 <span>1.4K</span></button>
-          <button class="action-btn">🔗 <span>გაზიარება</span></button>
-        </div>
-
-        <div class="video-info">
-          <div class="username">@nature_world</div>
-          <div class="description">ულამაზესი ხედები 4K ხარისხში 4K 🏔️ #nature #explore</div>
-        </div>
-      </div>
-
-      <!-- რეალური ვიდეო 3 -->
-      <div class="video-card">
-        <iframe src="https://www.youtube.com/embed/jNQXAC9IVRw?autoplay=0&loop=1&rel=0&controls=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        
-        <div class="side-bar">
-          <button class="action-btn" onclick="toggleLike(this)">❤️ <span>500K</span></button>
-          <button class="action-btn">💬 <span>12K</span></button>
-          <button class="action-btn">🔗 <span>გაზიარება</span></button>
-        </div>
-
-        <div class="video-info">
-          <div class="username">@history_tech</div>
-          <div class="description">პირველი ვიდეო YouTube-ის ისტორიაში 📽️ #history #youtube</div>
-        </div>
-      </div>
-
+    <div class="video-feed" id="videoFeed">
+      <div class="loading-msg" id="loadingMsg">🎲 რანდომ YouTube Shorts იტვირთება...</div>
     </div>
   </div>
 
   <script>
+    const videoFeed = document.getElementById('videoFeed');
+    const loadingMsg = document.getElementById('loadingMsg');
+
+    // რანდომ ვიდეოების ბაზა სხვადასხვა თემებიდან
+    const RANDOM_SHORTS = [
+      { id: "L_LUpnjgPso", author: "@nature_explore", desc: "ულამაზესი ბუნება 4K ხარისხში 🏔️ #shorts #nature" },
+      { id: "dQw4w9WgXcQ", author: "@legend_music", desc: "ლეგენდარული ჰიტი 🔥 #music #viral" },
+      { id: "jNQXAC9IVRw", author: "@history_tech", desc: "პირველი ვიდეო YouTube-ზე 📽️ #history" },
+      { id: "tpe2A4Q9ETo", author: "@travel_vibes", desc: "მოგზაურობა მსოფლიოს გარშემო ✈️ #travel" },
+      { id: "M576WGiDBdQ", author: "@tech_gadgets", desc: "მომავლის ტექნოლოგიები 🤖 #tech #future" },
+      { id: "3JZ_D3ELwOQ", author: "@fitness_goals", desc: "ვარჯიში და ჯანსაღი ცხოვრება 💪 #fitness" },
+      { id: "fJ9rUzIMcZQ", author: "@funny_moments", desc: "დღის იუმორი 😂 #comedy #shorts" },
+      { id: "YykjpeuMNEk", author: "@speed_cars", desc: "სუპერქარები და სიჩქარე 🏎️ #cars #speed" }
+    ];
+
+    // მასივის რანდომულად არევა (Fisher-Yates Shuffle)
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function loadRandomVideos() {
+      const shuffledVideos = shuffleArray([...RANDOM_SHORTS]);
+      loadingMsg.remove();
+
+      shuffledVideos.forEach((video) => {
+        const randomLikes = (Math.random() * 80 + 10).toFixed(1) + 'K';
+        const randomComments = Math.floor(Math.random() * 900 + 100);
+
+        const card = document.createElement('div');
+        card.className = 'video-card';
+
+        card.innerHTML = `
+          <iframe src="https://www.youtube.com/embed/${video.id}?autoplay=0&loop=1&rel=0&controls=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          
+          <div class="side-bar">
+            <button class="action-btn" onclick="toggleLike(this)">❤️ <span>${randomLikes}</span></button>
+            <button class="action-btn">💬 <span>${randomComments}</span></button>
+            <button class="action-btn">🔗 <span>გაზიარება</span></button>
+          </div>
+
+          <div class="video-info">
+            <div class="username">${video.author}</div>
+            <div class="description">${video.desc}</div>
+          </div>
+        `;
+
+        videoFeed.appendChild(card);
+      });
+    }
+
     function toggleLike(btn) {
       btn.classList.toggle('liked');
     }
+
+    window.addEventListener('DOMContentLoaded', loadRandomVideos);
   </script>
 
 </body>
