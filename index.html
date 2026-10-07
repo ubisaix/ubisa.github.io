@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⏳ დროის კაფსულა — ქართული ვიკიპედიის არქივი</title>
+  <title>🌟 ცნობილი ადამიანების კალენდარი — დაბადება და გარდაცვალება</title>
   <style>
     :root {
       --bg-color: #0f172a;
@@ -30,7 +30,7 @@
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 0 auto;
     }
 
@@ -52,6 +52,7 @@
       font-size: 1rem;
     }
 
+    /* კალენდარი და მართვის პანელი */
     .time-machine {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
@@ -138,10 +139,11 @@
       border: 1px dashed var(--accent);
     }
 
+    /* ტაბები */
     .tabs {
       display: flex;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       border-bottom: 1px solid var(--border-color);
       padding-bottom: 10px;
     }
@@ -150,11 +152,11 @@
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 600;
-      padding: 8px 16px;
+      padding: 10px 20px;
       cursor: pointer;
-      border-radius: 6px;
+      border-radius: 8px;
       transition: all 0.2s;
     }
 
@@ -163,50 +165,103 @@
       color: #000;
     }
 
-    .events-list {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+    /* ადამიანების ბარათების ბადე (Grid) */
+    .people-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 25px;
     }
 
-    .event-card {
+    .person-card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 18px 22px;
+      border-radius: 14px;
+      overflow: hidden;
       display: flex;
-      gap: 15px;
-      align-items: flex-start;
-      transition: transform 0.2s, border-color 0.2s;
+      flex-direction: column;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
     }
 
-    .event-card:hover {
-      transform: translateX(4px);
+    .person-card:hover {
+      transform: translateY(-5px);
       border-color: var(--accent);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
     }
 
-    .event-content {
+    .person-img-container {
+      width: 100%;
+      height: 240px;
+      background-color: #0f172a;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .person-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .person-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      backdrop-filter: blur(4px);
+    }
+
+    .person-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
       flex-grow: 1;
-      font-size: 1.05rem;
-      line-height: 1.6;
     }
 
-    .event-content a {
+    .person-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .person-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 15px;
+      flex-grow: 1;
+    }
+
+    .person-link {
+      display: inline-block;
+      margin-top: auto;
       color: #60a5fa;
       text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
     }
 
-    .event-content a:hover {
+    .person-link:hover {
       text-decoration: underline;
     }
 
     .status-msg {
+      grid-column: 1 / -1;
       text-align: center;
       padding: 50px;
       background: var(--card-bg);
       border-radius: 12px;
       color: var(--text-muted);
       font-size: 1.1rem;
+      border: 1px solid var(--border-color);
     }
   </style>
 </head>
@@ -214,8 +269,8 @@
 
   <div class="container">
     <header>
-      <h1>⏳ დროის კაფსულა</h1>
-      <p>ქართული ვიკიპედიის ისტორიული არქივი — რა ხდებოდა ამ დღეს?</p>
+      <h1>🌟 ცნობილი ადამიანების კალენდარი</h1>
+      <p>ვინ დაიბადა ან გარდაიცვალა ამ დღეს? (ქართველები და უცხოელი ვარსკვლავები)</p>
     </header>
 
     <div class="time-machine">
@@ -229,48 +284,49 @@
           <label>სწრაფი გადასვლა:</label>
           <div class="quick-buttons">
             <button class="btn-quick" onclick="jumpYears(1)">1 წლის წინ</button>
-            <button class="btn-quick" onclick="jumpYears(2)">2 წლის წინ</button>
-            <button class="btn-quick" onclick="jumpYears(3)">3 წლის წინ</button>
             <button class="btn-quick" onclick="jumpYears(5)">5 წლის წინ</button>
+            <button class="btn-quick" onclick="jumpYears(10)">10 წლის წინ</button>
+            <button class="btn-quick" onclick="jumpYears(25)">25 წლის წინ</button>
           </div>
         </div>
       </div>
     </div>
 
     <div class="current-date-banner" id="currentDateDisplay">
-      📅 ისტორიული არქივი
+      📅 იტვირთება თარიღი...
     </div>
 
+    <!-- ტაბები -->
     <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('events', this)">📜 მოვლენები</button>
-      <button class="tab-btn" onclick="switchTab('births', this)">👶 დაიბადნენ</button>
-      <button class="tab-btn" onclick="switchTab('deaths', this)">🕊️ გარდაიცვალნენ</button>
+      <button class="tab-btn active" onclick="switchTab('births', this)">👶 დაიბადნენ ამ დღეს</button>
+      <button class="tab-btn" onclick="switchTab('deaths', this)">🕊️ გარდაიცვალნენ ამ დღეს</button>
     </div>
 
-    <div id="eventsContainer" class="events-list">
+    <div id="peopleContainer" class="people-grid">
       <div class="status-msg">მონაცემები იტვირთება ქართული ვიკიპედიიდან...</div>
     </div>
   </div>
 
   <script>
-    let parsedData = {
-      events: [],
+    let parsedPeople = {
       births: [],
       deaths: []
     };
-    let currentTab = 'events';
+    let currentTab = 'births';
 
     const datePicker = document.getElementById('datePicker');
     const currentDateDisplay = document.getElementById('currentDateDisplay');
-    const eventsContainer = document.getElementById('eventsContainer');
+    const peopleContainer = document.getElementById('peopleContainer');
 
     const MONTHS_KA = [
       "იანვარი", "თებერვალი", "მარტი", "აპრილი", "მაისი", "ივნისი",
       "ივლისი", "აგვისტო", "სექტემბერი", "ოქტომბერი", "ნოემბერი", "დეკემბერი"
     ];
 
+    // ნაგულისხმევი ფოტო, თუ ვიკიპედიაში სურათი ვერ მოიძებნა
+    const DEFAULT_AVATAR = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&q=80';
+
     function init() {
-      // დღევანდელი თარიღის ზუსტი დაყენება ლოკალური დროით
       const today = new Date();
       const year = today.getFullYear();
       const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -286,7 +342,6 @@
       const dateVal = datePicker.value;
       if (!dateVal) return;
 
-      // თარიღის ტექსტის უშეცდომო დაშლა (YYYY-MM-DD)
       const parts = dateVal.split('-');
       const year = parseInt(parts[0], 10);
       const monthIndex = parseInt(parts[1], 10) - 1;
@@ -295,8 +350,8 @@
       const monthName = MONTHS_KA[monthIndex];
       const pageTitle = `${day}_${monthName}`;
 
-      currentDateDisplay.textContent = `📅 ${day} ${monthName} (${year} წელი) — ქართული ვიკიპედიის არქივი`;
-      eventsContainer.innerHTML = '<div class="status-msg">მონაცემები იტვირთება ქართული ვიკიპედიიდან...</div>';
+      currentDateDisplay.textContent = `📅 ${day} ${monthName} (${year} წელი) — ცნობილი ადამიანები`;
+      peopleContainer.innerHTML = '<div class="status-msg">მონაცემები იტვირთება ქართული ვიკიპედიიდან...</div>';
 
       try {
         const apiUrl = `https://ka.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&titles=${encodeURIComponent(pageTitle)}&format=json&origin=*`;
@@ -312,32 +367,28 @@
 
         const rawText = pages[pageId].revisions[0]['*'];
         parseWikitext(rawText);
-        renderTabContent();
+        await renderTabContent();
 
       } catch (error) {
         console.error("შეცდომა:", error);
-        eventsContainer.innerHTML = '<div class="status-msg">❌ ამ თარიღის მონაცემების წამოღება ვერ მოხერხდა.</div>';
+        peopleContainer.innerHTML = '<div class="status-msg">❌ ამ თარიღის მონაცემების წამოღება ვერ მოხერხდა.</div>';
       }
     }
 
+    // Wikitext-იდან ადამიანების სიის ამოღება
     function parseWikitext(text) {
-      parsedData = { events: [], births: [], deaths: [] };
+      parsedPeople = { births: [], deaths: [] };
 
       let currentSection = null;
       const lines = text.split('\n');
 
       lines.forEach(line => {
         const trimmed = line.trim();
-
-        // Regex სათაურების დასაჭერად (== მოვლენები ==, === დაიბადნენ ===)
         const headerMatch = trimmed.match(/^=+\s*([^=]+)\s*=+$/);
         
         if (headerMatch) {
           const title = headerMatch[1].toLowerCase();
-          
-          if (title.includes('მოვლენები') || title.includes('ისტორია')) {
-            currentSection = 'events';
-          } else if (title.includes('დაიბადნენ') || title.includes('დაბადებულები')) {
+          if (title.includes('დაიბადნენ') || title.includes('დაბადებულები')) {
             currentSection = 'births';
           } else if (title.includes('გარდაიცვალნენ') || title.includes('გარდაცვლილები')) {
             currentSection = 'deaths';
@@ -347,16 +398,36 @@
         } 
         else if (currentSection && /^[\*#:]/.test(trimmed)) {
           let cleanItem = trimmed.replace(/^[\*#:]+/, '').trim();
-
-          // ვიკიპედიის ბმულების გარდაქმნა
-          cleanItem = cleanItem.replace(/\[\[([^\]\vert{}]+)\Vert{}([^\]]+)\]\]/g, '<a href="https://ka.wikipedia.org/wiki/$1" target="_blank">$2</a>');
-          cleanItem = cleanItem.replace(/\[\[([^\]]+)\]\]/g, '<a href="https://ka.wikipedia.org/wiki/$1" target="_blank">$1</a>');
           
-          cleanItem = cleanItem.replace(/\{\{[^\}]+\}\}/g, '');
-          cleanItem = cleanItem.replace(/<!--[^\>]+-->/g, '');
+          // პირველი ვიკი-ბმულის დასახელების პოვნა (ადამიანის სახელი გვარი)
+          const linkMatch = cleanItem.match(/\[\[([^\]\vert{}]+)(?:\Vert{}([^\]]+))?\]\]/);
+          
+          if (linkMatch) {
+            const wikiTitle = linkMatch[1].trim(); // ვიკიპედიის სტატიის სახელი
+            const displayName = linkMatch[2] ? linkMatch[2].trim() : wikiTitle;
 
-          if (cleanItem.length > 2) {
-            parsedData[currentSection].push(cleanItem);
+            // ტექსტის გასუფთავება
+            let description = cleanItem
+              .replace(/\[\[([^\]\vert{}]+)\Vert{}([^\]]+)\]\]/g, '$2')
+              .replace(/\[\[([^\]]+)\]\]/g, '$1')
+              .replace(/\{\{[^\}]+\}\}/g, '')
+              .replace(/<!--[^\>]+-->/g, '')
+              .trim();
+
+            // წლიდან გამოყოფა
+            const yearMatch = description.match(/^(\d+|\b[IVXLCDM]+\b)\s*:\s*(.*)/);
+            let personYear = "ცნობილი წელი";
+            if (yearMatch) {
+              personYear = yearMatch[1] + " წელი";
+              description = yearMatch[2];
+            }
+
+            parsedPeople[currentSection].push({
+              wikiTitle: wikiTitle,
+              name: displayName,
+              year: personYear,
+              rawDesc: description
+            });
           }
         }
       });
@@ -369,19 +440,60 @@
       renderTabContent();
     }
 
-    function renderTabContent() {
-      const items = parsedData[currentTab] || [];
+    // ადამიანის სურათისა და მოკლე აღწერის წამოღება Wikipedia Summary API-ით
+    async function fetchPersonDetails(wikiTitle) {
+      try {
+        const url = `https://ka.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiTitle)}`;
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        const data = await res.json();
+        return {
+          image: data.thumbnail ? data.thumbnail.source : null,
+          extract: data.extract || null,
+          pageUrl: data.content_urls ? data.content_urls.desktop.page : `https://ka.wikipedia.org/wiki/${encodeURIComponent(wikiTitle)}`
+        };
+      } catch (e) {
+        return null;
+      }
+    }
 
-      if (items.length === 0) {
-        eventsContainer.innerHTML = '<div class="status-msg">ამ კატეგორიაში ჩანაწერები ვერ მოიძებნა.</div>';
+    async function renderTabContent() {
+      const list = parsedPeople[currentTab] || [];
+
+      if (list.length === 0) {
+        peopleContainer.innerHTML = '<div class="status-msg">ამ კატეგორიაში ჩანაწერები ვერ მოიძებნა.</div>';
         return;
       }
 
-      eventsContainer.innerHTML = items.map(itemHTML => `
-        <div class="event-card">
-          <div class="event-content">${itemHTML}</div>
-        </div>
-      `).join('');
+      peopleContainer.innerHTML = '<div class="status-msg">🔎 ადამიანების ფოტოები და ინფორმაცია იტვირთება...</div>';
+
+      // პირველი 15 ადამიანის დეტალების წამოღება
+      const topPeople = list.slice(0, 15);
+      const cardsHTML = [];
+
+      for (const person of topPeople) {
+        const details = await fetchPersonDetails(person.wikiTitle);
+
+        const imgUrl = (details && details.image) ? details.image : DEFAULT_AVATAR;
+        const bioText = (details && details.extract) ? details.extract : person.rawDesc;
+        const wikiLink = (details && details.pageUrl) ? details.pageUrl : `https://ka.wikipedia.org/wiki/${encodeURIComponent(person.wikiTitle)}`;
+
+        cardsHTML.push(`
+          <div class="person-card">
+            <div class="person-img-container">
+              <img src="${imgUrl}" alt="${person.name}" class="person-img" onerror="this.src='${DEFAULT_AVATAR}'">
+              <span class="person-badge">🗓️ ${person.year}</span>
+            </div>
+            <div class="person-body">
+              <h2 class="person-name">${person.name}</h2>
+              <p class="person-desc">${bioText}</p>
+              <a href="${wikiLink}" target="_blank" class="person-link">სრული ბიოგრაფია Wikipedia-ზე →</a>
+            </div>
+          </div>
+        `);
+      }
+
+      peopleContainer.innerHTML = cardsHTML.join('');
     }
 
     function jumpYears(yearsAgo) {
@@ -397,7 +509,6 @@
       fetchGeorgianWiki();
     }
 
-    // გვერდის ჩატვირთვისთანავე ავტომატური გაშვება
     window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
