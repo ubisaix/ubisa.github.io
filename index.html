@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>📱 Random Shorts & Video Feed</title>
+  <title>📱 Random Shorts Feed — Auto Play/Pause</title>
   <style>
     * {
       box-sizing: border-box;
@@ -21,7 +21,6 @@
       min-height: 100vh;
     }
 
-    /* ტიკტოკის კონტეინერი */
     .app-container {
       width: 100%;
       max-width: 420px;
@@ -40,7 +39,6 @@
       }
     }
 
-    /* ვერტიკალური Snap სქროლი */
     .video-feed {
       width: 100%;
       height: 100%;
@@ -66,9 +64,9 @@
       width: 100%;
       height: 100%;
       border: none;
+      pointer-events: none; /* უზრუნველყოფს სქროლვის სიმარტივეს */
     }
 
-    /* მარჯვენა ღილაკები */
     .side-bar {
       position: absolute;
       right: 12px;
@@ -111,7 +109,6 @@
       border-color: #fe2c55;
     }
 
-    /* ინფო ზოლი */
     .video-info {
       position: absolute;
       bottom: 20px;
@@ -151,15 +148,17 @@
 
   <div class="app-container">
     <div class="video-feed" id="videoFeed">
-      <div class="loading-msg" id="loadingMsg">🎲 რანდომ YouTube Shorts იტვირთება...</div>
+      <div class="loading-msg" id="loadingMsg">🎲 YouTube Shorts იტვირთება...</div>
     </div>
   </div>
+
+  <!-- YouTube Iframe API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
 
   <script>
     const videoFeed = document.getElementById('videoFeed');
     const loadingMsg = document.getElementById('loadingMsg');
 
-    // რანდომ ვიდეოების ბაზა სხვადასხვა თემებიდან
     const RANDOM_SHORTS = [
       { id: "L_LUpnjgPso", author: "@nature_explore", desc: "ულამაზესი ბუნება 4K ხარისხში 🏔️ #shorts #nature" },
       { id: "dQw4w9WgXcQ", author: "@legend_music", desc: "ლეგენდარული ჰიტი 🔥 #music #viral" },
@@ -171,7 +170,8 @@
       { id: "YykjpeuMNEk", author: "@speed_cars", desc: "სუპერქარები და სიჩქარე 🏎️ #cars #speed" }
     ];
 
-    // მასივის რანდომულად არევა (Fisher-Yates Shuffle)
+    const players = {};
+
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -180,19 +180,22 @@
       return array;
     }
 
-    function loadRandomVideos() {
-      const shuffledVideos = shuffleArray([...RANDOM_SHORTS]);
+    // YouTube API მზადყოფნისას გაიშვება ავტომატურად
+    function onYouTubeIframeAPIReady() {
       loadingMsg.remove();
+      const shuffledVideos = shuffleArray([...RANDOM_SHORTS]);
 
-      shuffledVideos.forEach((video) => {
+      shuffledVideos.forEach((video, index) => {
         const randomLikes = (Math.random() * 80 + 10).toFixed(1) + 'K';
         const randomComments = Math.floor(Math.random() * 900 + 100);
+        const iframeId = `player-${index}`;
 
         const card = document.createElement('div');
         card.className = 'video-card';
+        card.dataset.index = index;
 
         card.innerHTML = `
-          <iframe src="https://www.youtube.com/embed/${video.id}?autoplay=0&loop=1&rel=0&controls=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div id="${iframeId}"></div>
           
           <div class="side-bar">
             <button class="action-btn" onclick="toggleLike(this)">❤️ <span>${randomLikes}</span></button>
@@ -207,14 +210,49 @@
         `;
 
         videoFeed.appendChild(card);
+
+        // YouTube პლეერის ინიციალიზაცია
+        players[index] = new YT.Player(iframeId, {
+          height: '100%',
+          width: '100%',
+          videoId: video.id,
+          playerVars: {
+            autoplay: 0,
+            controls: 0,
+            loop: 1,
+            playlist: video.id,
+            rel: 0,
+            modestbranding: 1,
+            playsinline: 1
+          }
+        });
+
+        // Intersection Observer თითოეული ბარათისთვის
+        observer.observe(card);
       });
     }
+
+    // ჩასქროლვის კონტროლერი
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const index = entry.target.dataset.index;
+        const player = players[index];
+
+        if (player && typeof player.playVideo === 'function') {
+          if (entry.isIntersecting) {
+            // როცა ვიდეო ეკრანზე ჩნდება -> ირთვება
+            player.playVideo();
+          } else {
+            // როცა სცდება ეკრანს -> პაუზდება
+            player.pauseVideo();
+          }
+        }
+      });
+    }, { threshold: 0.7 });
 
     function toggleLike(btn) {
       btn.classList.toggle('liked');
     }
-
-    window.addEventListener('DOMContentLoaded', loadRandomVideos);
   </script>
 
 </body>
