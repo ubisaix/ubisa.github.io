@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⏳ დროის კაფსულა — Wikipedia ისტორიული არქივი</title>
+  <title>⏳ დროის კაფსულა — ქართული ვიკიპედიის არქივი</title>
   <style>
     :root {
       --bg-color: #0f172a;
       --card-bg: #1e293b;
       --accent: #f59e0b;
-      --accent-hover: #d97706;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --border-color: #334155;
@@ -53,7 +52,6 @@
       font-size: 1rem;
     }
 
-    /* Time Machine Control Panel */
     .time-machine {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
@@ -67,7 +65,6 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
-      margin-bottom: 20px;
     }
 
     @media (max-width: 650px) {
@@ -129,7 +126,6 @@
       font-weight: 600;
     }
 
-    /* Current Date Banner */
     .current-date-banner {
       text-align: center;
       font-size: 1.3rem;
@@ -142,7 +138,6 @@
       border: 1px dashed var(--accent);
     }
 
-    /* Tabs (Events, Births, Deaths) */
     .tabs {
       display: flex;
       gap: 10px;
@@ -168,7 +163,6 @@
       color: #000;
     }
 
-    /* Events List */
     .events-list {
       display: flex;
       flex-direction: column;
@@ -179,10 +173,9 @@
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 20px;
+      padding: 18px 22px;
       display: flex;
-
-      gap: 20px;
+      gap: 15px;
       align-items: flex-start;
       transition: transform 0.2s, border-color 0.2s;
     }
@@ -192,37 +185,18 @@
       border-color: var(--accent);
     }
 
-    .event-year {
-      background: rgba(245, 158, 11, 0.15);
-      color: var(--accent);
-      font-size: 1.1rem;
-      font-weight: 800;
-      padding: 8px 14px;
-      border-radius: 8px;
-      min-width: 80px;
-      text-align: center;
-    }
-
     .event-content {
       flex-grow: 1;
-    }
-
-    .event-text {
       font-size: 1.05rem;
-      line-height: 1.5;
-      color: var(--text-main);
+      line-height: 1.6;
     }
 
-    .event-link {
-      display: inline-block;
-      margin-top: 8px;
-      color: var(--accent);
+    .event-content a {
+      color: #60a5fa;
       text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
     }
 
-    .event-link:hover {
+    .event-content a:hover {
       text-decoration: underline;
     }
 
@@ -241,10 +215,9 @@
   <div class="container">
     <header>
       <h1>⏳ დროის კაფსულა</h1>
-      <p>Wikipedia-ს ისტორიული არქივი — ნახეთ, რა ხდებოდა მსოფლიოში ამ დღეს</p>
+      <p>ქართული ვიკიპედიის ისტორიული არქივი — რა ხდებოდა ამ დღეს?</p>
     </header>
 
-    <!-- დროის მანქანის პანელი -->
     <div class="time-machine">
       <div class="controls-grid">
         <div class="control-group">
@@ -255,80 +228,124 @@
         <div class="control-group">
           <label>სწრაფი გადასვლა:</label>
           <div class="quick-buttons">
-            <button class="btn-quick" onclick="jumpYears(1)">1 წლის წინ</button>
-            <button class="btn-quick" onclick="jumpYears(5)">5 წლის წინ</button>
-            <button class="btn-quick" onclick="jumpYears(10)">10 წლის წინ</button>
             <button class="btn-quick" onclick="setDate('1991-04-09')">9 აპრილი</button>
+            <button class="btn-quick" onclick="setDate('2008-08-08')">8 აგვისტო</button>
+            <button class="btn-quick" onclick="setDate('1921-02-25')">25 თებერვალი</button>
+            <button class="btn-quick" onclick="setDate('1918-05-26')">26 მაისი</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- არჩეული თარიღის ბანერი -->
     <div class="current-date-banner" id="currentDateDisplay">
       📅 8 აგვისტოს ისტორიული მოვლენები
     </div>
 
-    <!-- ტაბები -->
     <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('selected')">📜 მთავარი მოვლენები</button>
-      <button class="tab-btn" onclick="switchTab('births')">👶 დაბადებულები</button>
-      <button class="tab-btn" onclick="switchTab('deaths')">🕊️ გარდაცვლილები</button>
+      <button class="tab-btn active" onclick="switchTab('events')">📜 მოვლენები</button>
+      <button class="tab-btn" onclick="switchTab('births')">👶 დაიბადნენ</button>
+      <button class="tab-btn" onclick="switchTab('deaths')">🕊️ გარდაიცვალნენ</button>
     </div>
 
-    <!-- კონტენტის ზონა -->
     <div id="eventsContainer" class="events-list">
-      <div class="status-msg">მონაცემები იტვირთება Wikipedia-დან...</div>
+      <div class="status-msg">მონაცემები იტვირთება ქართული ვიკიპედიიდან...</div>
     </div>
   </div>
 
   <script>
-    let wikiData = null;
-    let currentTab = 'selected';
+    let parsedData = {
+      events: [],
+      births: [],
+      deaths: []
+    };
+    let currentTab = 'events';
 
     const datePicker = document.getElementById('datePicker');
     const currentDateDisplay = document.getElementById('currentDateDisplay');
     const eventsContainer = document.getElementById('eventsContainer');
 
-    // ინიციალიზაცია
-    function init() {
-      fetchWikiEvents();
+    const MONTHS_KA = [
+      "იანვარი", "თებერვალი", "მარტი", "აპრილი", "მაისი", "ივნისი",
+      "ივლისი", "აგვისტო", "სექტემბერი", "ოქტომბერი", "ნოემბერი", "დეკემბერი"
+    ];
 
-      datePicker.addEventListener('change', () => {
-        fetchWikiEvents();
-      });
+    function init() {
+      fetchGeorgianWiki();
+      datePicker.addEventListener('change', fetchGeorgianWiki);
     }
 
-    // Wikipedia-ს API-დან მონაცემების წამოღება
-    async function fetchWikiEvents() {
+    async function fetchGeorgianWiki() {
       const selectedDate = new Date(datePicker.value);
       if (isNaN(selectedDate)) return;
 
-      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
-      const day = String(selectedDate.getDate()).padStart(2, '0');
+      const day = selectedDate.getDate();
+      const monthName = MONTHS_KA[selectedDate.getMonth()];
+      const pageTitle = `${day}_${monthName}`;
 
-      // ქართული დასახელება ბანერისთვის
-      const formattedDateKa = selectedDate.toLocaleDateString('ka-GE', { day: 'numeric', month: 'long' });
-      currentDateDisplay.textContent = `📅 ${formattedDateKa}-ს ისტორიული არქივი`;
-
-      eventsContainer.innerHTML = '<div class="status-msg">მონაცემები იტვირთება Wikipedia-დან...</div>';
+      currentDateDisplay.textContent = `📅 ${day} ${monthName} — ქართული ვიკიპედიის არქივი`;
+      eventsContainer.innerHTML = '<div class="status-msg">მონაცემები იტვირთება ქართული ვიკიპედიიდან...</div>';
 
       try {
-        // Wikipedia-ს ოფიციალური On-This-Day API
-        const response = await fetch(`https://en.wikipedia.org/api/rest_v1/feed/onthisday/all/${month}/${day}`);
-        
-        if (!response.ok) throw new Error("API-ს შეცდომა");
+        // ქართული ვიკიპედიის API-ს გამოძახება
+        const apiUrl = `https://ka.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(pageTitle)}&prop=text&format=json&origin=*`;
+        const response = await fetch(apiUrl);
+        const data = await response.json();
 
-        wikiData = await response.json();
+        if (data.error || !data.parse) {
+          throw new Error("გვერდი ვერ მოიძებნა");
+        }
+
+        parseWikiHTML(data.parse.text['*']);
         renderTabContent();
 
       } catch (error) {
-        console.error("შეცდომა Wikipedia API-სთან:", error);
-        eventsContainer.innerHTML = '<div class="status-msg">❌ მონაცემების წამოღება ვერ მოხერხდა. შეამოწმეთ ინტერნეტ კავშირი.</div>';
+        console.error("შეცდომა:", error);
+        eventsContainer.innerHTML = '<div class="status-msg">❌ ამ თარიღის მონაცემების წამოღება ვერ მოხერხდა.</div>';
       }
     }
 
-    // ტაბების გადართვა
+    // HTML-ის დაპარსვა და კატეგორიებად დაყოფა
+    function parseWikiHTML(htmlContent) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlContent, 'text/html');
+
+      parsedData = { events: [], births: [], deaths: [] };
+
+      // ვიკიპედიის სექციების პოვნა
+      const headings = doc.querySelectorAll('h2, h3');
+      
+      headings.forEach(heading => {
+        const titleText = heading.textContent.toLowerCase();
+        let targetArray = null;
+
+        if (titleText.includes('მოვლენები')) targetArray = parsedData.events;
+        else if (titleText.includes('დაიბადნენ')) targetArray = parsedData.births;
+        else if (titleText.includes('გარდაიცვალნენ')) targetArray = parsedData.deaths;
+
+        if (targetArray) {
+          let nextElem = heading.nextElementSibling;
+          while (nextElem && nextElem.tagName !== 'H2' && nextElem.tagName !== 'H3') {
+            if (nextElem.tagName === 'UL') {
+              const listItems = nextElem.querySelectorAll('li');
+              listItems.forEach(li => {
+                // ბმულების გასწორება (ka.wikipedia.org-ზე გადასასვლელად)
+                const links = li.querySelectorAll('a');
+                links.forEach(a => {
+                  const href = a.getAttribute('href');
+                  if (href && href.startsWith('/wiki/')) {
+                    a.setAttribute('href', `https://ka.wikipedia.org${href}`);
+                    a.setAttribute('target', '_blank');
+                  }
+                });
+                targetArray.push(li.innerHTML);
+              });
+            }
+            nextElem = nextElem.nextElementSibling;
+          }
+        }
+      });
+    }
+
     function switchTab(tabName) {
       currentTab = tabName;
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -336,47 +353,24 @@
       renderTabContent();
     }
 
-    // ტაბის მიხედვით კონტენტის გამოტანა
     function renderTabContent() {
-      if (!wikiData) return;
-
-      const items = wikiData[currentTab] || [];
+      const items = parsedData[currentTab] || [];
 
       if (items.length === 0) {
         eventsContainer.innerHTML = '<div class="status-msg">ამ კატეგორიაში ჩანაწერები ვერ მოიძებნა.</div>';
         return;
       }
 
-      eventsContainer.innerHTML = items.slice(0, 20).map(item => {
-        const year = item.year || "ისტორია";
-        const text = item.text;
-        const wikiUrl = item.pages && item.pages[0] ? item.pages[0].content_urls.desktop.page : null;
-
-        return `
-          <div class="event-card">
-            <div class="event-year">${year}</div>
-            <div class="event-content">
-              <p class="event-text">${text}</p>
-              ${wikiUrl ? `<a href="${wikiUrl}" target="_blank" class="event-link">ვრცლად Wikipedia-ზე →</a>` : ''}
-            </div>
-          </div>
-        `;
-      }).join('');
+      eventsContainer.innerHTML = items.map(itemHTML => `
+        <div class="event-card">
+          <div class="event-content">${itemHTML}</div>
+        </div>
+      `).join('');
     }
 
-    // სწრაფი გადასვლები
     function setDate(dateStr) {
       datePicker.value = dateStr;
-      fetchWikiEvents();
-    }
-
-    function jumpYears(yearsAgo) {
-      const today = new Date();
-      const targetYear = today.getFullYear() - yearsAgo;
-      const month = String(today.getMonth() + 1).padStart(2, '0');
-      const day = String(today.getDate()).padStart(2, '0');
-      
-      setDate(`${targetYear}-${month}-${day}`);
+      fetchGeorgianWiki();
     }
 
     init();
