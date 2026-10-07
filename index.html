@@ -52,7 +52,6 @@
       font-size: 1rem;
     }
 
-    /* კალენდარი და მართვის პანელი */
     .time-machine {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
@@ -139,7 +138,6 @@
       border: 1px dashed var(--accent);
     }
 
-    /* ტაბები */
     .tabs {
       display: flex;
       gap: 10px;
@@ -165,7 +163,6 @@
       color: #000;
     }
 
-    /* ადამიანების ბარათების ბადე (Grid) */
     .people-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -296,7 +293,6 @@
       📅 იტვირთება თარიღი...
     </div>
 
-    <!-- ტაბები -->
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('births', this)">👶 დაიბადნენ ამ დღეს</button>
       <button class="tab-btn" onclick="switchTab('deaths', this)">🕊️ გარდაიცვალნენ ამ დღეს</button>
@@ -308,10 +304,7 @@
   </div>
 
   <script>
-    let parsedPeople = {
-      births: [],
-      deaths: []
-    };
+    let parsedPeople = { births: [], deaths: [] };
     let currentTab = 'births';
 
     const datePicker = document.getElementById('datePicker');
@@ -323,7 +316,6 @@
       "ივლისი", "აგვისტო", "სექტემბერი", "ოქტომბერი", "ნოემბერი", "დეკემბერი"
     ];
 
-    // ნაგულისხმევი ფოტო, თუ ვიკიპედიაში სურათი ვერ მოიძებნა
     const DEFAULT_AVATAR = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&q=80';
 
     function init() {
@@ -375,10 +367,8 @@
       }
     }
 
-    // Wikitext-იდან ადამიანების სიის ამოღება
     function parseWikitext(text) {
       parsedPeople = { births: [], deaths: [] };
-
       let currentSection = null;
       const lines = text.split('\n');
 
@@ -398,15 +388,12 @@
         } 
         else if (currentSection && /^[\*#:]/.test(trimmed)) {
           let cleanItem = trimmed.replace(/^[\*#:]+/, '').trim();
-          
-          // პირველი ვიკი-ბმულის დასახელების პოვნა (ადამიანის სახელი გვარი)
           const linkMatch = cleanItem.match(/\[\[([^\]\vert{}]+)(?:\Vert{}([^\]]+))?\]\]/);
           
           if (linkMatch) {
-            const wikiTitle = linkMatch[1].trim(); // ვიკიპედიის სტატიის სახელი
+            const wikiTitle = linkMatch[1].trim();
             const displayName = linkMatch[2] ? linkMatch[2].trim() : wikiTitle;
 
-            // ტექსტის გასუფთავება
             let description = cleanItem
               .replace(/\[\[([^\]\vert{}]+)\Vert{}([^\]]+)\]\]/g, '$2')
               .replace(/\[\[([^\]]+)\]\]/g, '$1')
@@ -414,7 +401,6 @@
               .replace(/<!--[^\>]+-->/g, '')
               .trim();
 
-            // წლიდან გამოყოფა
             const yearMatch = description.match(/^(\d+|\b[IVXLCDM]+\b)\s*:\s*(.*)/);
             let personYear = "ცნობილი წელი";
             if (yearMatch) {
@@ -440,20 +426,21 @@
       renderTabContent();
     }
 
-    // ადამიანის სურათისა და მოკლე აღწერის წამოღება Wikipedia Summary API-ით
-    async function fetchPersonDetails(wikiTitle) {
+    // სწრაფი და უსაფრთხო ჩატვირთვა
+    async function fetchPersonDetails(person) {
       try {
-        const url = `https://ka.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiTitle)}`;
+        const url = `https://ka.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(person.wikiTitle)}`;
         const res = await fetch(url);
-        if (!res.ok) return null;
+        if (!res.ok) return { person, image: null, extract: null };
         const data = await res.json();
         return {
+          person,
           image: data.thumbnail ? data.thumbnail.source : null,
           extract: data.extract || null,
-          pageUrl: data.content_urls ? data.content_urls.desktop.page : `https://ka.wikipedia.org/wiki/${encodeURIComponent(wikiTitle)}`
+          pageUrl: data.content_urls ? data.content_urls.desktop.page : `https://ka.wikipedia.org/wiki/${encodeURIComponent(person.wikiTitle)}`
         };
       } catch (e) {
-        return null;
+        return { person, image: null, extract: null };
       }
     }
 
@@ -467,31 +454,31 @@
 
       peopleContainer.innerHTML = '<div class="status-msg">🔎 ადამიანების ფოტოები და ინფორმაცია იტვირთება...</div>';
 
-      // პირველი 15 ადამიანის დეტალების წამოღება
       const topPeople = list.slice(0, 15);
-      const cardsHTML = [];
+      
+      // Promise.all — ყველა ადამიანის დეტალების ერთდროულად ჩატვირთვა (სწრაფი)
+      const results = await Promise.all(topPeople.map(p => fetchPersonDetails(p)));
 
-      for (const person of topPeople) {
-        const details = await fetchPersonDetails(person.wikiTitle);
+      const cardsHTML = results.map(res => {
+        const p = res.person;
+        const imgUrl = res.image ? res.image : DEFAULT_AVATAR;
+        const bioText = res.extract ? res.extract : p.rawDesc;
+        const wikiLink = res.pageUrl ? res.pageUrl : `https://ka.wikipedia.org/wiki/${encodeURIComponent(p.wikiTitle)}`;
 
-        const imgUrl = (details && details.image) ? details.image : DEFAULT_AVATAR;
-        const bioText = (details && details.extract) ? details.extract : person.rawDesc;
-        const wikiLink = (details && details.pageUrl) ? details.pageUrl : `https://ka.wikipedia.org/wiki/${encodeURIComponent(person.wikiTitle)}`;
-
-        cardsHTML.push(`
+        return `
           <div class="person-card">
             <div class="person-img-container">
-              <img src="${imgUrl}" alt="${person.name}" class="person-img" onerror="this.src='${DEFAULT_AVATAR}'">
-              <span class="person-badge">🗓️ ${person.year}</span>
+              <img src="${imgUrl}" alt="${p.name}" class="person-img" onerror="this.src='${DEFAULT_AVATAR}'">
+              <span class="person-badge">🗓️ ${p.year}</span>
             </div>
             <div class="person-body">
-              <h2 class="person-name">${person.name}</h2>
+              <h2 class="person-name">${p.name}</h2>
               <p class="person-desc">${bioText}</p>
               <a href="${wikiLink}" target="_blank" class="person-link">სრული ბიოგრაფია Wikipedia-ზე →</a>
             </div>
           </div>
-        `);
-      }
+        `;
+      });
 
       peopleContainer.innerHTML = cardsHTML.join('');
     }
