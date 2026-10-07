@@ -242,9 +242,9 @@
     </div>
 
     <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('events')">📜 მოვლენები</button>
-      <button class="tab-btn" onclick="switchTab('births')">👶 დაიბადნენ</button>
-      <button class="tab-btn" onclick="switchTab('deaths')">🕊️ გარდაიცვალნენ</button>
+      <button class="tab-btn active" onclick="switchTab('events', this)">📜 მოვლენები</button>
+      <button class="tab-btn" onclick="switchTab('births', this)">👶 დაიბადნენ</button>
+      <button class="tab-btn" onclick="switchTab('deaths', this)">🕊️ გარდაიცვალნენ</button>
     </div>
 
     <div id="eventsContainer" class="events-list">
@@ -286,16 +286,20 @@
       eventsContainer.innerHTML = '<div class="status-msg">მონაცემები იტვირთება ქართული ვიკიპედიიდან...</div>';
 
       try {
-        // ქართული ვიკიპედიის API-ს გამოძახება
-        const apiUrl = `https://ka.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(pageTitle)}&prop=text&format=json&origin=*`;
+        // Wikitext ფორმატში წამოღება (უფრო საიმედოა)
+        const apiUrl = `https://ka.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&titles=${encodeURIComponent(pageTitle)}&format=json&origin=*`;
         const response = await fetch(apiUrl);
         const data = await response.json();
 
-        if (data.error || !data.parse) {
+        const pages = data.query.pages;
+        const pageId = Object.keys(pages)[0];
+
+        if (pageId === "-1" || !pages[pageId].revisions) {
           throw new Error("გვერდი ვერ მოიძებნა");
         }
 
-        parseWikiHTML(data.parse.text['*']);
+        const rawText = pages[pageId].revisions[0]['*'];
+        parseWikitext(rawText);
         renderTabContent();
 
       } catch (error) {
@@ -304,52 +308,45 @@
       }
     }
 
-    // HTML-ის დაპარსვა და კატეგორიებად დაყოფა
-    function parseWikiHTML(htmlContent) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlContent, 'text/html');
-
+    // Wikitext-ის დაპარსვა
+    function parseWikitext(text) {
       parsedData = { events: [], births: [], deaths: [] };
 
-      // ვიკიპედიის სექციების პოვნა
-      const headings = doc.querySelectorAll('h2, h3');
-      
-      headings.forEach(heading => {
-        const titleText = heading.textContent.toLowerCase();
-        let targetArray = null;
+      let currentSection = null;
+      const lines = text.split('\n');
 
-        if (titleText.includes('მოვლენები')) targetArray = parsedData.events;
-        else if (titleText.includes('დაიბადნენ')) targetArray = parsedData.births;
-        else if (titleText.includes('გარდაიცვალნენ')) targetArray = parsedData.deaths;
+      lines.forEach(line => {
+        const trimmed = line.trim();
 
-        if (targetArray) {
-          let nextElem = heading.nextElementSibling;
-          while (nextElem && nextElem.tagName !== 'H2' && nextElem.tagName !== 'H3') {
-            if (nextElem.tagName === 'UL') {
-              const listItems = nextElem.querySelectorAll('li');
-              listItems.forEach(li => {
-                // ბმულების გასწორება (ka.wikipedia.org-ზე გადასასვლელად)
-                const links = li.querySelectorAll('a');
-                links.forEach(a => {
-                  const href = a.getAttribute('href');
-                  if (href && href.startsWith('/wiki/')) {
-                    a.setAttribute('href', `https://ka.wikipedia.org${href}`);
-                    a.setAttribute('target', '_blank');
-                  }
-                });
-                targetArray.push(li.innerHTML);
-              });
-            }
-            nextElem = nextElem.nextElementSibling;
+        // სექციის დასახელების პოვნა == ან === სიმბოლოებით
+        if (trimmed.startsWith('==') && trimmed.endsWith('==')) {
+          const sectionTitle = trimmed.replace(/=/g, '').trim().toLowerCase();
+          
+          if (sectionTitle.includes('მოვლენები')) currentSection = 'events';
+          else if (sectionTitle.includes('დაიბადნენ')) currentSection = 'births';
+          else if (sectionTitle.includes('გარდაიცვალნენ')) currentSection = 'deaths';
+          else currentSection = null;
+        } 
+        // სიის ელემენტის პოვნა (*)
+        else if (currentSection && trimmed.startsWith('*')) {
+          let cleanItem = trimmed.substring(1).trim();
+          
+          // ვიკიპედიის სინტაქსის წაშლა/გარდაქმნა
+          cleanItem = cleanItem.replace(/\[\[([^\]\vert{}]+)\Vert{}([^\]]+)\]\]/g, '<a href="https://ka.wikipedia.org/wiki/$1" target="_blank">$2</a>');
+          cleanItem = cleanItem.replace(/\[\[([^\]]+)\]\]/g, '<a href="https://ka.wikipedia.org/wiki/$1" target="_blank">$1</a>');
+          cleanItem = cleanItem.replace(/\{\{([^\}]+)\}\}/g, ''); // თარგების წაშლა
+
+          if (cleanItem.length > 3) {
+            parsedData[currentSection].push(cleanItem);
           }
         }
       });
     }
 
-    function switchTab(tabName) {
+    function switchTab(tabName, btn) {
       currentTab = tabName;
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
       renderTabContent();
     }
 
